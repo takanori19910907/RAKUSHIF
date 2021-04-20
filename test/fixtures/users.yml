@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  shop: one
+  admin: false
+  license: false
+  rookie: false
+
+two:
+  shop: two
+  admin: false
+  license: false
+  rookie: false
