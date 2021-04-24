@@ -1,7 +1,7 @@
 class Admin::UsersController < ApplicationController
   before_action :login_check
   before_action :admin_user
-  before_action :set_user, only: [:edit, :update]
+  before_action :set_user, only: [:edit, :update, :destroy]
 
   def top
   end
@@ -33,6 +33,12 @@ class Admin::UsersController < ApplicationController
     else
         flash[:danger] = "グループ情報変更に失敗しました。再度やり直してください"
     end
+    redirect_to admin_users_path
+  end
+
+  def destroy
+    @user.destroy
+      flash[:success] = "#{@user.name}さんのアカウントを削除しました"
     redirect_to admin_users_path
   end
 
