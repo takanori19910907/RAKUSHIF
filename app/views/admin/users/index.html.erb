@@ -1,0 +1,20 @@
+<p>従業員一覧</p>
+
+<ul>
+  <% @users.each do |user| %>
+
+  <li>
+  <%= user.name %>
+  <% if user.work_status == 1 then %>
+    <p>社員</p>
+  <% elsif user.work_status == 2 then %>
+    <p>パートナー</p>
+  <% elsif user.work_status == 3 then %>
+    <p>アルバイト</p>
+  <% else %>
+        <p>早朝アルバイト</p>
+  <% end  %>
+  </li>
+
+  <% end %>
+</ul>
