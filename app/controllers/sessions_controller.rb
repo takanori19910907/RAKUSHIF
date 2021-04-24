@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
       if user.admin
         redirect_to top_admin_users_path
       else
-        redirect_to root_path
+        redirect_to top_staff_users_path
       end
     else
       flash[:danger] = "ユーザー情報と一致しません 再度入力してください"

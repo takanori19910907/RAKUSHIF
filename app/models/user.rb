@@ -3,4 +3,5 @@ class User < ApplicationRecord
   has_many :requested_shifts
   has_many :fixed_shifts
   has_secure_password
+
 end
