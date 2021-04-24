@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       end
     end
   end
+  
   resources :users do
     collection do
       get :top
