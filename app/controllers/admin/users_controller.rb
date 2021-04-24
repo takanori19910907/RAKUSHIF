@@ -1,6 +1,7 @@
 class Admin::UsersController < ApplicationController
   before_action :login_check
   before_action :admin_user
+  before_action :set_user, only: [:edit, :update]
 
   def top
   end
@@ -23,7 +24,25 @@ class Admin::UsersController < ApplicationController
     end
   end
 
+  def edit
+  end
+  
+  def update
+    if @user.update(user_params)
+        flash[:success] = "グループ情報を変更しました"
+    else
+        flash[:danger] = "グループ情報変更に失敗しました。再度やり直してください"
+    end
+    redirect_to admin_users_path
+  end
+
+
   private
+
+    def set_user
+      @user = User.find(params[:id])
+    end
+
     def user_params
       params.require(:user).permit(:shop_id,:user_id,:name,:age,:work_status,:license,:rookie)
     end
