@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class FixedShiftsControllerTest < ActionDispatch::IntegrationTest
+class Admin::RequestedShiftsControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end
