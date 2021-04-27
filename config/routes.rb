@@ -20,6 +20,13 @@ Rails.application.routes.draw do
     end
   end
 
+    namespace :api, {format: 'json'} do
+      namespace :v1 do
+        resources :users, only: [:index, :show]
+        resources :requested_shifts, only: [:index, :show]
+      end
+    end
+
   get       '/login',   to: 'sessions#new'
   post     '/login',   to: 'sessions#create'
   delete   '/logout',  to: 'sessions#destroy'
