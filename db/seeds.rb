@@ -23,3 +23,9 @@ user1 = User.create(
   work_status: 2,
   rookie: true
 )
+
+shift = user1.requested_shifts.create(
+  shop_id: user1.shop_id,
+  clock_in: "2012-10-08 15:28:12",
+  clock_out: "2012-10-08 15:28:13" 
+)
