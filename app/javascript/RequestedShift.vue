@@ -2,9 +2,9 @@
   <div>
     <!-- カレンダーヘッダ -->
     <div id="cal-header">
-      <span class="header-arrow" v-on:click="setLastMonth">＜</span>
+      <span class="header-arrow" @click="setLastMonth">＜</span>
       <span class="selected-month">{{year}}年{{month}}月</span>
-      <span class="header-arrow" v-on:click="setNextMonth">＞</span>
+      <span class="header-arrow" @click="setNextMonth">＞</span>
     </div>
 
     <!-- カレンダーメイン -->
@@ -17,7 +17,7 @@
       <tbody>
         <tr v-for="(weekData,index) in calData" :key="index">
           <td class="cal-day" v-for="(dayNum,index) in weekData" :key="index" 
-            v-on:click="dateClick(dayNum)"
+            @click="openModal(index)"
             :class="{'cal-today': isToday(dayNum), active: day === dayNum}"
           >
             <span v-if="isToday(dayNum)">今日</span>
@@ -26,17 +26,30 @@
         </tr>
       </tbody>
     </table>
+    <!-- <div id="overlay" v-show="showModal" v-on:click="closeRequestShiftModal">
+      <div id="modal">
+        <p>モーダル</p>
+        <button v-on:click="closeRequestShiftModal">close</button>
+      </div> -->
+      <modal :val="dayNum" v-show="showModal" @close="closeModal" />
+    <!-- </div> -->
   </div>
 </template>
 <script>
+import Modal from 'Modal.vue'
 export default {
+    components: {
+      Modal
+    },
     data(){
         return{
             weekdays: ['日', '月', '火', '水', '木', '金', '土'],
             year:2020,
             month:3,
             day:-1,
-            today: ''
+            today: '',
+            showModal: false,
+            dayNum: 0
         }
     },
     mounted(){
@@ -44,7 +57,7 @@ export default {
       var y = date.getFullYear()
       var m = ('0' + (date.getMonth() + 1)).slice(-2)
       var d = ('0' + date.getDate()).slice(-2)
- 
+
       // yearとmonthを設定
       this.year = y
       this.month = Number(m)
@@ -55,17 +68,24 @@ export default {
         /**
          * カレンダー日付クリック時の処理
          */
-        dateClick: function (dayNum) {
-            if (dayNum !== '') {
-                this.day = dayNum
-                alert( 2021 + "/" + 4 + "/" + this.day );
-            }
-        },
+        // openRequestShiftModal: function (reqNum) {
+        //   this.showModal = true
+        // },
+        // closeRequestShiftModal: function () {
+        //   this.showModal = false
+        // },
         /**
          * 今日かどうかの判定
          * 年、月は現在選択しているページ
          * 日は引数
          */
+        openModal: function(num) {
+          this.showModal = true
+          this.dayNum = num
+        },
+        closeModal: function() {
+          this.showModal = false
+        },
         isToday: function (day) {
             var date = this.year + '-' + ('0' + this.month).slice(-2) + "-" + day
             if(this.today === date){
@@ -98,9 +118,9 @@ export default {
             this.day = -1
         }
     },
+
     computed: {
         calData: function () {
-            console.log(this.year + "-" + this.month + "のデータ作成")
             var calData = []
             // 初日の曜日を取得
             var firstWeekDay = new Date(this.year, this.month - 1, 1).getDay()
@@ -130,6 +150,11 @@ export default {
             }
             return calData
         }
+    },
+    showModalWindow: function() {
+
     }
 }
 </script>
+<style scoped>
+</style>
