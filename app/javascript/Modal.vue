@@ -1,5 +1,6 @@
+
+<!-- addshift(dispatch)でselectした要素、propsで受け取った日付情報をstoreに送るmodal -->
 <template>
-<!-- addshift(dispatch)でselectした要素、propsで受け取った日付情報をstoreに送る -->
   <div id="overlay">
     <div id="modal">
       <p>{{ year }}年{{ month }}月{{ day }}日の出勤希望を入力</p>
