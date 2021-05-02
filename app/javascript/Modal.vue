@@ -1,5 +1,6 @@
+
+<!-- addshift(dispatch)でselectした要素、propsで受け取った日付情報をstoreに送るmodal -->
 <template>
-<!-- addshift(dispatch)でselectした要素、propsで受け取った日付情報をstoreに送る -->
   <div id="overlay">
     <div id="modal">
       <p>{{ year }}年{{ month }}月{{ day }}日の出勤希望を入力</p>
@@ -19,7 +20,7 @@
         <p>出勤:{{ selected1 }}</p>
         <p>退勤:{{ selected2 }}</p>
         <p>上記の時間帯でシフト希望を提出します</p>
-        <button  type="submit" >提出</button>
+        <button  type="submit" @click.self="$emit('close')" >提出</button>
       </form>
     <button @click="$emit('close')">閉じる</button>
     </div>
@@ -54,7 +55,10 @@ export default {
     addShift: function() {
       this.$store.dispatch('addShift', {
         clockIn: this.selected1,
-        clockOut: this.selected2
+        clockOut: this.selected2,
+        year: this.year,
+        month: this.month,
+        day: this.day
         })
       this.selected1= ""
       this.selected2= ""
