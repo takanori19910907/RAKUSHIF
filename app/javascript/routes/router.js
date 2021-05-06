@@ -5,17 +5,16 @@ import Home from "../views/Home.vue";
 import About from "../views/About.vue";
 
 const router = new Router({
-  mode: "history",
   routes: [
     {
-      path: "/admin/requested_shifts",
+      path: "/",
       component: Home,
     },
     {
-      path: "/admin/requested_shifts/about", 
+    path: '/about/:id', 
+      name: 'About',
       component: About
-    }
-
+      }
   ],
 });
 export default router;
