@@ -1,18 +1,20 @@
 <template>
-  <header>
-    <router-link to="/admin/requested_shifts">希望シフト表</router-link>
-        <router-link to="/admin/requested_shifts/about">希望一覧</router-link>
-    <!-- <router-link :to="{name: 'about', params: {id: current_user.id}}"> 申請中の希望一覧</router-link> -->
-
-  </header>
+  <div>
+    <router-link to="/">希望シフト表</router-link>
+<router-link v-bind:to="{ name : 'About', params : { id: user.id }}">提出済み希望シフト一覧</router-link>
+  </div>
 </template>
 <script>
   export default {
     data() {
       return {
-        message: "Headerです",
       };
     },
+    props: {
+      user: {
+        type: Object
+      }
+    }
   };
 </script>
 <style lang="scss" scoped>

@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   namespace :api, {format: 'json'} do
     namespace :v1 do
       resources :users, only: [:index, :show]
-      resources :requested_shifts, only: [:index, :create]
+      resources :requested_shifts, only: [:index, :create,:show]
     end
   end
 

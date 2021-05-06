@@ -4,19 +4,17 @@ class Api::V1::RequestedShiftsController < ApplicationController
   end
 
   def index
-    shifts = RequestedShift.all
-    render json: shifts
-    current_user = current_user
-    render json: current_users
+    user = current_user
+    render json: user
   end
 
   def show
-    shifts = RequestedShift.find(params[:id])
+    shifts = current_user.requested_shifts
     render json: shifts
   end
 
   def create
-    @records = []
+    # stateに蓄積されたデータ(shifts)を受け取りオブジェクトを作成してDBへ保存
     params.require(:shifts).each do |record|
       clockIn = "2021-5-2-" + record[:clockIn] + ":00"
       clockOut = "2021-5-2-" + record[:clockOut] + ":00"
@@ -29,9 +27,4 @@ class Api::V1::RequestedShiftsController < ApplicationController
     end
     redirect_to root_path
   end
-
-  private
-    def records_permit(params)
-      params.permit(:clockIn, :clockOut)
-    end
 end
