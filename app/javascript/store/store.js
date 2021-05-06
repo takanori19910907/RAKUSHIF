@@ -52,7 +52,7 @@ const store = new Vuex.Store({
       state.shifts = []
     },
     removeStorageShiftData(state, payload) {
-      state.shifts.splice(payload.listIndex, 1)
+      state.shifts.splice(payload.shiftIdx, 1)
     }
   },
 })

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- カレンダーヘッダ -->
+    <!-- カレンダータイトル -->
     <div id="cal-header">
       <span class="header-arrow" @click="setLastMonth">＜</span>
       <span class="selected-month">{{year}}年{{month}}月</span>
@@ -16,10 +16,9 @@
       <!-- 日付表示 -->
       <tbody>
         <tr v-for="(weekData,index) in calData" :key="index">
-          <td class="cal-day" v-for="(dayNum,index) in weekData" :key="index" 
-            @click="openModal(dayNum)"
-            :class="{'cal-today': isToday(dayNum), active: day === dayNum}"
-          >
+          <td class="cal-day" v-for="(dayNum,index) in weekData" @click="openModal(dayNum)"
+            :key="index"
+            :class="{'cal-today': isToday(dayNum), active: day === dayNum}">
             <span v-if="isToday(dayNum)">今日</span>
             <span v-else>{{dayNum}}</span>
           </td>
@@ -27,24 +26,32 @@
       </tbody>
     </table>
     <modal :day="dayNum" :year="year" :month="month" v-show="showModal" @close="closeModal" />
-    <b>※下記のシフト希望はまだ提出されていません</b>
-    <p>下部のボタンでシフト希望の提出を完了させてください</p>
-    <table>
-      <tbody>
-        <tr>
-          <th>希望日</th>
-          <th>希望出勤時間</th>
-          <th>希望退勤時間</th>
-        </tr>
-        <tr v-for="(item, index) in shifts" :key="item.id">
-          <td> {{ item.year }}年{{ item.month }}月{{ item.day }}日</td>
-          <td> {{ item.clockIn }}</td>
-          <td> {{ item.clockOut }}</td>
-          <button @click="removeStorageShiftData(index)">×</button>
-        </tr>
-      </tbody>
-    </table>
-    <button @click="postshifts">シフトを提出</button>
+
+    <h2>ストック中の希望シフト</h2>
+    <div v-if="shifts.length">
+      <b>※下記のシフト希望はまだ提出されていません</b>
+      <p>期日までにシフト希望の提出を完了させてください</p>
+      <hr>
+      <table>
+        <tbody>
+          <tr>
+            <th>希望日</th>
+            <th>希望出勤時間</th>
+            <th>希望退勤時間</th>
+          </tr>
+          <tr v-for="(item, index) in shifts" :key="item.id">
+            <td> {{ item.year }}年{{ item.month }}月{{ item.day }}日</td>
+            <td> {{ item.clockIn }}</td>
+            <td> {{ item.clockOut }}</td>
+            <button @click="removeStorageShiftData(index)">×</button>
+          </tr>
+        </tbody>
+      </table>
+      <button @click="postshifts">シフトを提出</button>
+    </div>
+    <div v-else>
+      <p>現在ストックされている希望シフトはありません</p>
+    </div>
   </div>
 </template>
 
@@ -64,8 +71,7 @@ export default {
         day:-1,
         today: '',
         showModal: false,
-        dayNum: 0,
-        users: {}
+        dayNum: 0
     }
   },
   props: {
@@ -137,8 +143,7 @@ export default {
       axios.post('/api/v1/requested_shifts', {shifts: this.shifts })
       this.$store.dispatch('deleteReqLists')   
       }
-    },
-    removeStorageShiftData: function(shiftIdx) {
+    },    removeStorageShiftData: function(shiftIdx) {
       this.$store.dispatch("removeStorageShiftData", {shiftIdx: shiftIdx})
     }
 },
@@ -177,5 +182,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-</style>
