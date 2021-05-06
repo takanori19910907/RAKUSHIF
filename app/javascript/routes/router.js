@@ -11,8 +11,8 @@ const router = new Router({
       component: Home,
     },
     {
-    path: '/about/:id', 
-      name: 'About',
+    path: '/about/id', 
+      name: 'about',
       component: About
       }
   ],
