@@ -5,13 +5,11 @@ class Api::V1::RequestedShiftsController < ApplicationController
 
   def index
     shifts = RequestedShift.all
-    render json: shifts
-    current_user = current_user
-    render json: current_users
+    render json: {shifts: shifts, user: current_user}
   end
 
   def show
-    shifts = RequestedShift.find(params[:id])
+    shifts = current_user.requested_shifts
     render json: shifts
   end
 
