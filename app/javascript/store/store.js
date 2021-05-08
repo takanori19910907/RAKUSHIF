@@ -8,13 +8,6 @@ const store = new Vuex.Store({
     shifts: savedLists ? JSON.parse(savedLists) : [
       // ユーザーID、希望日時をlocalStorageに保存
       {
-      year: 2021,
-      month: 5,
-      day: 1,
-      clockIn: "9:00",
-      clockOut: "13:00" 
-      },
-      {
         year: 2021,
         month: 5,
         day: 2,
