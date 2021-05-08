@@ -2,7 +2,7 @@
   <section id="about">
     <h3>提出済みのシフト一覧</h3>
     <hr>
-    <!-- <p>ユーザー名: {{ user.name }}</p> -->
+    <p>ユーザー名: {{ user.name }}</p>
     <table>
       <tbody>
         <tr>

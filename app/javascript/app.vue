@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header :user="userData"></Header>
-      <router-view :shifts="shifts"></router-view>
+      <router-view :user="userData" :shifts="shifts"></router-view>
   </div>
 </template>
 <script>

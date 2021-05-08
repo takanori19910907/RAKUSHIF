@@ -16,8 +16,9 @@ class Api::V1::RequestedShiftsController < ApplicationController
   def create
     # stateに蓄積されたデータ(shifts)を受け取りオブジェクトを作成してDBへ保存
     params.require(:shifts).each do |record|
-      clockIn = "2021-5-2-" + record[:clockIn] + ":00"
-      clockOut = "2021-5-2-" + record[:clockOut] + ":00"
+      clockIn = record[:year].to_s + "-" + record[:month].to_s + "-" + record[:day].to_s + "-" +  record[:clockIn] + ":00"
+      clockOut = record[:year].to_s + "-" + record[:month].to_s + "-" + record[:day].to_s + "-" +  record[:clockOut] + ":00"
+      binding.pry
       shift = current_user.requested_shifts.build(
         shop_id: current_user.shop_id,
         clock_in: clockIn,
