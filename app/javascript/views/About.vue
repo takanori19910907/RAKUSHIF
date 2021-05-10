@@ -1,8 +1,9 @@
 <template>
   <section id="about">
+    <p>ユーザー名: {{ user.name }}さん</p>
     <h3>提出済みのシフト一覧</h3>
+    <div v-if="shifts.length">
     <hr>
-    <p>ユーザー名: {{ user.name }}</p>
     <table>
       <tbody>
         <tr>
@@ -18,6 +19,12 @@
         </tr>
       </tbody>
     </table>
+    </div>
+    <div v-else>
+      <p>シフト希望がありません</p>
+      <p>シフト希望表ページからシフト希望を提出してください</p>
+
+    </div>
   </section>
 </template>
 
@@ -44,10 +51,6 @@ export default {
 
   methods: {
     removeShiftData: function(id) {
-      // if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
-      // axios.post('/api/v1/requested_shifts', {shifts: this.shifts })
-      // this.$store.dispatch('deleteReqLists')
-      // }
       if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
         axios.delete('/api/v1/requested_shifts/id', {data: {id: id} } )
         this.updateShifts();
