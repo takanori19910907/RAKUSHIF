@@ -1,3 +1,5 @@
+<!-- ログインユーザーのシフト希望(提出済み)一覧ページ -->
+
 <template>
   <section id="about">
     <p>ユーザー名: {{ user.name }}さん</p>

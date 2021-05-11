@@ -23,6 +23,9 @@ const store = new Vuex.Store({
     addShift(context, payload) {
       context.commit('addShift', payload)
     },
+    updateShift(context, payload) {
+      context.commit('updateShift', payload)
+    },
     deleteReqLists(context) {
       context.commit("deleteReqLists")
     },
@@ -40,6 +43,17 @@ const store = new Vuex.Store({
         month: payload.month,
         day: payload.day
       })
+    },
+    updateShift(state, payload) {
+      console.log(payload.clockIn)
+      state.shifts.splice([payload.shiftIdx], 1, {
+        clockIn: payload.clockIn,
+        clockOut: payload.clockOut,
+        year: payload.year,
+        month: payload.month,
+        day: payload.day
+        }
+      )
     },
     deleteReqLists(state) {
       state.shifts = []
