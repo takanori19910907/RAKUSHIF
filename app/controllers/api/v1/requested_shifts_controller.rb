@@ -32,9 +32,6 @@ class Api::V1::RequestedShiftsController < ApplicationController
   def destroy
     @shift.destroy
     head :no_content
-    # render json: shifts
-    # redirect_to root_path
-    
   end
 
   private
