@@ -54,7 +54,6 @@ const store = new Vuex.Store({
         day: payload.day
         }
       )
-      console.log(state.shifts[payload.shiftIdx])
     },
     deleteReqLists(state) {
       state.shifts = []

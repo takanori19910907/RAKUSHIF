@@ -1,3 +1,5 @@
+<!-- 希望シフト提出/確定シフト確認に用いるカレンダー -->
+
 <template>
   <div>
   <!-- カレンダータイトル -->
@@ -8,11 +10,14 @@
     </div>
 
     <!-- カレンダーメイン -->
+
     <table id="cal-main">
+
       <!-- 曜日表示 -->
       <thead>
         <th v-for="(dayname,index) in weekdays" :key="index">{{dayname}}</th>
       </thead>
+
       <!-- 日付表示 -->
       <tbody>
         <tr v-for="(weekData,index) in calData" :key="index">
@@ -52,14 +57,6 @@ export default {
         showModal: false,
         dayNum: 0
     }
-  },
-  props: {
-    // year: {
-    //   type: Number
-    // },
-    // month: {
-    //   type: Number
-    // }
   },
 
     mounted(){
@@ -106,6 +103,8 @@ export default {
         }
         this.day = -1
     },
+
+     // シフト提出用のモーダルを開く
     openModal: function(num) {
       this.showModal = true
       this.dayNum = num
@@ -114,10 +113,7 @@ export default {
     // シフト提出用のモーダルを閉じる
     closeModal: function() {
       this.showModal = false
-    },
-    // sendCheckedDayNum(dayNum) {
-    //   this.$emit("checked", dayNum);
-    // }
+    }
   },
   computed: {
     calData: function () {

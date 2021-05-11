@@ -1,3 +1,5 @@
+<!-- 希望シフト提出ページ、一覧ページの切り替え用 -->
+
 <template>
   <div>
     <router-link to="/">希望シフト表</router-link>
@@ -17,18 +19,3 @@
     }
   };
 </script>
-<style lang="scss" scoped>
-  $background-color: skyblue;
-  header {
-    width: 100%;
-    height: 80px;
-    background-color: $background-color;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    a {
-      display: inline-block;
-      margin: 0 20px;
-    }
-  }
-</style>

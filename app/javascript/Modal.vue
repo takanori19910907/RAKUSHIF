@@ -1,12 +1,12 @@
-
 <!-- addshift(dispatch)でselectした要素、propsで受け取った日付情報をstoreに送るmodal -->
+
 <template>
   <div id="overlay">
     <div id="modal">
       <slot name="title"></slot>
       <slot name="subtitle"></slot>
-      <!-- <p>{{ year }}年{{ month }}月{{ day }}日の出勤希望を入力</p> -->
-      <!-- <form @submit.prevent="addShift">
+
+      <form @submit.prevent="addShift">
       <select v-model="selected1">
         <option disabled value="">出勤希望時間</option>
         <option v-for="clockIn in clockIns" v-bind:val="clockIn.time" v-bind:key="clockIn.id">
@@ -23,8 +23,10 @@
         <p>退勤:{{ selected2 }}</p>
         <p>上記の時間帯でシフト希望を提出します</p>
         <button  type="submit" @click.self="$emit('close')" >提出</button>
-      </form> -->
-      <form @submit.prevent="updateShift">
+      </form>
+
+      <!-- 希望シフト編集機能(現在実装中) -->
+      <!-- <form @submit.prevent="updateShift">
       <select v-model="selected1">
         <option disabled value="">出勤希望時間</option>
         <option v-for="clockIn in clockIns" v-bind:val="clockIn.time" v-bind:key="clockIn.id">
@@ -43,7 +45,7 @@
         <button  type="submit" @click.self="$emit('close')" >
         <slot name="submit"></slot>
         </button>
-      </form>
+      </form> -->
     <button @click="$emit('close')">閉じる</button>
     </div>
   </div>
@@ -86,17 +88,17 @@ export default {
       this.selected1= ""
       this.selected2= ""
     },
-    updateShift: function() {
-      this.$store.dispatch('updateShift', {
-        shiftIdx: this.dayNum,
-        clockIn: this.selected1,
-        clockOut: this.selected2,
-        year: this.year,
-        month: this.month,
-        day: this.day
-      })
-    }
+
+    // updateShift: function() {
+    //   this.$store.dispatch('updateShift', {
+    //     shiftIdx: this.dayNum,
+    //     clockIn: this.selected1,
+    //     clockOut: this.selected2,
+    //     year: this.year,
+    //     month: this.month,
+    //     day: this.day
+    //   })
+    // }
   }
-  
 }
 </script>
