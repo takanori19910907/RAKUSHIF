@@ -5,8 +5,9 @@
     <div id="modal">
       <slot name="title"></slot>
       <slot name="subtitle"></slot>
+      {{ shift }}
 
-      <form @submit.prevent="addShift">
+      <form @submit.prevent="clickRequestedShiftSubmit">
       <select v-model="selected1">
         <option disabled value="">出勤希望時間</option>
         <option v-for="clockIn in clockIns" v-bind:val="clockIn.time" v-bind:key="clockIn.id">
@@ -21,33 +22,10 @@
       </select>
         <p>出勤:{{ selected1 }}</p>
         <p>退勤:{{ selected2 }}</p>
-        <p>上記の時間帯でシフト希望を提出します</p>
-        <button  type="submit" @click.self="$emit('close')" >提出</button>
+        <button  type="submit" @click.self="$emit('close')" >完了</button>
       </form>
-
-      <!-- 希望シフト編集機能(現在実装中) -->
-      <!-- <form @submit.prevent="updateShift">
-      <select v-model="selected1">
-        <option disabled value="">出勤希望時間</option>
-        <option v-for="clockIn in clockIns" v-bind:val="clockIn.time" v-bind:key="clockIn.id">
-          {{ clockIn.time }}
-        </option>
-      </select>
-      <select v-model="selected2">
-        <option disabled value="">出勤希望時間</option>
-      <option v-for="clockOut in clockOuts" v-bind:val="clockOut.time" v-bind:key="clockOut.id">
-          {{ clockOut.time }}
-        </option>
-      </select>
-        <p>出勤:{{ selected1 }}</p>
-        <p>退勤:{{ selected2 }}</p>
-
-        <button  type="submit" @click.self="$emit('close')" >
-        <slot name="submit"></slot>
-        </button>
-      </form> -->
-    <button @click="$emit('close')">閉じる</button>
-    </div>
+      <button @click="$emit('close')">閉じる</button>
+    </div> 
   </div>
 </template>
 
@@ -70,6 +48,7 @@ export default {
     }
   },
   props: [
+    'shift',
     'year',
     'month',
     'day',
@@ -77,6 +56,15 @@ export default {
   ],
   
   methods: {
+  // shiftオブジェクトがあるときは編集用メソッド、ないときは新規作成メソッドを実行
+    clickRequestedShiftSubmit: function() {
+      if(this.shift) {
+        this.updateShift()
+      } else {
+        this.addShift()
+      }
+    },
+    
     addShift: function() {
       this.$store.dispatch('addShift', {
         clockIn: this.selected1,
@@ -89,16 +77,16 @@ export default {
       this.selected2= ""
     },
 
-    // updateShift: function() {
-    //   this.$store.dispatch('updateShift', {
-    //     shiftIdx: this.dayNum,
-    //     clockIn: this.selected1,
-    //     clockOut: this.selected2,
-    //     year: this.year,
-    //     month: this.month,
-    //     day: this.day
-    //   })
-    // }
+    updateShift: function() {
+      this.$store.dispatch('updateShift', {
+        shiftIdx: this.dayNum,
+        clockIn: this.selected1,
+        clockOut: this.selected2,
+        year: this.year,
+        month: this.month,
+        day: this.day
+      })
+    }
   }
 }
 </script>
