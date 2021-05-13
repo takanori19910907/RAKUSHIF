@@ -17,6 +17,7 @@
           <td> {{ item.year }}年{{ item.month }}月{{ item.day }}日</td>
           <td> {{ item.clock_in }}</td>
           <td> {{ item.clock_out }}</td>
+          <button @click="updateShiftData(item.id)">修正</button>
           <button @click="removeShiftData(item.id)">×</button>
         </tr>
       </tbody>
@@ -58,8 +59,8 @@ export default {
         this.updateShifts();
       }
     },
-    updateShifts: function() {
-      axios.get('/api/v1/requested_shifts/id', { params: { id: this.user.id } })
+    updateShiftData: function(id) {
+      axios.put('/api/v1/requested_shifts/id', {data: {id: id} })
       .then(response => (this.shifts = response.data))
     }
   }

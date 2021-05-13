@@ -14,19 +14,12 @@ class Api::V1::RequestedShiftsController < Api::V1::BaseController
   def create
     # stateに蓄積されたデータ(shifts)を受け取りオブジェクトを作成してDBへ保存
     params.require(:shifts).each do |record|
-      # clockIn = record[:year].to_s + "-" + record[:month].to_s + "-" + record[:day].to_s + "-" +  record[:clockIn] + ":00"
-      # clockOut = record[:year].to_s + "-" + record[:month].to_s + "-" + record[:day].to_s + "-" +  record[:clockOut] + ":00"
-      # shift = current_user.requested_shifts.build(
-      #   shop_id: current_user.shop_id,
-      #   clock_in: clockIn,
-      #   clock_out: clockOut,
       shift = @current_user.requested_shifts.build(
         shop_id: current_user.shop_id,
         clock_in: "#{record[:year]}-#{record[:month]}-#{record[:day]} #{record[:clockIn]}:00",
         clock_out: "#{record[:year]}-#{record[:month]}-#{record[:day]} #{record[:clockOut]}:00",
       )
       shift.save
-      binding.pry
     end
     redirect_to root_path
   end
@@ -34,6 +27,9 @@ class Api::V1::RequestedShiftsController < Api::V1::BaseController
   def destroy
     @shift.destroy
     head :no_content
+  end
+
+  def update
   end
 
   private
