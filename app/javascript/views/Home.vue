@@ -22,6 +22,7 @@
             <button @click="openModal(index)">修正</button>
             <button @click="removeStorageShiftData(index)">×</button>
             <modal v-show="showModal" @close="closeModal" 
+            :shift="item"
             :year="item.year"
             :month="item.month"
             :day="item.day"
@@ -45,7 +46,7 @@
 
 <script>
 import axios from 'axios';
-import Modal from 'Modal.vue'
+import Modal from '../components/Modal.vue'
 import Calendar from '../components/Calendar.vue';
 export default {
   components: {
