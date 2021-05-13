@@ -1,7 +1,4 @@
-class Api::V1::UsersController < ApplicationController
-    rescue_from ActiveRecord::RecordNotFound do |exception|
-    render json: { error: '404 not found' }, status: 404
-  end
+class Api::V1::UsersController < Api::V1::BaseController
 
   def index
     users = User.all

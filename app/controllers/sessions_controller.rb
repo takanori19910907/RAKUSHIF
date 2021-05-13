@@ -19,7 +19,19 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    log_out if logged_in?
+    log_out if @current_user
     redirect_to root_path
   end
+  
+  private
+    #ログイン処理(ブラウザのcookieにユーザー情報を保存)
+    def log_in(user)
+      session[:user_id] = user.id
+    end
+    
+    #ログアウト処理(ブラウザのcookieに保存しているユーザー情報を破棄)
+    def log_out
+      session.delete(:user_id)
+      @current_user = nil
+    end
 end
