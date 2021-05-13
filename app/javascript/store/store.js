@@ -45,7 +45,6 @@ const store = new Vuex.Store({
       })
     },
     updateShift(state, payload) {
-      console.log(payload.clockIn)
       state.shifts.splice([payload.shiftIdx], 1, {
         clockIn: payload.clockIn,
         clockOut: payload.clockOut,
