@@ -1,7 +1,7 @@
 <h1>RAKUSHIF</h1>
 <p>-ドラッグストア向けシフト管理ツール-</p>
 
-<% if logged_in?  %>
+<% if @current_user  %>
 
 <%= link_to "ログアウト", logout_path, method: :delete %>
 
