@@ -47,7 +47,7 @@ export default {
     },
     
   mounted () {
-    axios.get('/api/v1/requested_shifts/id', { params: { id: this.user.id }
+    axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.user.id }
 })
   .then(response => (this.shifts = response.data))
   },
@@ -55,12 +55,12 @@ export default {
   methods: {
     removeShiftData: function(id) {
       if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
-        axios.delete('/api/v1/requested_shifts/id', {data: {id: id} } )
+        axios.delete('/api/v1/staff/requested_shifts/id', {data: {id: id} } )
         this.updateShifts();
       }
     },
     updateShiftData: function(id) {
-      axios.put('/api/v1/requested_shifts/id', {data: {id: id} })
+      axios.put('/api/v1/staff/requested_shifts/id', {data: {id: id} })
       .then(response => (this.shifts = response.data))
     }
   }

@@ -1,0 +1,18 @@
+
+<% if @current_user.admin %>
+
+  <p>管理者トップ</p>
+
+<div id="app"></div>
+
+  <%= javascript_pack_tag "app_vue" %>
+
+<% else %>
+
+  <p>ユーザートップ</p>
+
+  <div id="app"></div>
+
+  <%= javascript_pack_tag "app_vue" %>
+
+<% end %>

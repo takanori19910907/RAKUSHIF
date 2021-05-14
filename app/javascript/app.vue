@@ -19,7 +19,7 @@
     },
     mounted () {
       axios
-        .get('/api/v1/requested_shifts.json')
+        .get('/api/v1/staff/requested_shifts.json')
         .then(response => (this.userData = response.data))
     },
 

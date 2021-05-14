@@ -10,7 +10,6 @@ axios.defaults.headers.common = {
   'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 };
 import VueAxios from "vue-axios";
-
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
