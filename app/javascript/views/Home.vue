@@ -82,7 +82,7 @@ export default {
     // ②localStorageのデータを削除
     postshifts: function() {
       if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
-      axios.post('/api/v1/requested_shifts', {shifts: this.shifts })
+      axios.post('/api/v1/staff/requested_shifts', {shifts: this.shifts })
       this.$store.dispatch('deleteReqLists')   
       }
     },    removeStorageShiftData: function(shiftIdx) {
