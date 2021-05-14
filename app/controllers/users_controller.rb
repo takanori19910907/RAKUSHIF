@@ -1,6 +1,6 @@
-class Admin::UsersController < ApplicationController
+class UsersController < ApplicationController
   before_action :login_check
-  before_action :admin_user
+  before_action :admin_user, except: [:top]
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def top
@@ -16,9 +16,9 @@ class Admin::UsersController < ApplicationController
 
   def create
     user = User.new(user_params)
-    user.password = "1111"
+    user.password = "password"
     if user.save!
-      redirect_to admin_users_path
+      redirect_to users_path
     else
       redirect_to root_path
     end
@@ -33,13 +33,13 @@ class Admin::UsersController < ApplicationController
     else
         flash[:danger] = "グループ情報変更に失敗しました。再度やり直してください"
     end
-    redirect_to admin_users_path
+    redirect_to users_path
   end
 
   def destroy
     @user.destroy
       flash[:success] = "#{@user.name}さんのアカウントを削除しました"
-    redirect_to admin_users_path
+    redirect_to users_path
   end
 
 

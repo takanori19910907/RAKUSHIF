@@ -1,4 +1,4 @@
-class Api::V1::RequestedShiftsController < Api::V1::BaseController
+class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
   before_action :set_shiftdata, only: [:destroy]
 
   def index
