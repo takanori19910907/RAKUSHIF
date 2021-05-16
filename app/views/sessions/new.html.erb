@@ -1,6 +1,6 @@
 <p>下記項目に入力後、『ログイン』をクリックしてください</p>
 
-<%= form_with scope: :session, url: login_path do |f| %>
+<%= form_with scope: :session, url: login_path, local: true do |f| %>
 
     <%= f.label :ユーザーID %>
 
