@@ -44,6 +44,7 @@ const store = new Vuex.Store({
         day: payload.day
       })
     },
+    
     updateShift(state, payload) {
       state.shifts.splice([payload.shiftIdx], 1, {
         clockIn: payload.clockIn,
@@ -54,6 +55,7 @@ const store = new Vuex.Store({
         }
       )
     },
+
     deleteReqLists(state) {
       state.shifts = []
     },

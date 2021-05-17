@@ -13,12 +13,19 @@
           <th>希望出勤時間</th>
           <th>希望退勤時間</th>
         </tr>
-        <tr v-for="(item) in shifts" :key="item.id">
+        <tr v-for="(item, index) in shifts" :key="item.id">
           <td> {{ item.year }}年{{ item.month }}月{{ item.day }}日</td>
           <td> {{ item.clock_in }}</td>
           <td> {{ item.clock_out }}</td>
-          <button @click="updateShiftData(item.id)">修正</button>
+          <button @click="openModal(item, index)">修正</button>
           <button @click="removeShiftData(item.id)">×</button>
+          <modal v-show="showModal" @close="closeModal" 
+            :shiftIdx="shift.id"
+            @sendRequestedShift="updateTableShiftData"
+            >
+            <p slot="title">提出済みの希望シフト編集</p>
+            <p slot="subtitle">希望する時間を選んでください</p>
+          </modal>
         </tr>
       </tbody>
     </table>
@@ -33,10 +40,17 @@
 
 <script>
 import axios from 'axios';
+import Modal from 'components/Modal.vue'
 export default {
+  components: {
+    Modal
+  },
   data() {
     return {
-      shifts: {}
+      shifts: {},
+      shift: {},
+      dayNum: 0,
+      showModal: false
     };
   },
 
@@ -53,14 +67,40 @@ export default {
   },
 
   methods: {
+    // シフト提出用のモーダルを開く
+    openModal: function(data) {
+      this.shift = data
+      this.showModal = true
+    },
+    
+    // シフト提出用のモーダルを閉じる
+    closeModal: function() {
+      this.showModal = false
+    },
+
+    //modal-componentから帰ってきたシフト希望データを用いて希望シフトテーブルの値を更新する
+    updateTableShiftData: function(...data) {
+      axios.put('/api/v1/staff/requested_shifts/id', {
+        shiftData: {
+          clockIn: data[0],
+          clockOut: data[1],
+          id: data[2], 
+        }
+      })
+      .then(response => (this.shifts = response.data))
+      this.updateShifts();
+    },
+    //クリックで指定した希望データを希望シフトテーブルから削除する 
     removeShiftData: function(id) {
       if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
         axios.delete('/api/v1/staff/requested_shifts/id', {data: {id: id} } )
         this.updateShifts();
       }
     },
-    updateShiftData: function(id) {
-      axios.put('/api/v1/staff/requested_shifts/id', {data: {id: id} })
+
+    //controllerから再レンダリングされたときにテーブルのシフトデータを再描画する 
+    updateShifts: function() {
+      axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.user.id } })
       .then(response => (this.shifts = response.data))
     }
   }

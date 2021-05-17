@@ -33,9 +33,10 @@
     <modal v-show="showModal" @close="closeModal"
       :day="dayNum"
       :year="year"
-      :month="month">
+      :month="month"
+      @sendRequestedShift="addRequestedShift"
+      >
       <p slot="title">希望シフト新規作成</p>
-      <span slot="submit">登録</span>
       <p slot="subtitle">{{ year }}年{{ month }}月{{ dayNum }}日を選択しています</p>
     </modal>
   </div>
@@ -113,6 +114,17 @@ export default {
     // シフト提出用のモーダルを閉じる
     closeModal: function() {
       this.showModal = false
+    },
+
+    // modal-componentから返ってきたデータを用いて希望シフトを作成しLocalStorageに保存する
+    addRequestedShift: function(...data) {
+      this.$store.dispatch('addShift', {
+        clockIn: data[0],
+        clockOut: data[1],
+        year: this.year,
+        month: this.month,
+        day: this.dayNum
+        })
     }
   },
   computed: {
