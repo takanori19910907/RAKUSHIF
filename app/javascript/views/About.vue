@@ -53,16 +53,16 @@ export default {
   },
 
   methods: {
+    updateShiftData: function(id) {
+      axios.put('/api/v1/staff/requested_shifts/id', {data: {id: id} })
+      .then(response => (this.shifts = response.data))
+    },
     removeShiftData: function(id) {
       if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
         axios.delete('/api/v1/staff/requested_shifts/id', {data: {id: id} } )
         this.updateShifts();
       }
     },
-    updateShiftData: function(id) {
-      axios.put('/api/v1/staff/requested_shifts/id', {data: {id: id} })
-      .then(response => (this.shifts = response.data))
-    }
   }
 };
 </script>
