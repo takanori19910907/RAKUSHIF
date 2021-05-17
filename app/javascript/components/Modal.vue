@@ -3,18 +3,18 @@
 <template>
   <div id="overlay">
     <div id="modal">
-      {{ year }}年{{ month }}月{{ day }}日({{ shiftIdx }})
       <slot name="title"></slot>
       <slot name="subtitle"></slot>
       <form @submit.prevent="sendRequestedShift">
       <select v-model="selected1">
-        <option disabled value="">出勤希望時間</option>
+        <option disabled value="">希望出勤時間</option>
         <option v-for="clockIn in clockIns" v-bind:val="clockIn.time" v-bind:key="clockIn.id">
           {{ clockIn.time }}
         </option>
       </select>
+      <span>〜</span>
       <select v-model="selected2">
-        <option disabled value="">出勤希望時間</option>
+        <option disabled value="">希望退勤時間</option>
       <option v-for="clockOut in clockOuts" v-bind:val="clockOut.time" v-bind:key="clockOut.id">
           {{ clockOut.time }}
         </option>
@@ -67,31 +67,7 @@ export default {
                       )
       this.selected1= ""
       this.selected2= ""
-      }
-    },
-    
-    // addShift: function() {
-    //   this.$store.dispatch('addShift', {
-    //     clockIn: this.selected1,
-    //     clockOut: this.selected2,
-    //     year: this.year,
-    //     month: this.month,
-    //     day: this.day
-    //     })
-    //   this.selected1= ""
-    //   this.selected2= ""
-    // },
-
-    // updateShift: function() {
-    //   this.$store.dispatch('updateShift', {
-    //     shiftIdx: this.dayNum,
-    //     clockIn: this.selected1,
-    //     clockOut: this.selected2,
-    //     year: this.year,
-    //     month: this.month,
-    //     day: this.day
-    //   })
-    // }
-  // }
+    }
+  }
 }
 </script>
