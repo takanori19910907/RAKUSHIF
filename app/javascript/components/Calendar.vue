@@ -115,6 +115,8 @@ export default {
     closeModal: function() {
       this.showModal = false
     },
+
+    // modal-componentから返ってきたデータを用いて希望シフトを作成しLocalStorageに保存する
     addRequestedShift: function(...data) {
       this.$store.dispatch('addShift', {
         clockIn: data[0],

@@ -78,7 +78,8 @@ export default {
     closeModal: function() {
       this.showModal = false
     },
-    
+
+    //modal-componentから返ってきたデータを用いてLocalStorageの希望シフトデータを更新する 
     updateStorageShiftData: function(...data) {
       this.$store.dispatch('updateShift', {
         clockIn: data[0],
