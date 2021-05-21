@@ -45,8 +45,8 @@
 
 <script>
 import axios from 'axios';
-import Modal from '../components/Modal.vue'
-import Calendar from '../components/Calendar.vue';
+import Modal from '../../components/Modal.vue'
+import Calendar from '../../components/Calendar.vue';
 export default {
   components: {
     Modal,

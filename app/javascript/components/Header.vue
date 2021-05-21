@@ -2,8 +2,8 @@
 
 <template>
   <div>
-    <router-link to="/">希望シフト表</router-link>
-<router-link :to="{ name : 'about', params : { id: user.id }}">提出済み希望シフト一覧</router-link>
+    <router-link to="/staff/requested_shifts/">希望シフト表</router-link>
+    <router-link :to="{ name : 'RequestedShiftsDetail', params : { id: user.id }}">提出済み希望シフト一覧</router-link>
   </div>
 </template>
 <script>
