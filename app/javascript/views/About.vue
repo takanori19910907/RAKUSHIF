@@ -14,9 +14,9 @@
           <th>希望退勤時間</th>
         </tr>
         <tr v-for="(item, index) in shifts" :key="item.id">
-          <td> {{ item.year }}年{{ item.month }}月{{ item.day }}日</td>
-          <td> {{ item.clock_in }}</td>
-          <td> {{ item.clock_out }}</td>
+          <td> {{ formattedYear(item.clock_in) }}年{{ formattedMonth(item.clock_in) }}月{{ formattedDay(item.clock_in) }}日</td>
+          <td> {{ formattedclockInHour(item.clock_in) }}時 {{ formattedclockInMinute(item.clock_in) }}分</td>
+          <td> {{ formattedclockOutHour(item.clock_out) }}時 {{ formattedclockOutMinute(item.clock_out) }}分</td>
           <button @click="openModal(item, index)">修正</button>
           <button @click="removeShiftData(item.id)">×</button>
           <modal v-show="showModal" @close="closeModal" 
@@ -33,13 +33,13 @@
     <div v-else>
       <p>シフト希望がありません</p>
       <p>シフト希望表ページからシフト希望を提出してください</p>
-
     </div>
   </section>
 </template>
 
 <script>
 import axios from 'axios';
+import dayjs from 'dayjs';
 import Modal from 'components/Modal.vue'
 export default {
   components: {
@@ -66,6 +66,44 @@ export default {
   .then(response => (this.shifts = response.data))
   },
 
+  computed: {
+    formattedYear: function () {
+      return function(value) {
+        return dayjs(value).year();
+      }
+    },
+    formattedMonth: function () {
+      return function(value) {
+        return dayjs(value).month() + 1 ;
+      }
+    },
+    formattedDay: function () {
+      return function(value) {
+        return dayjs(value).date();
+      }
+    },
+    formattedclockInHour: function() {
+      return function(value) {
+        return dayjs(value).hour();
+      }
+    },
+    formattedclockInMinute: function() {
+      return function(value) {
+        return dayjs(value).minute();
+      }
+    },
+    formattedclockOutHour: function() {
+      return function(value) {
+        return dayjs(value).hour();
+      }
+    },
+    formattedclockOutMinute: function() {
+      return function(value) {
+        return dayjs(value).minute();
+      }
+    },
+  },
+
   methods: {
     // シフト提出用のモーダルを開く
     openModal: function(data) {
@@ -80,7 +118,7 @@ export default {
 
     //modal-componentから帰ってきたシフト希望データを用いて希望シフトテーブルの値を更新する
     updateTableShiftData: function(...data) {
-      axios.put('/api/v1/staff/requested_shifts/id', {
+      axios.patch('/api/v1/staff/requested_shifts/id', {
         shiftData: {
           clockIn: data[0],
           clockOut: data[1],
@@ -88,8 +126,10 @@ export default {
         }
       })
       .then(response => (this.shifts = response.data))
+      console.log(this.shifts)
       this.updateShifts();
     },
+    
     //クリックで指定した希望データを希望シフトテーブルから削除する 
     removeShiftData: function(id) {
       if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
@@ -102,7 +142,8 @@ export default {
     updateShifts: function() {
       axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.user.id } })
       .then(response => (this.shifts = response.data))
-    }
+      console.log(this.shifts)
+    },
   }
 };
 </script>
