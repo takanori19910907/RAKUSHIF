@@ -31,7 +31,6 @@ class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
 
   def destroy    
     shift = @current_user.requested_shifts.find_by(id: params[:requested_shift][:id])
-    # binding.pry
     shift.destroy
     redirect_to top_users_path
     head :no_content
