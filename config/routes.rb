@@ -1,37 +1,12 @@
 Rails.application.routes.draw do
-  root "homes#top"
-  # namespace :admin do
-  #   resources :requested_shifts
-  #   resources :fixed_shifts
-  #   resources :users do
-  #     collection do
-  #       get :top
-  #     end
-  #   end
-  # end
-  
-  # namespace :staff do
-  #   resources :requested_shifts
-  #   resources :fixed_shifts
-  #   resources :users do
-  #     collection do
-  #       get :top
-  #     end
-  #   end
-  # end
 
-  # namespace :api, {format: 'json'} do
-  #   namespace :v1 do
-  #     resources :users, only: [:index, :show]
-  #     resources :requested_shifts, only: [:index, :create, :show, :update, :destroy]
-  #   end
-  # end
+  root "homes#top"
   
-    resources :users do
-      collection do
-        get :top
-      end
+  resources :users do
+    collection do
+      get :top
     end
+  end
 
   namespace :api, {format: 'json'} do
     namespace :v1 do
