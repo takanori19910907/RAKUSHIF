@@ -60,10 +60,14 @@ export default {
       }
     },
     
-  mounted () {
+  mounted() {
     axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.user.id }
 })
   .then(response => (this.shifts = response.data))
+  },
+
+  updated()  {
+    this.updateShifts();
   },
 
   computed: {
@@ -72,36 +76,42 @@ export default {
         return dayjs(value).year();
       }
     },
+
     formattedMonth: function () {
       return function(value) {
         return dayjs(value).month() + 1 ;
       }
     },
+
     formattedDay: function () {
       return function(value) {
         return dayjs(value).date();
       }
     },
+
     formattedclockInHour: function() {
       return function(value) {
         return dayjs(value).hour();
       }
     },
+
     formattedclockInMinute: function() {
       return function(value) {
         return dayjs(value).minute();
       }
     },
+
     formattedclockOutHour: function() {
       return function(value) {
         return dayjs(value).hour();
       }
     },
+
     formattedclockOutMinute: function() {
       return function(value) {
         return dayjs(value).minute();
       }
-    },
+    }
   },
 
   methods: {
@@ -126,15 +136,12 @@ export default {
         }
       })
       .then(response => (this.shifts = response.data))
-      console.log(this.shifts)
-      this.updateShifts();
     },
     
     //クリックで指定した希望データを希望シフトテーブルから削除する 
     removeShiftData: function(id) {
       if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
         axios.delete('/api/v1/staff/requested_shifts/id', {data: {id: id} } )
-        this.updateShifts();
       }
     },
 
@@ -142,7 +149,6 @@ export default {
     updateShifts: function() {
       axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.user.id } })
       .then(response => (this.shifts = response.data))
-      console.log(this.shifts)
     },
   }
 };
