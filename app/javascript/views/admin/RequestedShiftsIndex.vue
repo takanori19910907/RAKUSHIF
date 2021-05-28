@@ -10,12 +10,14 @@
         <tbody>
           <tr>
             <th>氏名</th>
+            <th>年齢</th>
             <th>勤務ステータス</th>
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
           <tr v-for="data in ShiftData" :key="data.id" >
             <td><userName :key="data.id" :userName="data.user.name" ></userName></td>
+            <td><userAge :key="data.id" :userAge="data.user.age" ></userAge></td>
             <td><userWorkStatus :key="data.id" :userData="data.user" ></userWorkStatus></td>
             <td><requestedClockInTime :key="data.id" :clockInTime="data.clock_in" ></requestedClockInTime></td>
             <td><requestedClockOutTime :key="data.id" :clockOutTime="data.clock_out" ></requestedClockOutTime></td>
@@ -35,8 +37,9 @@
 
 <script>
 import axios from 'axios';
-import Calendar from '../../components/FixedShiftsCalendar.vue';
+import Calendar from '../../components/FixedShiftsCalendar.vue'
 import UserName from '../../components/UserName.vue'
+import UserAge from '../../components/UserAge.vue'
 import UserWorkStatus from '../../components/UserWorkStatus.vue'
 import RequestedClockInTime from '../../components/RequestedClockInTime.vue'
 import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
@@ -44,6 +47,7 @@ export default {
   components: {
     Calendar,
     UserName,
+    UserAge,
     UserWorkStatus,
     RequestedClockInTime,
     RequestedClockOutTime
@@ -52,7 +56,7 @@ export default {
   data() {
     return{
         shiftData: {},
-        userinfo: {}
+        userData: {}
     }
   },
 
@@ -64,59 +68,30 @@ export default {
 
   created() {
     axios
-      .get('/api/v1/admin/requested_shifts.json')
-      .then(response => (this.userinfo = response.data))
+      .get('/api/v1/admin/users')
+      .then(response => (this.userData = response.data))
   },
 
   computed: {
     ShiftData: function() {
       return this.shiftData.map(shift => {
-        var user = this.userinfo.find(function(user){
+        var user = this.userData.find(function(user){
         return user.id === shift.user_id
         })
         return {
           ...shift,
           user: user
         }
-              // console.log(result)
       })
-      // return this.shiftData.map(shift => {
-        // console.log(this.userinfo)
-        // user = this.userinfo.find(user => user.id === shift.user_id)        
-        // return {
-          // ...shift,
-          // user: user
-        // }
-      // })
     },
   },
-
-  // computed: {
-    // userData: function(value) {
-    //   // return function(value) {
-    //     return this.userinfo.filter(
-    //       function (item) {
-    //           return item.id === value
-    //     })
-      // }
-    // }
-  // },
 
   methods: {
     showShifts: function(value) {
       axios
-        .get('/api/v1/admin/requested_shifts/id', { params: { year: value.year, month: value.month, date: value.date }})
+        .get('/api/v1/admin/requested_shifts', { params: { year: value.year, month: value.month, date: value.date }})
         .then(response => (this.shiftData = response.data))
-    },
-
-    // userData: function(value) {
-      // return function(value) {
-        // return this.userinfo.filter(
-        //   function (item) {
-        //       return item.id === value
-        // })
-      // }
-    // }
+    }
   }
 }
 </script>

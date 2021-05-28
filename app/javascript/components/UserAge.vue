@@ -1,13 +1,13 @@
 <template>
   <div>
-    <p>{{ userName }}さん</p>
+    <p>{{ userAge }}歳</p>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    userName: String 
+    userAge: Number
   }
 }
 </script>
