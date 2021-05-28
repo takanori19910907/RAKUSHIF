@@ -2,103 +2,121 @@
 
 <template>
   <div>
-    <calendar />
+    <calendar @sendDate="showShifts"/>
     <h2>みんなの希望シフト一覧</h2>
-    <div v-if="shifts.length">
+    <div v-if="shiftData.length">
       <hr>
       <table>
         <tbody>
           <tr>
             <th>氏名</th>
+            <th>勤務ステータス</th>
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(item, index) in shifts" :key="item.id">
-            <td>たかのりさん</td>
-            <td> {{ item.clockIn }} </td>
-            <td> {{ item.clockOut }} </td>
-            <button @click="openModal(item,index)">修正</button>
-            <button @click="removeStorageShiftData(index)">×</button>
-            <modal v-show="showModal" @close="closeModal" 
-            :year="shift.year"
-            :month="shift.month"
-            :day="shift.day"
-            :shiftIdx="dayNum"
-            @sendRequestedShift="updateStorageShiftData"
-            >
-            <p slot="title">希望シフト編集</p>
-            <p slot="subtitle">{{ item.year }}年{{ item.month }}月{{ item.day }}日の希望時間を変更します</p>
-            </modal>
+          <tr v-for="data in ShiftData" :key="data.id" >
+            <td><userName :key="data.id" :userName="data.user.name" ></userName></td>
+            <td><userWorkStatus :key="data.id" :userData="data.user" ></userWorkStatus></td>
+            <td><requestedClockInTime :key="data.id" :clockInTime="data.clock_in" ></requestedClockInTime></td>
+            <td><requestedClockOutTime :key="data.id" :clockOutTime="data.clock_out" ></requestedClockOutTime></td>
+            <button>修正</button>
+            <button>×</button>
           </tr>
         </tbody>
       </table>
-      <button @click="postshifts">シフトを提出</button>
+      <button>シフト確定</button>
     </div>
     
     <div v-else>
-      <p>現在ストックされている希望シフトはありません</p>
+      <p>提出されている希望シフトはありません</p>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import Calendar from '../../components/Calendar.vue';
+import Calendar from '../../components/FixedShiftsCalendar.vue';
+import UserName from '../../components/UserName.vue'
+import UserWorkStatus from '../../components/UserWorkStatus.vue'
+import RequestedClockInTime from '../../components/RequestedClockInTime.vue'
+import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
 export default {
   components: {
     Calendar,
+    UserName,
+    UserWorkStatus,
+    RequestedClockInTime,
+    RequestedClockOutTime
   },
 
   data() {
     return{
-        showModal: false,
-        shift: [],
-        dayNum: 0
+        shiftData: {},
+        userinfo: {}
     }
   },
+
   props: {
     shifts: {
-      type: Array
+      Type: Array
     }
   },
 
-  methods: {
-    // シフト提出用のモーダルを開く
-    openModal: function(data, index) {
-      this.shift = data
-      this.dayNum = index
-      this.showModal = true
-    },
-    
-    // シフト提出用のモーダルを閉じる
-    closeModal: function() {
-      this.showModal = false
-    },
+  created() {
+    axios
+      .get('/api/v1/admin/requested_shifts.json')
+      .then(response => (this.userinfo = response.data))
+  },
 
-    //modal-componentから返ってきたデータを用いてLocalStorageの希望シフトデータを更新する 
-    updateStorageShiftData: function(...data) {
-      this.$store.dispatch('updateShift', {
-        clockIn: data[0],
-        clockOut: data[1],
-        shiftIdx: data[2],
-        year: data[3],
-        month: data[4],
-        day: data[5],
+  computed: {
+    ShiftData: function() {
+      return this.shiftData.map(shift => {
+        var user = this.userinfo.find(function(user){
+        return user.id === shift.user_id
+        })
+        return {
+          ...shift,
+          user: user
+        }
+              // console.log(result)
       })
+      // return this.shiftData.map(shift => {
+        // console.log(this.userinfo)
+        // user = this.userinfo.find(user => user.id === shift.user_id)        
+        // return {
+          // ...shift,
+          // user: user
+        // }
+      // })
+    },
+  },
+
+  // computed: {
+    // userData: function(value) {
+    //   // return function(value) {
+    //     return this.userinfo.filter(
+    //       function (item) {
+    //           return item.id === value
+    //     })
+      // }
+    // }
+  // },
+
+  methods: {
+    showShifts: function(value) {
+      axios
+        .get('/api/v1/admin/requested_shifts/id', { params: { year: value.year, month: value.month, date: value.date }})
+        .then(response => (this.shiftData = response.data))
     },
 
-    // modalで入力しlocalStorageに一時保存されている希望データを
-    // ①requestedShift_controllerにpostしテーブルに保存
-    // ②localStorageのデータを削除
-    postshifts: function() {
-      if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
-      axios.post('/api/v1/staff/requested_shifts', {shifts: this.shifts })
-      this.$store.dispatch('deleteReqLists')   
-      }
-    },
-    removeStorageShiftData: function(shiftIdx) {
-      this.$store.dispatch("removeStorageShiftData", {shiftIdx: shiftIdx})
-    }
+    // userData: function(value) {
+      // return function(value) {
+        // return this.userinfo.filter(
+        //   function (item) {
+        //       return item.id === value
+        // })
+      // }
+    // }
   }
 }
 </script>
