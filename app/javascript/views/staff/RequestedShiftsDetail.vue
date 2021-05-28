@@ -2,7 +2,6 @@
 
 <template>
   <section id="about">
-    <p>ユーザー名: {{ user.name }}さん</p>
     <h3>提出済みのシフト一覧</h3>
     <div v-if="shifts.length">
     <hr>
@@ -55,13 +54,13 @@ export default {
   },
 
   props: {
-      user: {
-        type: Object
+      userID: {
+        type: Number
       }
     },
     
   mounted() {
-    axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.user.id }
+    axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.userID }
 })
   .then(response => (this.shifts = response.data))
   },
@@ -147,7 +146,7 @@ export default {
 
     //controllerから再レンダリングされたときにテーブルのシフトデータを再描画する 
     updateShifts: function() {
-      axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.user.id } })
+      axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.userID } })
       .then(response => (this.shifts = response.data))
     },
   }

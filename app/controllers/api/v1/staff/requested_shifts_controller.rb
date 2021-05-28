@@ -1,8 +1,6 @@
 class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
 
   def index
-    user = current_user
-    render json: user
   end
 
   def show

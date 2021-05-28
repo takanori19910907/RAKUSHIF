@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Header :user="userData"></Header>
-      <router-view :user="userData" :shifts="shifts"></router-view>
+    <Header :userID="userID"></Header>
+      <router-view :userID="userID" :shifts="shifts"></router-view>
   </div>
 </template>
 <script>
@@ -14,13 +14,13 @@
     },
     data: function() {
       return {
-        userData: {}
+        userID: 0
       };
     },
     mounted () {
       axios
-        .get('/api/v1/staff/requested_shifts.json')
-        .then(response => (this.userData = response.data))
+        .get('/api/v1/staff/users')
+        .then(response => (this.userID = response.data))
     },
 
     computed: {
@@ -30,6 +30,3 @@
     },
   };
 </script>
-
-<style scoped>
-</style>
