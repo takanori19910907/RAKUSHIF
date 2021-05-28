@@ -45,8 +45,8 @@
 
 <script>
 import axios from 'axios';
-import Modal from '../../components/Modal.vue'
-import Calendar from '../../components/Calendar.vue';
+import Modal from 'components/Modal.vue'
+import Calendar from 'components/RequestedShiftsCalendar.vue';
 export default {
   components: {
     Modal,
@@ -60,6 +60,7 @@ export default {
         dayNum: 0
     }
   },
+
   props: {
     shifts: {
       type: Array
@@ -97,7 +98,7 @@ export default {
     postshifts: function() {
       if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
       axios.post('/api/v1/staff/requested_shifts', {shifts: this.shifts })
-      this.$store.dispatch('deleteReqLists')   
+      this.$store.dispatch('deleteReqLists')
       }
     },
     removeStorageShiftData: function(shiftIdx) {
