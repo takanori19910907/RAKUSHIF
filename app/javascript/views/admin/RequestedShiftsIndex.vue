@@ -2,8 +2,9 @@
 
 <template>
   <div>
-    <calendar @sendDate="showShifts"/>
+    <calendar @sendDate="checkShifts"/>
     <h2>みんなの希望シフト一覧</h2>
+    {{ this.$store.state.fixedShifts }}
     <div v-if="shiftData.length">
       <hr>
       <table>
@@ -37,6 +38,7 @@
 
 <script>
 import axios from 'axios';
+import dayjs from 'dayjs';
 import Calendar from '../../components/FixedShiftsCalendar.vue'
 import UserName from '../../components/UserName.vue'
 import UserAge from '../../components/UserAge.vue'
@@ -60,11 +62,11 @@ export default {
     }
   },
 
-  props: {
-    shifts: {
-      Type: Array
-    }
-  },
+  // props: {
+  //   shifts: {
+  //     Type: Array
+  //   }
+  // },
 
   created() {
     axios
@@ -87,10 +89,25 @@ export default {
   },
 
   methods: {
-    showShifts: function(value) {
-      axios
+  // stateに入っているfixedShftsから１つずつ要素を取り出して中身を確認
+  //   ①check_in(出勤希望時間)のみ取り出してshiftsとして配列にまとめる
+  //   ②カレンダーcomponentsで指定した日情報の要素がshiftsに含まれるかを確認
+  //   falseの場合のみ③に進む
+  //   ③axios.getでその日情報の入った希望シフトを全て取得する
+    checkShifts: function(value) {
+      var shifts = this.$store.state.fixedShifts.map(shift => {
+        var item = dayjs(shift[0].clock_in).format('DD/MM/YYYY')
+          return item
+      })
+      var calendar = dayjs(value.year + '-' + value.month + '-' + value.date).format('DD/MM/YYYY')
+      var res = shifts.includes(calendar)
+      console.log(shifts)
+      if(!res) {
+        axios
         .get('/api/v1/admin/requested_shifts', { params: { year: value.year, month: value.month, date: value.date }})
         .then(response => (this.shiftData = response.data))
+        this.$store.dispatch('fixedShifts', this.shiftData)
+      }
     }
   }
 }
