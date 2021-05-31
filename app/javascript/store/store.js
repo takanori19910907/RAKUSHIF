@@ -15,6 +15,15 @@ const store = new Vuex.Store({
       clockOut: "17:00"      
       },
     ],
+      fixedShifts: savedLists ? JSON.parse(savedLists) : [
+      {
+        year: 2099,
+        month: 6,
+        day: 2,
+        clockIn: "12:00",
+        clockOut: "17:00"
+      },
+    ]
   },
 
   getters: {},
@@ -31,7 +40,10 @@ const store = new Vuex.Store({
     },
     removeStorageShiftData(context, payload) {
       context.commit('removeStorageShiftData', payload)
-    }
+    },
+    fixedShifts(context, payload) {
+      context.commit('fixedShifts', payload)
+    },
   },
 
   mutations: {
@@ -61,6 +73,11 @@ const store = new Vuex.Store({
     },
     removeStorageShiftData(state, payload) {
       state.shifts.splice(payload.shiftIdx, 1)
+    },
+    fixedShifts(state, payload) {
+      if (payload.length) {
+        state.fixedShifts.push(payload)
+      }
     }
   },
 })
