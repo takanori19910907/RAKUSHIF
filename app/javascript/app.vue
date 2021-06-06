@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header :userID="userID"></Header>
-      <router-view :userID="userID" :shifts="shifts"></router-view>
+      <router-view :userID="userID" :shifts="shifts" :shiftData="fixedShifts"></router-view>
   </div>
 </template>
 <script>
@@ -25,7 +25,8 @@
 
     computed: {
       ...mapState([
-      'shifts'
+      'shifts',
+      'fixedShifts'
       ]),
     },
   };
