@@ -50,11 +50,13 @@ const store = new Vuex.Store({
           user: user
         }
       })
-    }
-
+    },
   },
 
+　
+
   actions: {
+    // ユーザーが使うシフト関連機能
     addShift(context, payload) {
       context.commit('addShift', payload)
     },
@@ -67,15 +69,20 @@ const store = new Vuex.Store({
     removeStorageShiftData(context, payload) {
       context.commit('removeStorageShiftData', payload)
     },
+    // 管理者が使うシフト関連機能
     fixedShifts(context, payload) {
       context.commit('fixedShifts', payload)
     },
     destroyShift(context, payload) {
       context.commit('destroyShift', payload)
+    },
+    updateItemInShiftData(context, payload) {
+      context.commit('updateItemInShiftData', payload)
     }
   },
 
   mutations: {
+    // ユーザーが使うシフト関連機能
     addShift(state, payload) {
       state.shifts.push({
         clockIn: payload.clockIn,
@@ -104,18 +111,40 @@ const store = new Vuex.Store({
     removeStorageShiftData(state, payload) {
       state.shifts.splice(payload.shiftIdx, 1)
     },
-
+    
+    // ユーザーが使うシフト関連機能
     fixedShifts(state, payload) {
       state.fixedShifts.push(payload)
     },
 
     destroyShift(state, payload) {
-
       for (var i = 0; i < state.fixedShifts.length; i++) {
         if (payload === state.fixedShifts[i].id) {
           state.fixedShifts.splice(i, 1);
         }
       }
+    },
+    updateItemInShiftData(state, payload) {
+      var shift = state.fixedShifts[payload.arrayIdx]
+      shift.clock_in = `${payload.year}-${payload.month}-${payload.date} ${payload.clockIn}:00`
+      shift.clock_out =  `${payload.year}-${payload.month}-${payload.date} ${payload.clockOut}:00`
+      
+      // var result = state.fixedShifts.find((payload) => {
+    // console.log(`val=${val}, idx=${idx}, obj=${obj}`);
+    // return 30 <= val;
+      // state.shifts.splice([payload.shiftIdx], 1, {
+      //   clockIn: payload.clockIn,
+      //   clockOut: payload.clockOut
+      // }
+      // )
+      // console.log('test')
+      // for (var i = 0; i < state.fixedShifts.length; i++) {
+      //   if (payload.shiftIdx === state.fixedShifts[i].id) {
+      //     state.fixedShifts.splice(payload.shiftIdx, 1)
+      //   } 
+      // }
+      // console.log(shift)
+      // state.fixedShifts.push(shift)
     },
   }
 })

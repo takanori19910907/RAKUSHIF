@@ -15,24 +15,25 @@
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="data in getShiftData" :key="data.id" >
+          <tr v-for="(data, index) in getShiftData" :key="data.id" >
             <td><userName :key="data.id" :userName="data.user.name" ></userName></td>
             <td><userAge :key="data.id" :userAge="data.user.age" ></userAge></td>
             <td><userWorkStatus :key="data.id" :userData="data.user" ></userWorkStatus></td>
             <td><requestedClockInTime :key="data.id" :clockInTime="data.clock_in" ></requestedClockInTime></td>
             <td><requestedClockOutTime :key="data.id" :clockOutTime="data.clock_out" ></requestedClockOutTime></td>
-            <!-- <button @click="openModal">修正</button> -->
+            <button @click="openModal(data, index)">修正</button>
             <button @click="deleteItemInShiftData(data.id)">×</button>
-            <!-- <modal v-show="showModal" @close="closeModal" 
-            :year="shift.year"
-            :month="shift.month"
-            :day="shift.day"
-            :shiftIdx="dayNum"
-            @sendRequestedShift="updateStorageShiftData" -->
-            <!-- > -->
-            <!-- <p slot="title">希望シフト編集</p>
-            <p slot="subtitle">{{ item.year }}年{{ item.month }}月{{ item.day }}日の希望時間を変更します</p>
-            </modal> -->
+            <fixedShiftsModal v-if="showModal" @close="closeModal" 
+              :key="data.id"
+              :year="year"
+              :month="month"
+              :day="date"
+              :shift="checkedShift"
+              :shiftIdx="data.id"
+              :arrayIdx="arrayIdx"
+              @sendUpdateData="updateItemInShiftData"
+              >
+            </fixedShiftsModal>
           </tr>
         </tbody>
       </table>
@@ -49,6 +50,7 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Calendar from '../../components/FixedShiftsCalendar.vue'
+import FixedShiftsModal from '../../components/FixedShiftsModal.vue'
 import UserName from '../../components/UserName.vue'
 import UserAge from '../../components/UserAge.vue'
 import UserWorkStatus from '../../components/UserWorkStatus.vue'
@@ -57,6 +59,7 @@ import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
 export default {
   components: {
     Calendar,
+    FixedShiftsModal,
     UserName,
     UserAge,
     UserWorkStatus,
@@ -71,7 +74,9 @@ export default {
         year: 2021,
         month: 6,
         date: 5,
-        showModal: false
+        checkedShift: {},
+        showModal: false,
+        arrayIdx: 0
     }
   },
 
@@ -97,6 +102,7 @@ export default {
 
   methods: {
   checkShifts: function(value) {
+      // console.log(1);
       this.year = value.year
       this.month = value.month
       this.date = value.date
@@ -105,32 +111,50 @@ export default {
       })
       var calendarDate = dayjs(value.year + '-' + value.month + '-' + value.date).format('DD/MM/YYYY')
       if(!shiftsDate.includes(calendarDate)) {
+        // console.log(2);
         axios
         .get('/api/v1/admin/requested_shifts', { params: { year: value.year, month: value.month, date: value.date }})
         .then(response => {
           this.shiftData = response.data
           if(!!this.shiftData.length){
+        // console.log(3);
             for( var i = 0; i < this.shiftData.length; i++ )
             this.$store.dispatch('fixedShifts', this.shiftData[i])
             }
           })
+      } else {
+        // console.log(4);
+        return this.$store.state.fixedShifts
       }
     },
-    // openModal: function() {
-    //   this.showModal = true
-    // },
+    openModal: function(value, index) {
+      this.arrayIdx = index
+      this.checkedShift = value
+      this.showModal = true
+    },
     
-    // closeModal: function() {
-    //   this.showModal = false
-    // },
+    closeModal: function() {
+      this.showModal = false
+    },
 
-    // updateItemInShiftData: function(itemID) {
-    
-    // },
+    updateItemInShiftData: function(value) {
+      this.showModal = false
+      this.$store.dispatch('updateItemInShiftData', value )
+
+    },
 
     deleteItemInShiftData: function(itemID) {
       this.$store.dispatch("destroyShift", itemID)
-    }
+    },
+
+    formattedclockIn: function(clockIn) {
+      console.log(clockIn)
+        return dayjs(clockIn).format('HH:mm');
+    },
+
+    formattedclockOut: function(clockIn) {
+        return dayjs(clockIn).format('HH:mm');
+    },
   }
 }
 </script>
