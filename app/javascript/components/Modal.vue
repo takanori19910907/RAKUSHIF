@@ -19,8 +19,9 @@
           {{ clockOut.time }}
         </option>
       </select>
-        <p>出勤:{{ selected1 }}</p>
-        <p>退勤:{{ selected2 }}</p>
+        <p>出勤 : {{ selected1 }}</p>
+        <p>退勤 : {{ selected2 }}</p>
+        <slot name="footer-messages"></slot>
         <button  type="submit" @click.self="$emit('close')" >完了</button>
       </form>
       <button @click="$emit('close')">閉じる</button>
