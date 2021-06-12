@@ -17,7 +17,7 @@
           <td> {{ formattedclockInHour(item.clock_in) }}時 {{ formattedclockInMinute(item.clock_in) }}分</td>
           <td> {{ formattedclockOutHour(item.clock_out) }}時 {{ formattedclockOutMinute(item.clock_out) }}分</td>
           <button @click="openModal(item, index)">修正</button>
-          <button @click="removeShiftData(item.id)">×</button>
+          <button @click="removeShiftData(item.id, index)">×</button>
           <modal v-show="showModal" @close="closeModal" 
             :shiftIdx="shift.id"
             @sendRequestedShift="updateTableShiftData"
@@ -44,6 +44,8 @@ export default {
   components: {
     Modal
   },
+
+  
   data() {
     return {
       shifts: {},
@@ -53,20 +55,14 @@ export default {
     };
   },
 
-  props: {
-      userID: {
-        type: Number
-      }
-    },
+  props: [
+    'userID'
+  ],
     
-  mounted() {
+  created() {
     axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.userID }
 })
   .then(response => (this.shifts = response.data))
-  },
-
-  updated()  {
-    this.updateShifts();
   },
 
   computed: {
@@ -138,17 +134,18 @@ export default {
     },
     
     //クリックで指定した希望データを希望シフトテーブルから削除する 
-    removeShiftData: function(id) {
+    removeShiftData: function(id, index) {
       if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
+        this.shifts.splice(index, 1)
         axios.delete('/api/v1/staff/requested_shifts/id', {data: {id: id} } )
       }
     },
 
     //controllerから再レンダリングされたときにテーブルのシフトデータを再描画する 
-    updateShifts: function() {
-      axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.userID } })
-      .then(response => (this.shifts = response.data))
-    },
+    // updateShifts: function() {
+    //   axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.userID } })
+    //   .then(response => (this.shifts = response.data))
+    // },
   }
 };
 </script>

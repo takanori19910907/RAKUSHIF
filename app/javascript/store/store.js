@@ -1,30 +1,21 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
 import dayjs from 'dayjs';
 
 Vue.use(Vuex);
 const savedLists = localStorage.getItem('req-shifts')
 const store = new Vuex.Store({
   state: {
-    shifts: savedLists ? JSON.parse(savedLists) : [
-      // ユーザーID、希望日時をlocalStorageに保存
-      {
-        year: 2021,
-        month: 5,
-        day: 2,
-      clockIn: "12:00",
-      clockOut: "17:00"      
-      },
-    ],
-      fixedShifts: savedLists ? JSON.parse(savedLists) : [
-      {
-        year: 2099,
-        month: 6,
-        day: 2,
-        clockIn: "12:00",
-        clockOut: "17:00"
-      },
-    ]
+    // requestedShifts => 希望シフト
+    // RequestedShifts-componentからdispatchされたデータを格納
+    shifts: savedLists ? JSON.parse(savedLists) : [{}],
+
+    myShifts: savedLists ? JSON.parse(savedLists) : [{}],
+
+    // fixedShifts => 編集中シフト
+    // FixedShiftIndex-componentでDBから取得したデータを格納
+    fixedShifts: savedLists ? JSON.parse(savedLists) : [{}]
   },
 
   getters: {
@@ -53,8 +44,6 @@ const store = new Vuex.Store({
     },
   },
 
-　
-
   actions: {
     // ユーザーが使うシフト関連機能
     addShift(context, payload) {
@@ -78,6 +67,15 @@ const store = new Vuex.Store({
     },
     updateItemInShiftData(context, payload) {
       context.commit('updateItemInShiftData', payload)
+    },
+
+    getMyShifts(context, payload) {
+      axios
+      .get('/api/v1/staff/requested_shifts/id')
+      .then(response => {
+        var shifts = response.data
+        context.commit('getMyShifts', shifts)
+      })
     }
   },
 
@@ -94,6 +92,7 @@ const store = new Vuex.Store({
     },
     
     updateShift(state, payload) {
+      console.log(payload)
       state.shifts.splice([payload.shiftIdx], 1, {
         clockIn: payload.clockIn,
         clockOut: payload.clockOut,
@@ -128,24 +127,11 @@ const store = new Vuex.Store({
       var shift = state.fixedShifts[payload.arrayIdx]
       shift.clock_in = `${payload.year}-${payload.month}-${payload.date} ${payload.clockIn}:00`
       shift.clock_out =  `${payload.year}-${payload.month}-${payload.date} ${payload.clockOut}:00`
-      
-      // var result = state.fixedShifts.find((payload) => {
-    // console.log(`val=${val}, idx=${idx}, obj=${obj}`);
-    // return 30 <= val;
-      // state.shifts.splice([payload.shiftIdx], 1, {
-      //   clockIn: payload.clockIn,
-      //   clockOut: payload.clockOut
-      // }
-      // )
-      // console.log('test')
-      // for (var i = 0; i < state.fixedShifts.length; i++) {
-      //   if (payload.shiftIdx === state.fixedShifts[i].id) {
-      //     state.fixedShifts.splice(payload.shiftIdx, 1)
-      //   } 
-      // }
-      // console.log(shift)
-      // state.fixedShifts.push(shift)
     },
+
+    getMyShifts(state, shifts) {
+      state.myShifts = shifts
+    }
   }
 })
 

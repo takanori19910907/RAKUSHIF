@@ -1,17 +1,15 @@
 
 <% if @current_user.admin %>
 
-  <p>管理者トップ</p>
-
   <p>アカウント名: <%= @current_user.name %>さん</p>
+  
+  <%= render 'shared/header'  %>
 
 <div id="app"></div>
 
   <%= javascript_pack_tag "app_vue" %>
 
 <% else %>
-
-  <p>ユーザートップ</p>
 
   <p>アカウント名: <%= @current_user.name %>さん</p>
 

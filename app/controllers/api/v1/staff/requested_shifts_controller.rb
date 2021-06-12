@@ -23,7 +23,10 @@ class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
 
   def update
     shift = current_user.requested_shifts.find_by(id: params[:shiftData][:id])
-    shift.update(clock_in: params[:shiftData][:clockIn],clock_out: params[:shiftData][:clockOut])
+    shift.update(
+      clock_in: "#{params[:shiftData][:year]}-#{params[:shiftData][:month]}-#{params[:shiftData][:date]} #{params[:shiftData][:clockIn]}:00",
+      clock_out: "#{params[:shiftData][:year]}-#{params[:shiftData][:month]}-#{params[:shiftData][:date]} #{params[:shiftData][:clockOut]}:00",
+    )
     head :no_content
   end
 

@@ -4,6 +4,7 @@ Vue.use(Router);
 import RequestedShifts from "../views/staff/RequestedShifts.vue";
 import RequestedShiftsDetail from "../views/staff/RequestedShiftsDetail.vue";
 import RequestedShiftsIndex from "../views/admin/RequestedShiftsIndex.vue";
+import FixedShiftsIndex from "../views/admin/FixedShiftsIndex.vue";
 const router = new Router({
   routes: [
     {
@@ -19,8 +20,15 @@ const router = new Router({
 
     {
       path: "/admin/requested_shifts/",
+      name: 'RequestedShiftsIndex',
       component: RequestedShiftsIndex,
     },
+
+    {
+      path: "/admin/fixed_shifts/",
+      name: 'FixedShiftsIndex',
+      component: FixedShiftsIndex,
+    }
 
   ],
 });

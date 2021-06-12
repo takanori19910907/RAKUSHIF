@@ -1,11 +1,9 @@
-<!-- 希望シフト提出用ページ -->
-
 <template>
   <div>
-    <calendar @sendDate="checkShifts"/>
-    <h2>みんなの希望シフト一覧</h2>
+    <calendar @sendDate="checkShifts"></calendar>
+    <h1>確定シフト一覧</h1>
     <div v-if="shiftData.length">
-      <hr>
+    <hr>
       <table>
         <tbody>
           <tr>
@@ -15,7 +13,7 @@
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(data, index) in getShiftData" :key="data.id" >
+          <tr v-for="(data, index) in getShiftData()" :key="data.id" >
             <td><userName :key="data.id" :userName="data.user.name" ></userName></td>
             <td><userAge :key="data.id" :userAge="data.user.age" ></userAge></td>
             <td><userWorkStatus :key="data.id" :userData="data.user" ></userWorkStatus></td>
@@ -37,11 +35,12 @@
           </tr>
         </tbody>
       </table>
-      <button @click="createFixedShift">シフト確定</button>
     </div>
-    
     <div v-else>
-      <p>提出されている希望シフトはありません</p>
+      <p>
+        まだ確定シフトが作成されていない、<br>
+        もしくは出勤予定の従業員がいません
+        </p>
     </div>
   </div>
 </template>
@@ -86,45 +85,16 @@ export default {
       .then(response => (this.userData = response.data))
   },
 
-  computed: {
-    getShiftData: function() {
-      return this.$store.getters.getShiftData({
-        date: {
-          year: this.year,
-          month: this.month,
-          date: this.date
-          },
-        user: this.userData
-        }
-      )
-    },
-  },
-
   methods: {
   checkShifts: function(value) {
-      // console.log(1);
-      this.year = value.year
-      this.month = value.month
-      this.date = value.date
-      var shiftsDate = this.$store.state.fixedShifts.map(shift => {
-          return dayjs(shift.clock_in).format('DD/MM/YYYY')
+    this.year = value.year
+    this.month = value.month
+    this.date = value.date
+    axios
+    .get('/api/v1/admin/fixed_shifts', { params: { year: this.year, month: this.month, date: this.date }})
+    .then(response => {
+      this.shiftData = response.data
       })
-      var calendarDate = dayjs(value.year + '-' + value.month + '-' + value.date).format('DD/MM/YYYY')
-      if(!shiftsDate.includes(calendarDate)) {
-        // console.log(2);
-        axios
-        .get('/api/v1/admin/requested_shifts', { params: { year: value.year, month: value.month, date: value.date }})
-        .then(response => {
-          this.shiftData = response.data
-          if(!!this.shiftData.length){
-        // console.log(3);
-            for( var i = 0; i < this.shiftData.length; i++ )
-            this.$store.dispatch('fixedShifts', this.shiftData[i])
-            }
-          })
-      } else {
-        // console.log(4);
-      }
     },
 
     createFixedShift: function() {
@@ -156,13 +126,32 @@ export default {
     },
 
     formattedclockIn: function(clockIn) {
-      console.log(clockIn)
         return dayjs(clockIn).format('HH:mm');
     },
 
     formattedclockOut: function(clockIn) {
         return dayjs(clockIn).format('HH:mm');
     },
+
+    getShiftData: function() {  
+      var calendarDate = dayjs(this.year + '-' + this.month + '-' + this.date).format('DD/MM/YYYY')
+      if(this.shiftData.length) {
+        var shifts = this.shiftData.filter(function (item) {
+          var shiftDate = dayjs(item.clock_in).format('DD/MM/YYYY')
+          return calendarDate === shiftDate
+        })
+
+        return shifts.map(shift => {
+          var user = this.userData.find(function (user) {
+          return user.id === shift.user_id
+          })
+          return {
+            ...shift,
+            user: user
+          }
+        })
+      }
+    }
   }
 }
 </script>
