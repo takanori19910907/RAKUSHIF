@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Header :userID="userID"></Header>
-      <router-view :userID="userID" :shifts="shifts" :shiftData="fixedShifts"></router-view>
+    <Header :userID="user.id" :hasAdmin="user.admin"></Header>
+      <router-view :userID="user.id" :hasAdmin="user.admin" :shifts="shifts" :shiftData="fixedShifts"></router-view>
   </div>
 </template>
 <script>
@@ -14,13 +14,13 @@
     },
     data: function() {
       return {
-        userID: 0
+        user: {}
       };
     },
     mounted () {
       axios
         .get('/api/v1/staff/users')
-        .then(response => (this.userID = response.data))
+        .then(response => (this.user = response.data))
     },
 
     computed: {

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       namespace :admin do
         resources :users, only: [:index, :show]
         resources :requested_shifts, only: [:index, :create, :show, :update, :destroy]
+        resources :fixed_shifts, only: [:index, :create, :show, :update, :destroy]
       end
       namespace :staff do
         resources :users, only: [:index, :show]
