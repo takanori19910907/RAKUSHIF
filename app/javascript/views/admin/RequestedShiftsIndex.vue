@@ -37,7 +37,7 @@
           </tr>
         </tbody>
       </table>
-      <button>シフト確定</button>
+      <button @click="createFixedShift">シフト確定</button>
     </div>
     
     <div v-else>
@@ -124,9 +124,17 @@ export default {
           })
       } else {
         // console.log(4);
-        return this.$store.state.fixedShifts
       }
     },
+
+    createFixedShift: function() {
+      this.$store.state.fixedShifts.splice(0, 1) 
+      if (window.confirm("確定シフトを作成します、よろしいですか?")) {
+      axios.post('/api/v1/admin/fixed_shifts', {shifts: this.$store.state.fixedShifts })
+      this.$router.push('/admin/fixed_shifts')
+      }
+    },
+
     openModal: function(value, index) {
       this.arrayIdx = index
       this.checkedShift = value
