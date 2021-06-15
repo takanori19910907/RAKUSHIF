@@ -4,6 +4,7 @@
   <div>
     <calendar />
     <h2>ストック中の希望シフト</h2>
+    {{ shift }}
     <div v-if="shifts.length">
       <b>※下記のシフト希望はまだ提出されていません</b>
       <p>期日までにシフト希望の提出を完了させてください</p>
@@ -16,24 +17,22 @@
             <th>希望退勤時間</th>
           </tr>
           <tr v-for="(item, index) in shifts" :key="item.id">
-            <td> {{ item.year }}年{{ item.month }}月{{ item.day }}日</td>
+            <td> {{ item.year }}年{{ item.month }}月{{ item.date }}日</td>
             <td> {{ item.clockIn }}</td>
             <td> {{ item.clockOut }}</td>
             <button @click="openModal(item,index)">修正</button>
             <button @click="removeStorageShiftData(index)">×</button>
-            <modal v-show="showModal" @close="closeModal" 
-            :year="shift.year"
-            :month="shift.month"
-            :day="shift.day"
-            :shiftIdx="dayNum"
-            @sendRequestedShift="updateStorageShiftData"
-            >
-            <p slot="title">希望シフト編集</p>
-            <p slot="subtitle">{{ item.year }}年{{ item.month }}月{{ item.day }}日の希望時間を変更します</p>
-            </modal>
           </tr>
         </tbody>
       </table>
+      <modal v-if="showModal" @close="closeModal" 
+            :year="shift.year"
+            :month="shift.month"
+            :date="shift.date"
+            :shiftIdx="shiftIdx"
+            @sendRequestedShift="updateStorageShiftData"
+            >
+        </modal>
       <button @click="postshifts">シフトを提出</button>
     </div>
     
@@ -57,21 +56,19 @@ export default {
     return{
         showModal: false,
         shift: [],
-        dayNum: 0
+        shiftIdx: 0
     }
   },
 
-  props: {
-    shifts: {
-      type: Array
-    }
-  },
+  props: [
+    'shifts'
+  ],
 
   methods: {
     // シフト提出用のモーダルを開く
     openModal: function(data, index) {
       this.shift = data
-      this.dayNum = index
+      this.shiftIdx = index
       this.showModal = true
     },
     
@@ -81,14 +78,16 @@ export default {
     },
 
     //modal-componentから返ってきたデータを用いてLocalStorageの希望シフトデータを更新する 
-    updateStorageShiftData: function(...data) {
+    updateStorageShiftData: function(data) {
+      console.log(data);
+      this.showModal = false
       this.$store.dispatch('updateShift', {
-        clockIn: data[0],
-        clockOut: data[1],
-        shiftIdx: data[2],
-        year: data[3],
-        month: data[4],
-        day: data[5],
+        clockIn: data.clockIn,
+        clockOut: data.clockOut,
+        shiftIdx: data.shiftIdx,
+        year: data.year,
+        month: data.month,
+        date: data.date,
       })
     },
 

@@ -87,7 +87,7 @@ const store = new Vuex.Store({
         clockOut: payload.clockOut,
         year: payload.year,
         month: payload.month,
-        day: payload.day
+        date: payload.date
       })
     },
     
@@ -98,7 +98,7 @@ const store = new Vuex.Store({
         clockOut: payload.clockOut,
         year: payload.year,
         month: payload.month,
-        day: payload.day
+        date: payload.date
       }
       )
     },

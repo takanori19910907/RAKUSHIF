@@ -21,7 +21,7 @@
       <!-- 日付表示 -->
       <tbody>
         <tr v-for="(weekData,index) in calData" :key="index">
-          <td class="cal-day" v-for="(dayNum,index) in weekData" @click="openModal(dayNum)"
+          <td class="cal-day" v-for="(dayNum,index) in weekData" @click="openModal(dayNum, index)"
             :key="index"
             :class="{'cal-today': isToday(dayNum), active: day === dayNum}">
             <span v-if="isToday(dayNum)">今日</span>
@@ -30,15 +30,13 @@
         </tr>
       </tbody>
     </table>
-    <modal v-show="showModal" @close="closeModal"
-      :day="dayNum"
+    <modal v-if="showModal" @close="closeModal"
       :year="year"
       :month="month"
+      :date="dayNum"
       @sendRequestedShift="addRequestedShift"
       >
-      <p slot="title">希望シフト新規作成</p>
-      <p slot="subtitle">{{ year }}年{{ month }}月{{ dayNum }}日を選択しています</p>
-    </modal>
+      </modal>
   </div>
 </template>
 
@@ -106,9 +104,9 @@ export default {
     },
 
      // シフト提出用のモーダルを開く
-    openModal: function(num) {
+    openModal: function(date) {
+      this.dayNum = date
       this.showModal = true
-      this.dayNum = num
     },
     
     // シフト提出用のモーダルを閉じる
@@ -117,13 +115,15 @@ export default {
     },
 
     // modal-componentから返ってきたデータを用いて希望シフトを作成しLocalStorageに保存する
-    addRequestedShift: function(...data) {
+    addRequestedShift: function(data) {
+      this.showModal = false
+      console.log(data)
       this.$store.dispatch('addShift', {
-        clockIn: data[0],
-        clockOut: data[1],
-        year: this.year,
-        month: this.month,
-        day: this.dayNum
+        year: data.year,
+        month: data.month,
+        date: data.date,
+        clockIn: data.clockIn,
+        clockOut: data.clockOut,
         })
     }
   },

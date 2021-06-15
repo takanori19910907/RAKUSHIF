@@ -4,23 +4,26 @@
   <div>
     <calendar @sendDate="checkShifts"/>
     <h2>みんなの希望シフト一覧</h2>
+
     <div v-if="shiftData.length">
       <hr>
       <table>
         <tbody>
           <tr>
-            <th>氏名</th>
+            <!-- <th>氏名</th>
             <th>年齢</th>
-            <th>勤務ステータス</th>
+            <th>勤務ステータス</th> -->
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(data, index) in getShiftData" :key="data.id" >
-            <td><userName :key="data.id" :userName="data.user.name" ></userName></td>
+          <tr v-for="(data, index) in filteredShiftData" :key="data.id" >
+            <!-- <td><userName :key="data.id" :userName="data.user.name" ></userName></td>
             <td><userAge :key="data.id" :userAge="data.user.age" ></userAge></td>
             <td><userWorkStatus :key="data.id" :userData="data.user" ></userWorkStatus></td>
             <td><requestedClockInTime :key="data.id" :clockInTime="data.clock_in" ></requestedClockInTime></td>
-            <td><requestedClockOutTime :key="data.id" :clockOutTime="data.clock_out" ></requestedClockOutTime></td>
+            <td><requestedClockOutTime :key="data.id" :clockOutTime="data.clock_out" ></requestedClockOutTime></td> -->
+            {{ data.clock_in }}
+            {{ data.clock_out }}
             <button @click="openModal(data, index)">修正</button>
             <button @click="deleteItemInShiftData(data.id)">×</button>
             <fixedShiftsModal v-if="showModal" @close="closeModal" 
@@ -40,9 +43,9 @@
       <button @click="createFixedShift">シフト確定</button>
     </div>
     
-    <div v-else>
+    <!-- <div v-else>
       <p>提出されている希望シフトはありません</p>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -69,11 +72,12 @@ export default {
 
   data() {
     return{
-        shiftData: {},
+        shifts: [],
+        shiftData: [],
         userData: {},
-        year: 2021,
-        month: 6,
-        date: 5,
+        year: null,
+        month: null,
+        date: null,
         checkedShift: {},
         showModal: false,
         arrayIdx: 0
@@ -81,49 +85,44 @@ export default {
   },
 
   created() {
+    // axios
+    //   .get('/api/v1/admin/users')
+    //   .then(response => (this.userData = response.data))
     axios
-      .get('/api/v1/admin/users')
-      .then(response => (this.userData = response.data))
+      .get('/api/v1/admin/requested_shifts')
+      .then(response => {
+      this.shiftData = response.data
+      })
   },
 
   computed: {
-    getShiftData: function() {
-      return this.$store.getters.getShiftData({
-        date: {
-          year: this.year,
-          month: this.month,
-          date: this.date
-          },
-        user: this.userData
-        }
-      )
+    filteredShiftData: function() {
+      return this.shifts
+        .filter((shift) => {
+          const targetDate = dayjs(shift.clock_in).date();
+          return targetDate === this.date;
+        })
+        .map((shift) => {
+          return { ...shift, user: "(dummy)" };
+        });
     },
   },
 
   methods: {
   checkShifts: function(value) {
-      // console.log(1);
-      this.year = value.year
-      this.month = value.month
       this.date = value.date
-      var shiftsDate = this.$store.state.fixedShifts.map(shift => {
-          return dayjs(shift.clock_in).format('DD/MM/YYYY')
-      })
-      var calendarDate = dayjs(value.year + '-' + value.month + '-' + value.date).format('DD/MM/YYYY')
-      if(!shiftsDate.includes(calendarDate)) {
-        // console.log(2);
-        axios
-        .get('/api/v1/admin/requested_shifts', { params: { year: value.year, month: value.month, date: value.date }})
-        .then(response => {
-          this.shiftData = response.data
-          if(!!this.shiftData.length){
-        // console.log(3);
-            for( var i = 0; i < this.shiftData.length; i++ )
-            this.$store.dispatch('fixedShifts', this.shiftData[i])
-            }
+      const shiftDates = this.shifts.map((shift) => {
+        return dayjs(shift.clock_in).date();
+      });
+      if (!shiftDates.includes(value.date)) {
+          this.shiftData
+            .filter((constShift) => {
+              const checkedDate = dayjs(constShift.clock_in).date();
+              return checkedDate === value.date;
+            })
+            .forEach((constShift) => {
+              this.shifts.push(constShift);
           })
-      } else {
-        // console.log(4);
       }
     },
 
@@ -148,7 +147,6 @@ export default {
     updateItemInShiftData: function(value) {
       this.showModal = false
       this.$store.dispatch('updateItemInShiftData', value )
-
     },
 
     deleteItemInShiftData: function(itemID) {
@@ -156,7 +154,6 @@ export default {
     },
 
     formattedclockIn: function(clockIn) {
-      console.log(clockIn)
         return dayjs(clockIn).format('HH:mm');
     },
 
