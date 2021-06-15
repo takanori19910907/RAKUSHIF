@@ -26,7 +26,7 @@ const store = new Vuex.Store({
   // ④希望シフトとRequestedShiftsIndex componentから取得したユーザー情報を紐付けて
   // 希望シフト & ユーザー情報をセットにしたオブジェクトを作成しcomponentに返す
   
-    getShiftData: (state) => (data) => {
+    filteredShiftData: (state) => (data) => {
       var calendarDate = dayjs(data.date.year + '-' + data.date.month + '-' + data.date.date).format('DD/MM/YYYY')
       var shifts = state.fixedShifts.filter(function (item) {
         var shiftDate = dayjs(item.clock_in).format('DD/MM/YYYY')
@@ -42,6 +42,22 @@ const store = new Vuex.Store({
         }
       })
     },
+
+    formattedYear:  (state) => (data) => {
+        return dayjs(data).year();
+    },
+
+    formattedMonth:  (state) => (data) => {
+        return dayjs(data).month() + 1;
+    },
+
+    formattedDate:  (state) => (data) => {
+        return dayjs(data).date();
+    },
+
+    formattedTime: (state) => (data) => {
+      return dayjs(data).format('HH:mm');
+    }
   },
 
   actions: {
@@ -67,15 +83,6 @@ const store = new Vuex.Store({
     },
     updateItemInShiftData(context, payload) {
       context.commit('updateItemInShiftData', payload)
-    },
-
-    getMyShifts(context, payload) {
-      axios
-      .get('/api/v1/staff/requested_shifts/id')
-      .then(response => {
-        var shifts = response.data
-        context.commit('getMyShifts', shifts)
-      })
     }
   },
 
@@ -92,15 +99,13 @@ const store = new Vuex.Store({
     },
     
     updateShift(state, payload) {
-      console.log(payload)
       state.shifts.splice([payload.shiftIdx], 1, {
         clockIn: payload.clockIn,
         clockOut: payload.clockOut,
         year: payload.year,
         month: payload.month,
         date: payload.date
-      }
-      )
+      })
     },
 
     deleteReqLists(state) {
@@ -124,9 +129,9 @@ const store = new Vuex.Store({
       }
     },
     updateItemInShiftData(state, payload) {
-      var shift = state.fixedShifts[payload.arrayIdx]
-      shift.clock_in = `${payload.year}-${payload.month}-${payload.date} ${payload.clockIn}:00`
-      shift.clock_out =  `${payload.year}-${payload.month}-${payload.date} ${payload.clockOut}:00`
+      let targetShift = state.fixedShifts.find(el => el.id == payload.shiftIdx)
+      targetShift.clock_in = `${payload.year}-${payload.month}-${payload.date} ${payload.clockIn}:00`;
+      targetShift.clock_out = `${payload.year}-${payload.month}-${payload.date} ${payload.clockOut}:00`;
     },
 
     getMyShifts(state, shifts) {

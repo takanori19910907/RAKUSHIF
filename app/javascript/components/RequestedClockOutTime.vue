@@ -1,17 +1,19 @@
 <template>
     <div>
-    <p>{{ clockOutTime }}</p>
+    <p>{{ formattedClockOut }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    clockOutTime: String
+  props: [
+    'clockOut'
+  ],
+
+  computed: {
+    formattedClockOut(){
+    return this.$store.getters.formattedTime(this.clockOut);
+    }
   }
 }
 </script>
-
-<style>
-
-</style>

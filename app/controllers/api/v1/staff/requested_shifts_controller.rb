@@ -1,11 +1,12 @@
 class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
 
   def index
+    shifts = current_user.requested_shifts
+    render json: shifts
   end
 
   def show
-    shifts = current_user.requested_shifts
-    render json: shifts
+    shift = current_user.requested_shifts.find(id: params[:id])
   end
 
   def create
@@ -22,7 +23,6 @@ class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
   end
 
   def update
-    binding.pry
     shift = current_user.requested_shifts.find_by(id: params[:shiftData][:id])
     shift.update(
       clock_in: "#{params[:shiftData][:year]}-#{params[:shiftData][:month]}-#{params[:shiftData][:date]} #{params[:shiftData][:clockIn]}:00",

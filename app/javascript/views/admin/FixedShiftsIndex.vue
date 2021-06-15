@@ -1,9 +1,13 @@
+<!-- 確定シフト編集用ページ -->
+
 <template>
   <div>
-    <calendar @sendDate="checkShifts"></calendar>
-    <h1>確定シフト一覧</h1>
-    <div v-if="shiftData.length">
-    <hr>
+    <h2>確定シフト閲覧/編集</h2>
+    <calendar @sendDate="checkShifts"/>
+    <div v-if="this.month && this.date">
+      <h2>{{ this.month }}月{{ this.date }}日の出勤予定者</h2>
+    </div>
+    <div v-if="filteredShiftData.length">
       <table>
         <tbody>
           <tr>
@@ -13,146 +17,140 @@
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(data, index) in getShiftData()" :key="data.id" >
-            <td><userName :key="data.id" :userName="data.user.name" ></userName></td>
-            <td><userAge :key="data.id" :userAge="data.user.age" ></userAge></td>
-            <td><userWorkStatus :key="data.id" :userData="data.user" ></userWorkStatus></td>
-            <td><requestedClockInTime :key="data.id" :clockInTime="data.clock_in" ></requestedClockInTime></td>
-            <td><requestedClockOutTime :key="data.id" :clockOutTime="data.clock_out" ></requestedClockOutTime></td>
-            <button @click="openModal(data, index)">修正</button>
-            <button @click="deleteItemInShiftData(data.id)">×</button>
-            <fixedShiftsModal v-if="showModal" @close="closeModal" 
-              :key="data.id"
-              :year="year"
-              :month="month"
-              :day="date"
-              :shift="checkedShift"
-              :shiftIdx="data.id"
-              :arrayIdx="arrayIdx"
-              @sendUpdateData="updateItemInShiftData"
-              >
-            </fixedShiftsModal>
+          <tr v-for="(item, index) in filteredShiftData" :key="item.id" >
+            <td><userName :key="item.id" :userName="item.user.name" ></userName></td>
+            <td><userAge :key="item.id" :userAge="item.user.age" ></userAge></td>
+            <td><userWorkStatus :key="item.id" :userData="item.user" ></userWorkStatus></td>
+            <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
+            <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
+            <button @click="openModal(item, index)">修正</button>
+            <button @click="deleteItemInShiftData(item.id)">×</button>
           </tr>
         </tbody>
       </table>
+      <fixedShiftsModal v-if="showModal" @close="closeModal" 
+        :year="year"
+        :month="month"
+        :date="date"
+        :shift="selectedShift"
+        :shiftIdx="selectedShift.id"
+        :arrayIdx="arrayIdx"
+        @sendUpdateData="updateItemInShiftData"
+        >
+      </fixedShiftsModal>
+      <button @click="createFixedShift">シフト変更完了</button>
+    </div>
+    <div v-else-if="this.date === null ">
+      <p>カレンダーをクリックするとその日付の出勤予定者を確認出来ます</p>
     </div>
     <div v-else>
-      <p>
-        まだ確定シフトが作成されていない、<br>
-        もしくは出勤予定の従業員がいません
-        </p>
+      <p>出勤予定の方がいません</p>
+      <p>シフトの人員補充をお願いします</p>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import dayjs from 'dayjs';
-import Calendar from '../../components/FixedShiftsCalendar.vue'
-import FixedShiftsModal from '../../components/FixedShiftsModal.vue'
-import UserName from '../../components/UserName.vue'
-import UserAge from '../../components/UserAge.vue'
-import UserWorkStatus from '../../components/UserWorkStatus.vue'
-import RequestedClockInTime from '../../components/RequestedClockInTime.vue'
-import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
-export default {
-  components: {
-    Calendar,
-    FixedShiftsModal,
-    UserName,
-    UserAge,
-    UserWorkStatus,
-    RequestedClockInTime,
-    RequestedClockOutTime
-  },
+  import axios from 'axios';
+  import dayjs from 'dayjs';
+  import Calendar from '../../components/FixedShiftsCalendar.vue'
+  import FixedShiftsModal from '../../components/FixedShiftsModal.vue'
+  import UserName from '../../components/UserName.vue'
+  import UserAge from '../../components/UserAge.vue'
+  import UserWorkStatus from '../../components/UserWorkStatus.vue'
+  import RequestedClockInTime from '../../components/RequestedClockInTime.vue'
+  import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
+  export default {
+    components: {
+      Calendar,
+      FixedShiftsModal,
+      UserName,
+      UserAge,
+      UserWorkStatus,
+      RequestedClockInTime,
+      RequestedClockOutTime
+    },
 
-  data() {
-    return{
-        shiftData: {},
+    data() {
+      return{
+        shiftData: [],
         userData: {},
-        year: 2021,
-        month: 6,
-        date: 5,
-        checkedShift: {},
+        selectedShift: {},
+        year: null,
+        month: null,
+        date: null,
         showModal: false,
         arrayIdx: 0
-    }
-  },
-
-  created() {
-    axios
-      .get('/api/v1/admin/users')
-      .then(response => (this.userData = response.data))
-  },
-
-  methods: {
-  checkShifts: function(value) {
-    this.year = value.year
-    this.month = value.month
-    this.date = value.date
-    axios
-    .get('/api/v1/admin/fixed_shifts', { params: { year: this.year, month: this.month, date: this.date }})
-    .then(response => {
-      this.shiftData = response.data
-      })
-    },
-
-    createFixedShift: function() {
-      this.$store.state.fixedShifts.splice(0, 1) 
-      if (window.confirm("確定シフトを作成します、よろしいですか?")) {
-      axios.post('/api/v1/admin/fixed_shifts', {shifts: this.$store.state.fixedShifts })
-      this.$router.push('/admin/fixed_shifts')
       }
     },
 
-    openModal: function(value, index) {
-      this.arrayIdx = index
-      this.checkedShift = value
-      this.showModal = true
-    },
-    
-    closeModal: function() {
-      this.showModal = false
-    },
-
-    updateItemInShiftData: function(value) {
-      this.showModal = false
-      this.$store.dispatch('updateItemInShiftData', value )
-
-    },
-
-    deleteItemInShiftData: function(itemID) {
-      this.$store.dispatch("destroyShift", itemID)
-    },
-
-    formattedclockIn: function(clockIn) {
-      console.log(clockIn)
-        return dayjs(clockIn).format('HH:mm');
-    },
-
-    formattedclockOut: function(clockIn) {
-        return dayjs(clockIn).format('HH:mm');
-    },
-
-    getShiftData: function() {  
-      var calendarDate = dayjs(this.year + '-' + this.month + '-' + this.date).format('DD/MM/YYYY')
-      if(this.shiftData.length) {
-        var shifts = this.shiftData.filter(function (item) {
-          var shiftDate = dayjs(item.clock_in).format('DD/MM/YYYY')
-          return calendarDate === shiftDate
+    created() {
+      axios
+        .get('/api/v1/admin/requested_shifts')
+        .then(response => {
+        this.shiftData = response.data.shifts
+        this.userData = response.data.users
         })
+    },
 
-        return shifts.map(shift => {
-          var user = this.userData.find(function (user) {
-          return user.id === shift.user_id
+    computed: {
+      filteredShiftData() {
+        return this.$store.getters.filteredShiftData({
+          date: {
+            year: this.year,
+            month: this.month,
+            date: this.date
+            },
+            user: this.userData     
+        })
+      },
+    },
+
+    methods: {
+      checkShifts(value) {
+        this.year = value.year
+        this.month = value.month
+        this.date = value.date
+        const shiftDates = this.$store.state.fixedShifts.map((shift) => {
+          return dayjs(shift.clock_in).date();
+        });
+        if (!shiftDates.includes(value.date)) {
+          const selectedShifts = this.shiftData.filter((constShift) => {
+            const checkedDate = dayjs(constShift.clock_in).date();
+            return checkedDate === value.date;
           })
-          return {
-            ...shift,
-            user: user
+          for( var i = 0; i < selectedShifts.length; i++ ){
+          this.$store.dispatch('fixedShifts', selectedShifts[i])
           }
-        })
+        }
+      },
+
+      createFixedShift() {
+        this.$store.state.fixedShifts.splice(0, 1) 
+        if (window.confirm("確定シフトを作成します、よろしいですか?")) {
+          axios.post('/api/v1/admin/fixed_shifts', {shifts: this.$store.state.fixedShifts })
+          this.$router.push('/admin/fixed_shifts')
+        }
+      },
+
+      openModal(value, index) {
+        this.arrayIdx = index
+        this.selectedShift = value
+        this.showModal = true
+      },
+      
+      closeModal() {
+        this.showModal = false
+      },
+
+      updateItemInShiftDate(value) {
+        this.showModal = false
+        this.$store.dispatch('updateItemInShiftData', value )
+      },
+
+      deleteItemInShiftData(itemID) {
+        this.$store.dispatch("destroyShift", itemID)
       }
-    }
   }
 }
 </script>
