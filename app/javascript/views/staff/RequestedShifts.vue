@@ -2,9 +2,9 @@
 
 <template>
   <div>
+    <h2>希望シフト作成</h2>
     <calendar />
-    <h2>ストック中の希望シフト</h2>
-    {{ shift }}
+    <p>ストック中の希望シフト</p>
     <div v-if="shifts.length">
       <b>※下記のシフト希望はまだ提出されていません</b>
       <p>期日までにシフト希望の提出を完了させてください</p>
@@ -26,14 +26,20 @@
         </tbody>
       </table>
       <modal v-if="showModal" @close="closeModal" 
-            :year="shift.year"
-            :month="shift.month"
-            :date="shift.date"
-            :shiftIdx="shiftIdx"
-            @sendRequestedShift="updateStorageShiftData"
-            >
-        </modal>
+        :year="shift.year"
+        :month="shift.month"
+        :date="shift.date"
+        :shiftIdx="shiftIdx"
+        @sendRequestedShift="updateStorageShiftData"
+      >
+      </modal>
       <button @click="postshifts">シフトを提出</button>
+    </div>
+
+    <div v-else-if="this.guideMessage">
+      <p>カレンダーをクリックすると、シフト希望用の入力フォームが表示されます</p>
+      <p>希望の出勤/退勤時間を入力し『確定』を押すと希望シフトが一時的にストックされます</p>
+      <p>作成期間全て入力を終えたら『シフトを提出』を押してください</p>
     </div>
     
     <div v-else>
@@ -43,66 +49,71 @@
 </template>
 
 <script>
-import axios from 'axios';
-import Modal from 'components/Modal.vue'
-import Calendar from 'components/RequestedShiftsCalendar.vue';
-export default {
-  components: {
-    Modal,
-    Calendar,
-  },
+  import axios from 'axios';
+  import Modal from 'components/Modal.vue'
+  import Calendar from 'components/RequestedShiftsCalendar.vue';
+  export default {
+    components: {
+      Modal,
+      Calendar,
+    },
 
-  data() {
-    return{
+    data() {
+      return{
         showModal: false,
         shift: [],
-        shiftIdx: 0
-    }
-  },
-
-  props: [
-    'shifts'
-  ],
-
-  methods: {
-    // シフト提出用のモーダルを開く
-    openModal: function(data, index) {
-      this.shift = data
-      this.shiftIdx = index
-      this.showModal = true
-    },
-    
-    // シフト提出用のモーダルを閉じる
-    closeModal: function() {
-      this.showModal = false
-    },
-
-    //modal-componentから返ってきたデータを用いてLocalStorageの希望シフトデータを更新する 
-    updateStorageShiftData: function(data) {
-      console.log(data);
-      this.showModal = false
-      this.$store.dispatch('updateShift', {
-        clockIn: data.clockIn,
-        clockOut: data.clockOut,
-        shiftIdx: data.shiftIdx,
-        year: data.year,
-        month: data.month,
-        date: data.date,
-      })
-    },
-
-    // modalで入力しlocalStorageに一時保存されている希望データを
-    // ①requestedShift_controllerにpostしテーブルに保存
-    // ②localStorageのデータを削除
-    postshifts: function() {
-      if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
-      axios.post('/api/v1/staff/requested_shifts', {shifts: this.shifts })
-      this.$store.dispatch('deleteReqLists')
+        shiftIdx: 0,
+        guideMessage: true
       }
     },
-    removeStorageShiftData: function(shiftIdx) {
-      this.$store.dispatch("removeStorageShiftData", {shiftIdx: shiftIdx})
+
+    props: [
+      'shifts'
+    ],
+
+    mounted() {
+      this.guideMessage = true
+    },
+
+    methods: {
+      // シフト提出用のモーダルを開く
+      openModal(data, index) {
+        this.guideMessage = false
+        this.shift = data
+        this.shiftIdx = index
+        this.showModal = true
+      },
+      
+      // シフト提出用のモーダルを閉じる
+      closeModal() {
+        this.showModal = false
+      },
+
+      //modal-componentから返ってきたデータを用いてLocalStorageの希望シフトデータを更新する 
+      updateStorageShiftData(data) {
+        this.showModal = false
+        this.$store.dispatch('updateShift', {
+          clockIn: data.clockIn,
+          clockOut: data.clockOut,
+          shiftIdx: data.shiftIdx,
+          year: data.year,
+          month: data.month,
+          date: data.date,
+        })
+      },
+
+      // modalで入力しlocalStorageに一時保存されている希望データを
+      // ①requestedShift_controllerにpostしテーブルに保存
+      // ②localStorageのデータを削除
+      postshifts() {
+        if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
+        axios.post('/api/v1/staff/requested_shifts', {shifts: this.shifts })
+        this.$store.dispatch('deleteReqLists')
+        }
+      },
+      removeStorageShiftData(shiftIdx) {
+        this.$store.dispatch("removeStorageShiftData", {shiftIdx: shiftIdx})
+      }
     }
-  }
 }
 </script>

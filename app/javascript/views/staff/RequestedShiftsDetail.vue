@@ -13,9 +13,9 @@
           <th>希望退勤時間</th>
         </tr>
         <tr v-for="(item, index) in shifts" :key="item.id">
-          <td> {{ formattedYear(item.clock_in) }}年{{ formattedMonth(item.clock_in) }}月{{ formattedDay(item.clock_in) }}日</td>
-          <td> {{ formattedclockInHour(item.clock_in) }}時 {{ formattedclockInMinute(item.clock_in) }}分</td>
-          <td> {{ formattedclockOutHour(item.clock_out) }}時 {{ formattedclockOutMinute(item.clock_out) }}分</td>
+          <td><requestedDate :key="item.id" :clockIn ="item.clock_in" ></requestedDate></td>
+          <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
+          <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
           <button @click="openModal(item)">修正</button>
           <button @click="removeShiftData(item.id, index)">×</button>
         </tr>
@@ -34,137 +34,88 @@
     </div>
     <div v-else>
       <p>シフト希望がありません</p>
-      <p>シフト希望表ページからシフト希望を提出してください</p>
+      <p>希望シフト作成ページで入力し提出してください</p>
     </div>
   </section>
 </template>
 
 <script>
-import axios from 'axios';
-import dayjs from 'dayjs';
-import Modal from 'components/Modal.vue'
-export default {
-  components: {
-    Modal
-  },
+  import axios from 'axios';
+  import Modal from 'components/Modal.vue'
+  import RequestedDate from '../../components/RequestedDate.vue'
+  import RequestedClockInTime from '../../components/RequestedClockInTime.vue'
+  import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
+  export default {
+    components: {
+      Modal,
+      RequestedDate,
+      RequestedClockInTime,
+      RequestedClockOutTime
+    },
 
-  
-  data() {
-    return {
-      shifts: {},
-      shift: {},
-      year: 0,
-      month: 0,
-      date: 0,
-      shiftIdx: 0,
-      showModal: false
-    };
-  },
-
-  props: [
-    'userID'
-  ],
     
-  created() {
-    axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.userID }
-})
-  .then(response => (this.shifts = response.data))
-  },
-
-  computed: {
-    formattedYear: function () {
-      return function(value) {
-        return dayjs(value).year();
-      }
+    data() {
+      return {
+        shifts: [],
+        shift: {},
+        year: 0,
+        month: 0,
+        date: 0,
+        shiftIdx: 0,
+        showModal: false
+      };
     },
 
-    formattedMonth: function () {
-      return function(value) {
-        return dayjs(value).month() + 1 ;
-      }
+    props: [
+      'userID'
+    ],
+      
+    created() {
+      axios.get('/api/v1/staff/requested_shifts')
+    .then(response => (this.shifts = response.data))
     },
 
-    formattedDay: function () {
-      return function(value) {
-        return dayjs(value).date();
-      }
-    },
+    methods: {
+      // シフト提出用のモーダルを開く
+      openModal(data) {
+        this.shift = data
+        this.shiftIdx = data.id
+        this.showModal = true
+      },
+      
+      // シフト提出用のモーダルを閉じる
+      closeModal() {
+        this.showModal = false
+      },
 
-    formattedclockInHour: function() {
-      return function(value) {
-        return dayjs(value).hour();
-      }
-    },
+      //modal-componentから帰ってきたシフト希望データを用いて希望シフトテーブルの値を更新する
+      updateTableShiftData(data) {
+        this.showModal = false
+        axios.patch('/api/v1/staff/requested_shifts/id', {
+          shiftData: {
+            clockIn: data.clockIn,
+            clockOut: data.clockOut,
+            id: data.shiftIdx, 
+          }
+        })
+        this.getShift(data.shiftIdx);
+      },
+      
+      //クリックで指定した希望データを希望シフトテーブルから削除する 
+      removeShiftData: function(id, index) {
+        if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
+          this.shifts.splice(index, 1)
+          axios.delete('/api/v1/staff/requested_shifts/id', {data: {id: id} } )
+        }
+      },
 
-    formattedclockInMinute: function() {
-      return function(value) {
-        return dayjs(value).minute();
-      }
-    },
-
-    formattedclockOutHour: function() {
-      return function(value) {
-        return dayjs(value).hour();
-      }
-    },
-
-    formattedclockOutMinute: function() {
-      return function(value) {
-        return dayjs(value).minute();
+      getShift(shiftIdx) {
+      axios
+        .get('/api/v1/staff/requested_shifts/id', { params: { id: shiftIdx }})
+        .then(response => {
+        this.shiftData = response.data.shift
+        })
       }
     }
-  },
-
-  methods: {
-    // シフト提出用のモーダルを開く
-    openModal: function(data) {
-      this.shift = data
-      this.shiftIdx = data.id
-      this.formattedDate(data.clock_in)
-      this.showModal = true
-    },
-    
-    // シフト提出用のモーダルを閉じる
-    closeModal: function() {
-      this.showModal = false
-    },
-
-    //modal-componentから帰ってきたシフト希望データを用いて希望シフトテーブルの値を更新する
-    updateTableShiftData: function(data) {
-      this.showModal = false
-      axios.patch('/api/v1/staff/requested_shifts/id', {
-        shiftData: {
-          clockIn: data.clockIn,
-          clockOut: data.clockOut,
-          id: data.shiftIdx, 
-        }
-      })
-      .then(response => {
-        
-        (this.shifts = response.data)
-        })
-      console.log(this.shifts)
-    },
-    
-    //クリックで指定した希望データを希望シフトテーブルから削除する 
-    removeShiftData: function(id, index) {
-      if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
-        this.shifts.splice(index, 1)
-        axios.delete('/api/v1/staff/requested_shifts/id', {data: {id: id} } )
-      }
-    },
-
-    formattedDate: function (data) {
-        this.year = dayjs(data).year()
-        this.month = dayjs(data).month() + 1
-        this.date = dayjs(data).date()
-    },
-
-    //controllerから再レンダリングされたときにテーブルのシフトデータを再描画する 
-    // updateShifts: function() {
-    //   axios.get('/api/v1/staff/requested_shifts/id', { params: { id: this.userID } })
-    //   .then(response => (this.shifts = response.data))
-    // },
-  }
 };
 </script>

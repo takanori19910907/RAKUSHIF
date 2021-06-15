@@ -7,7 +7,7 @@
       <p>希望シフト編集</p>
 
       <div>
-        <p>{{ year }}/{{ month }}/{{ day }}</p>
+        <p>{{ year }}/{{ month }}/{{ date }}</p>
         <p>希望時間: {{ formattedclockIn(shift.clock_in) }}〜 {{ formattedclockIn(shift.clock_out) }} から</p>
       </div>
 
@@ -75,7 +75,7 @@
       'arrayIdx',
       'year',
       'month',
-      'day'
+      'date'
     ],
     
     methods: {
@@ -84,7 +84,7 @@
         this.setData.clockOut = this.selected2
         this.setData.year = this.year
         this.setData.month = this.month
-        this.setData.date = this.day
+        this.setData.date = this.date
         this.setData.shiftIdx = this.shiftIdx 
         this.setData.arrayIdx = this.arrayIdx
         this.$emit('sendUpdateData', this.setData)
