@@ -22,7 +22,7 @@
         <p>出勤 : {{ selected1 }}</p>
         <p>退勤 : {{ selected2 }}</p>
         <slot name="footer-messages"></slot>
-        <button  type="submit" @click.self="$emit('close')" >完了</button>
+        <button  type="submit" >完了</button>
       </form>
       <button @click="$emit('close')">閉じる</button>
     </div> 
@@ -45,29 +45,37 @@ export default {
         {id: 2, time: "17:30" },
         {id: 3, time: "21:00" }
       ],
+      setData: {
+        year: 0,
+        month: 0,
+        date: 0,
+        clockIn: "",
+        clockOut: "",
+        shiftIdx: 0
+      }
     }
   },
   props: [
     'shift',
     'year',
     'month',
-    'day',
+    'date',
     'shiftIdx',
     'title'
   ],
   
   methods: {
     sendRequestedShift: function() {
+    this.setData.year = this.year
+    this.setData.month = this.month
+    this.setData.date = this.date
+    this.setData.clockIn = this.selected1
+    this.setData.clockOut = this.selected2
+    this.setData.shiftIdx = this.shiftIdx
+    console.log(this.setData.year);
       this.$emit('sendRequestedShift', 
-                      this.selected1,
-                      this.selected2,
-                      this.shiftIdx,
-                      this.year,
-                      this.month,
-                      this.day,
+                      this.setData
                       )
-      this.selected1= ""
-      this.selected2= ""
     }
   }
 }

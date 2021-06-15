@@ -13,8 +13,8 @@ class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
     params.require(:shifts).each do |record|
       shift = @current_user.requested_shifts.build(
         shop_id: current_user.shop_id,
-        clock_in: "#{record[:year]}-#{record[:month]}-#{record[:day]} #{record[:clockIn]}:00",
-        clock_out: "#{record[:year]}-#{record[:month]}-#{record[:day]} #{record[:clockOut]}:00",
+        clock_in: "#{record[:year]}-#{record[:month]}-#{record[:date]} #{record[:clockIn]}:00",
+        clock_out: "#{record[:year]}-#{record[:month]}-#{record[:date]} #{record[:clockOut]}:00",
       )
       shift.save
     end
@@ -22,6 +22,7 @@ class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
   end
 
   def update
+    binding.pry
     shift = current_user.requested_shifts.find_by(id: params[:shiftData][:id])
     shift.update(
       clock_in: "#{params[:shiftData][:year]}-#{params[:shiftData][:month]}-#{params[:shiftData][:date]} #{params[:shiftData][:clockIn]}:00",
