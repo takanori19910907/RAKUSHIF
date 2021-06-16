@@ -102,7 +102,7 @@
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        const shiftDates = this.$store.state.fixedShifts.map((shift) => {
+        const shiftDates = this.$store.state.shifts.beforeCreateData.map((shift) => {
           return dayjs(shift.clock_in).date();
         });
         if (!shiftDates.includes(value.date)) {

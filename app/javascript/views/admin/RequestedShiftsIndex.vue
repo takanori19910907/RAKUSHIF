@@ -39,12 +39,12 @@
         @sendUpdateData="updateItemInShiftData"
         >
       </fixedShiftsModal>
+      <p>出勤者を決定したら『シフト確定』を押してください</p>
       <button @click="createFixedShift">シフト確定</button>
     </div>
     <div v-else-if="this.date === null ">
       <p>カレンダーをクリックすると、日付ごとにスタッフの希望シフトが表示されます</p>
       <p>各日付でシフトを修正/削除し出勤者を決めてください</p>
-      <p>作成期間全て出勤者を決定したら『シフト確定』を押してください</p>
     </div>
     <div v-else>
       <p>出勤予定の方がいません</p>
@@ -114,7 +114,7 @@
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        const shiftDates = this.$store.state.fixedShifts.map((shift) => {
+        const shiftDates = this.$store.state.shifts.beforeCreateData.map((shift) => {
           return dayjs(shift.clock_in).date();
         });
         if (!shiftDates.includes(value.date)) {
@@ -128,14 +128,6 @@
         }
       },
 
-      createFixedShift() {
-        this.$store.state.fixedShifts.splice(0, 1) 
-        if (window.confirm("確定シフトを作成します、よろしいですか?")) {
-        axios.post('/api/v1/admin/fixed_shifts', {shifts: this.$store.state.fixedShifts })
-        this.$router.push('/admin/fixed_shifts')
-        }
-      },
-
       openModal(value, index) {
         this.arrayIdx = index
         this.selectedShift = value
@@ -144,6 +136,14 @@
       
       closeModal() {
         this.showModal = false
+      },
+      
+      createFixedShift() {
+        this.$store.state.shifts.beforeCreateData.splice(0, 1) 
+        if (window.confirm("確定シフトを作成します、よろしいですか?")) {
+        axios.post('/api/v1/admin/fixed_shifts', {shifts: this.$store.state.shifts.beforeCreateData })
+        this.$router.push('/admin/fixed_shifts')
+        }
       },
 
       updateItemInShiftData(value) {
