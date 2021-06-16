@@ -24,7 +24,7 @@
             <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
             <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
             <button @click="openModal(item, index)">修正</button>
-            <button @click="deleteItemInShiftData(item.id)">×</button>
+            <button @click="deleteFixedShift(item.id)">×</button>
           </tr>
         </tbody>
       </table>
@@ -35,10 +35,10 @@
         :shift="selectedShift"
         :shiftIdx="selectedShift.id"
         :arrayIdx="arrayIdx"
-        @sendUpdateData="updateItemInShiftData"
+        @sendUpdateData="changeFixedShift"
         >
       </fixedShiftsModal>
-      <button @click="createFixedShift">シフト変更完了</button>
+      <button @click="updateFixedShifts">シフト変更完了</button>
     </div>
     <div v-else-if="this.date === null ">
       <p>カレンダーをクリックするとその日付の出勤予定者を確認出来ます</p>
@@ -85,6 +85,8 @@
     },
 
     created() {
+      this.$store.dispatch('getAllShiftsByAdmin')
+      
       axios
         .get('/api/v1/admin/requested_shifts')
         .then(response => {
@@ -111,7 +113,7 @@
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        const shiftDates = this.$store.state.fixedShifts.map((shift) => {
+        const shiftDates = this.$store.state.shifts.beforeCreateData.map((shift) => {
           return dayjs(shift.clock_in).date();
         });
         if (!shiftDates.includes(value.date)) {
@@ -125,14 +127,6 @@
         }
       },
 
-      createFixedShift() {
-        this.$store.state.fixedShifts.splice(0, 1) 
-        if (window.confirm("確定シフトを作成します、よろしいですか?")) {
-          axios.post('/api/v1/admin/fixed_shifts', {shifts: this.$store.state.fixedShifts })
-          this.$router.push('/admin/fixed_shifts')
-        }
-      },
-
       openModal(value, index) {
         this.arrayIdx = index
         this.selectedShift = value
@@ -143,13 +137,16 @@
         this.showModal = false
       },
 
-      updateItemInShiftDate(value) {
+      changeFixedShift(value) {
         this.showModal = false
-        this.$store.dispatch('updateItemInShiftData', value )
       },
 
-      deleteItemInShiftData(itemID) {
-        this.$store.dispatch("destroyShift", itemID)
+      updateFixedShifts() {
+        console.log('update')
+      },
+
+      deleteFixedShift(itemID) {
+        console.log('delete')
       }
   }
 }
