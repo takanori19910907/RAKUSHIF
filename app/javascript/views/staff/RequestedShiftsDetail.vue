@@ -29,6 +29,10 @@
                 :month="month"
                 :date="date"
                 :shiftId="shiftId"
+                :title=" '申請済みの希望シフトを編集' "
+                :subtitle=" 'シフトを編集' "
+                :footerMessage=" '上記の時刻に変更します' "
+                :submit=" '変更' "
                 >
     </modal>
     </div>

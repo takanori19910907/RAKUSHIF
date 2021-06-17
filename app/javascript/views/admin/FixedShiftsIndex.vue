@@ -35,6 +35,10 @@
         :shift="selectedShift"
         :shiftId="selectedShift.id"
         :index="index"
+        :title=" '確定シフトの編集' "
+        :subtitle=" 'シフトを編集' "
+        :footerMessage=" '上記の時刻に変更します' "
+        :submit=" '変更' "
         @sendShiftsData="changeFixedShift"
         >
       </Modal>

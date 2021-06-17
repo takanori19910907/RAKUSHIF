@@ -34,6 +34,10 @@
       :year="year"
       :month="month"
       :date="dayNum"
+      :title=" '希望シフトの作成' "
+      :subtitle=" 'シフトを作成' "
+      :footerMessage=" '上記の日時で作成します' "
+      :submit=" '作成' "
       @sendShiftsData="addRequestedShift"
       >
       </modal>
