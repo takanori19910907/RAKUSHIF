@@ -3,8 +3,12 @@
 <template>
   <div id="overlay">
     <div id="modal">
-      <slot name="title"></slot>
-      <slot name="subtitle"></slot>
+      <h3>{{ title }}</h3>
+      <p>{{ year }}/{{ month }}/{{ date }}の{{ subtitle }}</p>
+      
+      <p v-if="shift">
+      {{ formattedClockIn }} 〜 {{ formattedClockOut }} から
+      </p>
       <form @submit.prevent="sendShiftsData">
       <select v-model="selected1">
         <option disabled value="">希望出勤時間</option>
@@ -21,8 +25,9 @@
       </select>
         <p>出勤 : {{ selected1 }}</p>
         <p>退勤 : {{ selected2 }}</p>
-        <slot name="footer-messages"></slot>
-        <button  type="submit" >完了</button>
+
+        <p>{{ footerMessage }}</p>
+        <button  type="submit" >{{ submit }}</button>
       </form>
       <button @click="$emit('close')">閉じる</button>
     </div> 
@@ -66,9 +71,19 @@ export default {
     'date',
     'shiftId',
     'index',
-    'title'
+    'title',
+    'subtitle',
+    'footerMessage',
+    'submit'
   ],
-  
+  computed: {
+    formattedClockIn() {
+      return this.$store.getters.formattedTime(this.shift.clock_in)
+    },
+    formattedClockOut() {
+      return this.$store.getters.formattedTime(this.shift.clock_out)
+    }
+  },
   methods: {
     sendShiftsData() {
     this.setData.year = this.year
