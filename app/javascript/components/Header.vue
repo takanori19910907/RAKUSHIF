@@ -8,6 +8,7 @@
     </div>
     <div v-else>
       <router-link to="/staff/requested_shifts/">希望シフト表</router-link>
+      <router-link to="/staff/fixed_shifts/">確定シフト表</router-link>
       <router-link :to="{ name : 'RequestedShiftsDetail', params : { id: this.userID }}">提出済み希望シフト一覧</router-link>
     </div>
   </div>

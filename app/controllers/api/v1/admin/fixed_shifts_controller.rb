@@ -2,11 +2,10 @@ class Api::V1::Admin::FixedShiftsController < ApplicationController
 
   def index
     shifts = FixedShift.all
-    users = User.all
-    render json: { shifts: shifts, users: users }
+    render json: shifts
   end
 
-  def create      
+  def create
     params.require(:shifts).each do |record|
       user = User.find_by(id: record[:user_id])
       shift = FixedShift.new(

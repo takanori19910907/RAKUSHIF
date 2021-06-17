@@ -1,7 +1,15 @@
 <template>
   <div id="app">
-    <Header :userID="user.id" :hasAdmin="user.admin"></Header>
-      <router-view :userID="user.id" :hasAdmin="user.admin" :shifts="requestedShifts" :shiftData="fixedShifts"></router-view>
+    <Header :userID="myUserData.id" :hasAdmin="myUserData.admin"></Header>
+      <router-view 
+        :userID="myUserData.id"
+        :hasAdmin="myUserData.admin"
+        :allUsersData="allUsersData"
+        :shifts="requestedShifts"
+        :requested="requestedShiftsInTableData"
+        :shiftData="fixedShifts"
+        :fixed="fixedShiftsInTableData"
+        ></router-view>
   </div>
 </template>
 <script>
@@ -14,19 +22,23 @@
     },
     data: function() {
       return {
-        user: {}
+        // user: {}
       };
     },
     mounted () {
-      axios
-        .get('/api/v1/staff/users')
-        .then(response => (this.user = response.data))
+      // axios
+      //   .get('/api/v1/staff/users')
+      //   .then(response => (this.user = response.data))
     },
 
     computed: {
       ...mapState([
+      'myUserData',
+      'allUsersData',
       'requestedShifts',
-      'fixedShifts'
+      'requestedShiftsInTableData',
+      'fixedShifts',
+      'fixedShiftsInTableData'
       ]),
     },
   };

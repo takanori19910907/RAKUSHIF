@@ -63,10 +63,10 @@
     },
 
     mounted(){
-      var date = new Date()
-      var y = date.getFullYear()
-      var m = ('0' + (date.getMonth() + 1)).slice(-2)
-      var d = ('0' + date.getDate()).slice(-2)
+      const date = new Date()
+      const y = date.getFullYear()
+      const m = ('0' + (date.getMonth() + 1)).slice(-2)
+      const d = ('0' + date.getDate()).slice(-2)
 
       // yearとmonthを設定
       this.year = y
@@ -78,7 +78,7 @@
     methods: {
       // 当日かどうかの判定
       isToday(day) {
-        var date = this.year + '-' + ('0' + this.month).slice(-2) + "-" + day
+        const date = this.year + '-' + ('0' + this.month).slice(-2) + "-" + day
         if(this.today === date){
           return true
         }
@@ -133,18 +133,18 @@
 
     computed: {
       calData() {
-        var calData = []
+        const calData = []
         // 初日の曜日を取得
-        var firstWeekDay = new Date(this.year, this.month - 1, 1).getDay()
+        const firstWeekDay = new Date(this.year, this.month - 1, 1).getDay()
         // 月の日数
-        var lastDay = new Date(this.year, this.month, 0).getDate()
+        const lastDay = new Date(this.year, this.month, 0).getDate()
         // 日数カウント用
-        var dayNum = 1
+        let dayNum = 1
         // 週ごとのデータを作成して、calDateにpush
         while (dayNum <= lastDay) {
-          var weekData = []          
+          const weekData = []          
           // 日曜～土曜の日付データを配列で作成
-          for (var i = 0; i <= 6; i++) {
+          for (let i = 0; i <= 6; i++) {
             if (calData.length === 0 && i < firstWeekDay) {
               // 初週の1日以前の曜日は空文字
               weekData[i] = ''

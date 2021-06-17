@@ -3,7 +3,7 @@
 <template>
   <section id="about">
     <h3>提出済みのシフト一覧</h3>
-    <div v-if="shifts.length">
+    <div v-if="this.$store.state.myRequestedShifts.length">
     <hr>
     <table>
       <tbody>
@@ -12,18 +12,18 @@
           <th>希望出勤時間</th>
           <th>希望退勤時間</th>
         </tr>
-        <tr v-for="(item, index) in shifts" :key="item.id">
+        <tr v-for="(item, index) in this.$store.state.myRequestedShifts" :key="item.id">
           <td><requestedDate :key="item.id" :clockIn ="item.clock_in" ></requestedDate></td>
           <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
           <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
           <button @click="openModal(item)">修正</button>
-          <button @click="removeShiftData(item.id, index)">×</button>
+          <button @click="removeShiftInTableData(item.id, index)">×</button>
         </tr>
       </tbody>
     </table>
     <modal v-if="showModal" 
                 @close="closeModal" 
-                @sendShiftsData="updateTableShiftData"
+                @sendShiftsData="updateShiftInTableData"
                 :shift="shift"
                 :year="year"
                 :month="month"
@@ -60,12 +60,11 @@
     
     data() {
       return {
-        shifts: [],
         shift: {},
-        year: 0,
-        month: 0,
-        date: 0,
-        shiftId: 0,
+        year: null,
+        month: null,
+        date: null,
+        shiftId: null,
         showModal: false
       };
     },
@@ -75,8 +74,7 @@
     ],
       
     created() {
-      axios.get('/api/v1/staff/requested_shifts')
-    .then(response => (this.shifts = response.data))
+    this.$store.dispatch('getMyShiftsData')
     },
 
     methods: {
@@ -96,35 +94,15 @@
       },
 
       //modal-componentから帰ってきたシフト希望データを用いて希望シフトテーブルの値を更新する
-      async updateTableShiftData(data) {
+      updateShiftInTableData(data) {
         this.showModal = false
-        await axios.patch(`/api/v1/staff/requested_shifts/${data.shiftId}`, {
-          shiftData: {
-            year: this.year,
-            month: this.month,
-            date: this.date,
-            clockIn: data.clockIn,
-            clockOut: data.clockOut,
-            id: data.shiftId,
-          }
-        })
-        this.getShift();
+        this.$store.dispatch('updateShiftInTableData', data)
       },
       
       //クリックで指定した希望データを希望シフトテーブルから削除する 
-      removeShiftData: function(id, index) {
-        if (window.confirm("このシフト希望を削除します、よろしいですか?")) {
-          this.shifts.splice(index, 1)
-          axios.delete('/api/v1/staff/requested_shifts/id', {data: {id: id} } )
-        }
-      },
-
-      getShift() {
-      axios
-        .get('/api/v1/staff/requested_shifts')
-        .then(response => {
-        this.shifts = response.data
-        })
+      removeShiftInTableData(id, index) {
+        this.$store.state.myRequestedShifts.splice(index, 1)
+        this.$store.dispatch( 'removeShiftInTableData', id )
       }
     }
 };

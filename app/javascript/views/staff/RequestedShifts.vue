@@ -2,14 +2,10 @@
 
 <template>
   <div>
-    {{ this.$store.state.fixedShifts }}
-    <hr>
-    {{ this.$store.state.requestedShifts }}
-
     <h2>希望シフト作成</h2>
     <calendar />
     <p>ストック中の希望シフト</p>
-    <div v-if="shifts.length">
+    <div v-if="this.$store.state.temporarilyRequestedShifts.length">
       <b>※下記のシフト希望はまだ提出されていません</b>
       <p>期日までにシフト希望の提出を完了させてください</p>
       <hr>
@@ -20,7 +16,7 @@
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(item, index) in shifts" :key="item.id">
+          <tr v-for="(item, index) in this.$store.state.temporarilyRequestedShifts" :key="item.id">
             <td> {{ item.year }}年{{ item.month }}月{{ item.date }}日</td>
             <td> {{ item.clockIn }}</td>
             <td> {{ item.clockOut }}</td>
@@ -75,10 +71,6 @@
       }
     },
 
-    props: [
-      'shifts'
-    ],
-
     created() {
       this.$store.dispatch('resetRequestedShifts')
       this.guideMessage = true
@@ -114,12 +106,11 @@
       // modalで入力しlocalStorageに一時保存されている希望データを
       // ①requestedShift_controllerにpostしテーブルに保存
       // ②localStorageのデータを削除
-      postshifts() {
-        if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
-        axios.post('/api/v1/staff/requested_shifts', {shifts: this.shifts })
+      async postshifts() {
+        await this.$store.dispatch('postRequestedShiftsInTheTable' )
         this.$store.dispatch('resetRequestedShifts')
-        }
       },
+
       removeStorageShiftData(shiftId) {
         this.$store.dispatch("removeStorageShiftData", {shiftId: shiftId})
       }

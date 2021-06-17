@@ -15,7 +15,7 @@ Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
 
 document.addEventListener("DOMContentLoaded", () => {
-  var vm = new Vue({
+  let vm = new Vue({
     el: '#app',
     store,
     router,
