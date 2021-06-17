@@ -34,6 +34,10 @@
         :month="shift.month"
         :date="shift.date"
         :index="index"
+        :title=" '希望シフトの修正' "
+        :subtitle=" '希望内容を変更' "
+        :footerMessage=" '上記の時刻に変更します' "
+        :submit=" '変更' "
         @sendShiftsData="updateStorageShiftData"
       >
       </modal>

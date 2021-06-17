@@ -66,7 +66,7 @@
 
     created() {
       axios
-        .get('/api/v1/admin/requested_shifts')
+        .get('/api/v1/admin/fixed_shifts')
         .then(response => {
         this.shiftData = response.data.shifts
         this.userData = response.data.users
@@ -91,7 +91,7 @@
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        const shiftDates = this.$store.state.shifts.beforeCreateData.map((shift) => {
+        const shiftDates = this.$store.state.fixedShifts.map((shift) => {
           return dayjs(shift.clock_in).date();
         });
         if (!shiftDates.includes(value.date)) {
