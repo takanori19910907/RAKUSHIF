@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       namespace :staff do
         resources :users, only: [:index, :show]
         resources :requested_shifts, only: [:index, :create, :update, :destroy]
+        resources :fixed_shifts, only: [:index]
       end
     end
   end
