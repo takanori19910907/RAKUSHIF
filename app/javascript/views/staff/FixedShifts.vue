@@ -23,16 +23,6 @@
           </tr>
         </tbody>
       </table>
-      <fixedShiftsModal v-if="showModal" @close="closeModal" 
-        :year="year"
-        :month="month"
-        :date="date"
-        :shift="selectedShift"
-        :shiftIdx="selectedShift.id"
-        :arrayIdx="arrayIdx"
-        @sendUpdateData="updateItemInShiftData"
-        >
-      </fixedShiftsModal>
     </div>
     
     <div v-else>
@@ -45,7 +35,7 @@
   import axios from 'axios';
   import dayjs from 'dayjs';
   import Calendar from '../../components/FixedShiftsCalendar.vue'
-  import FixedShiftsModal from '../../components/FixedShiftsModal.vue'
+  import Modal from '../../components/Modal.vue'
   import UserName from '../../components/UserName.vue'
   import UserAge from '../../components/UserAge.vue'
   import UserWorkStatus from '../../components/UserWorkStatus.vue'
@@ -54,7 +44,7 @@
   export default {
     components: {
       Calendar,
-      FixedShiftsModal,
+      Modal,
       UserName,
       UserAge,
       UserWorkStatus,
@@ -70,8 +60,7 @@
         year: null,
         month: null,
         date: null,
-        showModal: false,
-        arrayIdx: 0
+        showModal: false
       }
     },
 

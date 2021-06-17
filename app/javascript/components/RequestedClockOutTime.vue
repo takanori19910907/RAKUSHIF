@@ -1,5 +1,5 @@
 <template>
-    <div>
+  <div>
     <p>{{ formattedClockOut }}</p>
   </div>
 </template>
@@ -12,7 +12,7 @@ export default {
 
   computed: {
     formattedClockOut(){
-    return this.$store.getters.formattedTime(this.clockOut);
+      return this.$store.getters.formattedTime(this.clockOut);
     }
   }
 }

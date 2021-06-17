@@ -4,19 +4,18 @@ import axios from "axios";
 import dayjs from 'dayjs';
 
 Vue.use(Vuex);
-const savedLists = localStorage.getItem('StorageShiftsData')
+const savedLists = localStorage.getItem('shiftsStorageData')
 const store = new Vuex.Store({
   state: {
-    shifts: {
-      // requestedShifts => 希望シフト
-      // RequestedShifts-componentからdispatchされたデータを格納
-      beforeApplyData: savedLists ? JSON.parse(savedLists) : [],
+    // requestedShifts => 希望シフト
+    // RequestedShifts-componentからdispatchされたデータを格納
+    requestedShifts: savedLists ? JSON.parse(savedLists) : [],
 
-      // workingShifts => 編集中シフト
-      // FixedShiftIndex-componentでDBから取得したデータを格納
-      beforeCreateData: savedLists ? JSON.parse(savedLists) : []
-    },
+    // fixedShifts => 編集中シフト
+    // FixedShiftIndex-componentでDBから取得したデータを格納
+    fixedShifts: savedLists ? JSON.parse(savedLists) : []
   },
+
   getters: {
   // ①カレンダーcomponentで指定した日付情報を取得し日付オブジェクトに変換
   // ②stateに保管している希望シフトデータも１つずつ日付オブジェクトへの変換処理を行う  
@@ -27,7 +26,7 @@ const store = new Vuex.Store({
   
     filteredShiftData: (state) => (data) => {
       var calendarDate = dayjs(data.date.year + '-' + data.date.month + '-' + data.date.date).format('DD/MM/YYYY')
-      var shifts = state.shifts.beforeCreateData.filter(function (item) {
+      var shifts = state.fixedShifts.filter(function (item) {
         var shiftDate = dayjs(item.clock_in).format('DD/MM/YYYY')
         return calendarDate === shiftDate
       })
@@ -67,8 +66,8 @@ const store = new Vuex.Store({
     updateShift(context, payload) {
       context.commit('updateShift', payload)
     },
-    deleteReqLists(context) {
-      context.commit("deleteReqLists")
+    resetRequestedShifts(context) {
+      context.commit("resetRequestedShifts")
     },
     removeStorageShiftData(context, payload) {
       context.commit('removeStorageShiftData', payload)
@@ -100,7 +99,7 @@ const store = new Vuex.Store({
   mutations: {
     // ユーザーが使うシフト関連機能
     addShift(state, payload) {
-      state.shifts.beforeApplyData.push({
+      state.requestedShifts.push({
         clockIn: payload.clockIn,
         clockOut: payload.clockOut,
         year: payload.year,
@@ -110,7 +109,7 @@ const store = new Vuex.Store({
     },
     
     updateShift(state, payload) {
-      state.shifts.beforeApplyData.splice([payload.shiftIdx], 1, {
+      state.requestedShifts.splice([payload.shiftId], 1, {
         clockIn: payload.clockIn,
         clockOut: payload.clockOut,
         year: payload.year,
@@ -119,12 +118,12 @@ const store = new Vuex.Store({
       })
     },
 
-    deleteReqLists(state) {
-      state.shifts.beforeApplyData = []
+    resetRequestedShifts(state) {
+      state.requestedShifts = []
     },
 
     removeStorageShiftData(state, payload) {
-      state.shifts.beforeApplyData.splice(payload.shiftIdx, 1)
+      state.requestedShifts.splice(payload.shiftId, 1)
     },
     
     // 管理者が使うシフト関連機能
@@ -133,18 +132,18 @@ const store = new Vuex.Store({
     },
 
     fixedShifts(state, payload) {
-      state.shifts.beforeCreateData.push(payload)
+      state.fixedShifts.push(payload)
     },
 
     destroyShift(state, payload) {
-      for (var i = 0; i < state.shifts.beforeCreateData.length; i++) {
-        if (payload === state.shifts.beforeCreateData[i].id) {
-          state.shifts.beforeCreateData.splice(i, 1);
+      for (var i = 0; i < state.fixedShifts.length; i++) {
+        if (payload === state.fixedShifts[i].id) {
+          state.fixedShifts.splice(i, 1);
         }
       }
     },
     updateItemInShiftData(state, payload) {
-      let targetShift = state.shifts.beforeCreateData.find(el => el.id == payload.shiftIdx)
+      let targetShift = state.fixedShifts.find(el => el.id == payload.shiftId)
       targetShift.clock_in = `${payload.year}-${payload.month}-${payload.date} ${payload.clockIn}:00`;
       targetShift.clock_out = `${payload.year}-${payload.month}-${payload.date} ${payload.clockOut}:00`;
     }
@@ -152,7 +151,7 @@ const store = new Vuex.Store({
 })
 
 store.subscribe((mutation, state) => {
-  localStorage.setItem('StorageShiftsData', JSON.stringify(state.shifts.beforeApplyData))
+  localStorage.setItem('shiftsStorageData', JSON.stringify(state.requestedShifts))
 });
 
 export default store;

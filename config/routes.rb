@@ -12,12 +12,12 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :admin do
         resources :users, only: [:index, :show]
-        resources :requested_shifts, only: [:index, :create, :show, :update, :destroy]
-        resources :fixed_shifts, only: [:index, :create, :show, :update, :destroy]
+        resources :requested_shifts, only: [:index, :create, :update, :destroy]
+        resources :fixed_shifts, only: [:index, :create, :update, :destroy]
       end
       namespace :staff do
         resources :users, only: [:index, :show]
-        resources :requested_shifts, only: [:index, :create, :show, :update, :destroy]
+        resources :requested_shifts, only: [:index, :create, :update, :destroy]
       end
     end
   end

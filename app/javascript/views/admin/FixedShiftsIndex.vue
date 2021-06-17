@@ -28,16 +28,16 @@
           </tr>
         </tbody>
       </table>
-      <fixedShiftsModal v-if="showModal" @close="closeModal" 
+      <Modal v-if="showModal" @close="closeModal" 
         :year="year"
         :month="month"
         :date="date"
         :shift="selectedShift"
-        :shiftIdx="selectedShift.id"
-        :arrayIdx="arrayIdx"
-        @sendUpdateData="changeFixedShift"
+        :shiftId="selectedShift.id"
+        :index="index"
+        @sendShiftsData="changeFixedShift"
         >
-      </fixedShiftsModal>
+      </Modal>
       <button @click="updateFixedShifts">シフト変更完了</button>
     </div>
     <div v-else-if="this.date === null ">
@@ -54,7 +54,7 @@
   import axios from 'axios';
   import dayjs from 'dayjs';
   import Calendar from '../../components/FixedShiftsCalendar.vue'
-  import FixedShiftsModal from '../../components/FixedShiftsModal.vue'
+  import Modal from '../../components/Modal.vue'
   import UserName from '../../components/UserName.vue'
   import UserAge from '../../components/UserAge.vue'
   import UserWorkStatus from '../../components/UserWorkStatus.vue'
@@ -63,7 +63,7 @@
   export default {
     components: {
       Calendar,
-      FixedShiftsModal,
+      Modal,
       UserName,
       UserAge,
       UserWorkStatus,
@@ -80,15 +80,15 @@
         month: null,
         date: null,
         showModal: false,
-        arrayIdx: 0
+        index: 0
       }
     },
 
     created() {
-      this.$store.dispatch('getAllShiftsByAdmin')
+      // this.$store.dispatch('getAllShiftsByAdmin')
       
       axios
-        .get('/api/v1/admin/requested_shifts')
+        .get('/api/v1/admin/fixed_shifts')
         .then(response => {
         this.shiftData = response.data.shifts
         this.userData = response.data.users
@@ -113,7 +113,7 @@
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        const shiftDates = this.$store.state.shifts.beforeCreateData.map((shift) => {
+        const shiftDates = this.$store.state.fixedShifts.map((shift) => {
           return dayjs(shift.clock_in).date();
         });
         if (!shiftDates.includes(value.date)) {
@@ -127,9 +127,9 @@
         }
       },
 
-      openModal(value, index) {
-        this.arrayIdx = index
-        this.selectedShift = value
+      openModal(data, index) {
+        this.index = index
+        this.selectedShift = data
         this.showModal = true
       },
       
@@ -138,6 +138,7 @@
       },
 
       changeFixedShift(value) {
+        console.log('change')
         this.showModal = false
       },
 

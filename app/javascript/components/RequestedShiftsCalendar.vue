@@ -34,20 +34,20 @@
       :year="year"
       :month="month"
       :date="dayNum"
-      @sendRequestedShift="addRequestedShift"
+      @sendShiftsData="addRequestedShift"
       >
       </modal>
   </div>
 </template>
 
 <script>
-import Modal from "components/Modal.vue"
-export default {
-  components: {
-    Modal
-  },
-  data() {
-    return {
+  import Modal from "components/Modal.vue"
+  export default {
+    components: {
+      Modal
+    },
+    data() {
+      return {
         weekdays: ['日', '月', '火', '水', '木', '金', '土'],
         year: 2020,
         month: 3,
@@ -55,109 +55,108 @@ export default {
         today: '',
         showModal: false,
         dayNum: 0
-    }
-  },
+      }
+    },
 
     mounted(){
-    var date = new Date()
-    var y = date.getFullYear()
-    var m = ('0' + (date.getMonth() + 1)).slice(-2)
-    var d = ('0' + date.getDate()).slice(-2)
+      var date = new Date()
+      var y = date.getFullYear()
+      var m = ('0' + (date.getMonth() + 1)).slice(-2)
+      var d = ('0' + date.getDate()).slice(-2)
 
-    // yearとmonthを設定
-    this.year = y
-    this.month = Number(m)
-    // 今日の日付を設定
-    this.today = y + '-' + m + '-' + d
-  },
+      // yearとmonthを設定
+      this.year = y
+      this.month = Number(m)
+      // 今日の日付を設定
+      this.today = y + '-' + m + '-' + d
+    },
 
-  methods: {
-    // 当日かどうかの判定
-    isToday: function (day) {
+    methods: {
+      // 当日かどうかの判定
+      isToday(day) {
         var date = this.year + '-' + ('0' + this.month).slice(-2) + "-" + day
         if(this.today === date){
-            return true
+          return true
         }
         return false
-    },
+      },
 
-     // 先月のカレンダーを取得
-    setLastMonth: function () {
+      // 先月のカレンダーを取得
+      setLastMonth() {
         if (this.month === 1) {
-            this.year--
-            this.month = 12
+          this.year--
+          this.month = 12
         } else {
-            this.month--
+          this.month--
         }
         this.day = -1
-    },
+      },
 
-    // 翌月のカレンダーを取得
-    setNextMonth: function () {
+      // 翌月のカレンダーを取得
+      setNextMonth() {
         if (this.month === 12) {
-            this.year++
-            this.month = 1
+          this.year++
+          this.month = 1
         } else {
-            this.month++
+          this.month++
         }
         this.day = -1
-    },
+      },
 
-     // シフト提出用のモーダルを開く
-    openModal: function(date) {
-      this.dayNum = date
-      this.showModal = true
-    },
-    
-    // シフト提出用のモーダルを閉じる
-    closeModal: function() {
-      this.showModal = false
-    },
+      // シフト提出用のモーダルを開く
+      openModal(date) {
+        this.dayNum = date
+        this.showModal = true
+      },
+      
+      // シフト提出用のモーダルを閉じる
+      closeModal() {
+        this.showModal = false
+      },
 
-    // modal-componentから返ってきたデータを用いて希望シフトを作成しLocalStorageに保存する
-    addRequestedShift: function(data) {
-      this.showModal = false
-      console.log(data)
-      this.$store.dispatch('addShift', {
-        year: data.year,
-        month: data.month,
-        date: data.date,
-        clockIn: data.clockIn,
-        clockOut: data.clockOut,
+      // modal-componentから返ってきたデータを用いて希望シフトを作成しLocalStorageに保存する
+      addRequestedShift(data) {
+        this.showModal = false
+        this.$store.dispatch('addShift', {
+          year: data.year,
+          month: data.month,
+          date: data.date,
+          clockIn: data.clockIn,
+          clockOut: data.clockOut,
         })
-    }
-  },
-  computed: {
-    calData: function () {
-      var calData = []
-      // 初日の曜日を取得
-      var firstWeekDay = new Date(this.year, this.month - 1, 1).getDay()
-      // 月の日数
-      var lastDay = new Date(this.year, this.month, 0).getDate()
-      // 日数カウント用
-      var dayNum = 1
-      // 週ごとのデータを作成して、calDateにpush
-      while (dayNum <= lastDay) {
-        var weekData = []
-        
-        // 日曜～土曜の日付データを配列で作成
-        for (var i = 0; i <= 6; i++) {
-          if (calData.length === 0 && i < firstWeekDay) {
-            // 初週の1日以前の曜日は空文字
-            weekData[i] = ''
-          } else if (lastDay < dayNum) {
-            // 最終日以降の曜日は空文字
-            weekData[i] = ''
-          } else {
-            // 通常の日付入力
-            weekData[i] = dayNum
-            dayNum++
+      }
+    },
+
+    computed: {
+      calData() {
+        var calData = []
+        // 初日の曜日を取得
+        var firstWeekDay = new Date(this.year, this.month - 1, 1).getDay()
+        // 月の日数
+        var lastDay = new Date(this.year, this.month, 0).getDate()
+        // 日数カウント用
+        var dayNum = 1
+        // 週ごとのデータを作成して、calDateにpush
+        while (dayNum <= lastDay) {
+          var weekData = []          
+          // 日曜～土曜の日付データを配列で作成
+          for (var i = 0; i <= 6; i++) {
+            if (calData.length === 0 && i < firstWeekDay) {
+              // 初週の1日以前の曜日は空文字
+              weekData[i] = ''
+            } else if (lastDay < dayNum) {
+              // 最終日以降の曜日は空文字
+              weekData[i] = ''
+            } else {
+              // 通常の日付入力
+              weekData[i] = dayNum
+              dayNum++
             }
           }
           calData.push(weekData)
+        }
+        return calData
       }
-      return calData
     }
-  }
 }
 </script>

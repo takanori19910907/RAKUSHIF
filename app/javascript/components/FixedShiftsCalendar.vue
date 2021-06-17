@@ -39,22 +39,22 @@ export default {
   },
   data() {
     return {
-        weekdays: ['日', '月', '火', '水', '木', '金', '土'],
-        year: 2020,
-        month: 3,
-        day:-1,
-        today: '',
-        setDatetime: {
-          year: 0,
-          month: 0,
-          date: 0
-        },
-        showModal: false,
-        dayNum: 0
+      weekdays: ['日', '月', '火', '水', '木', '金', '土'],
+      year: 2020,
+      month: 3,
+      day:-1,
+      today: '',
+      setDatetime: {
+        year: 0,
+        month: 0,
+        date: 0
+      },
+      showModal: false,
+      dayNum: 0
     }
   },
 
-    mounted(){
+  mounted(){
     var date = new Date()
     var y = date.getFullYear()
     var m = ('0' + (date.getMonth() + 1)).slice(-2)
@@ -63,54 +63,53 @@ export default {
     // yearとmonthを設定
     this.year = y
     this.month = Number(m)
+
     // 今日の日付を設定
     this.today = y + '-' + m + '-' + d
   },
 
   methods: {
     // 当日かどうかの判定
-    isToday: function (day) {
-        var date = this.year + '-' + ('0' + this.month).slice(-2) + "-" + day
-        if(this.today === date){
-            return true
-        }
-        return false
+    isToday(day) {
+      var date = this.year + '-' + ('0' + this.month).slice(-2) + "-" + day
+      if(this.today === date){
+        return true
+      }
+      return false
     },
 
      // 先月のカレンダーを取得
-    setLastMonth: function () {
-        if (this.month === 1) {
-            this.year--
-            this.month = 12
-        } else {
-            this.month--
-        }
+    setLastMonth() {
+      if (this.month === 1) {
+        this.year--
+        this.month = 12
+      } else {
+        this.month--
+      }
         this.day = -1
     },
 
     // 翌月のカレンダーを取得
-    setNextMonth: function () {
-        if (this.month === 12) {
-            this.year++
-            this.month = 1
-        } else {
-            this.month++
-        }
+    setNextMonth() {
+      if (this.month === 12) {
+        this.year++
+        this.month = 1
+      } else {
+        this.month++
+      }
         this.day = -1
     },
     
-    setShifts: function(date) {
+    setShifts(date) {
       this.setDatetime.year = this.year
       this.setDatetime.month = this.month
       this.setDatetime.date = date
-      this.$emit('sendDate', 
-                      this.setDatetime
-                    )
+      this.$emit('sendDate', this.setDatetime)
     }
   },
 
   computed: {
-    calData: function () {
+    calData() {
       var calData = []
       // 初日の曜日を取得
       var firstWeekDay = new Date(this.year, this.month - 1, 1).getDay()
@@ -120,9 +119,8 @@ export default {
       var dayNum = 1
       // 週ごとのデータを作成して、calDateにpush
       while (dayNum <= lastDay) {
-        var weekData = []
-        
-        // 日曜～土曜の日付データを配列で作成
+        var weekData = []        
+      // 日曜～土曜の日付データを配列で作成
         for (var i = 0; i <= 6; i++) {
           if (calData.length === 0 && i < firstWeekDay) {
             // 初週の1日以前の曜日は空文字
@@ -134,9 +132,9 @@ export default {
             // 通常の日付入力
             weekData[i] = dayNum
             dayNum++
-            }
           }
-          calData.push(weekData)
+        }
+        calData.push(weekData)
       }
       return calData
     }

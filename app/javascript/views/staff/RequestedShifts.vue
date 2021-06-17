@@ -2,11 +2,14 @@
 
 <template>
   <div>
+    {{ this.$store.state.fixedShifts }}
+    <hr>
+    {{ this.$store.state.requestedShifts }}
+
     <h2>希望シフト作成</h2>
     <calendar />
     <p>ストック中の希望シフト</p>
-    {{ beforeApplyData }}
-    <div v-if="beforeApplyData.length">
+    <div v-if="shifts.length">
       <b>※下記のシフト希望はまだ提出されていません</b>
       <p>期日までにシフト希望の提出を完了させてください</p>
       <hr>
@@ -17,7 +20,7 @@
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(item, index) in beforeApplyData" :key="item.id">
+          <tr v-for="(item, index) in shifts" :key="item.id">
             <td> {{ item.year }}年{{ item.month }}月{{ item.date }}日</td>
             <td> {{ item.clockIn }}</td>
             <td> {{ item.clockOut }}</td>
@@ -30,8 +33,8 @@
         :year="shift.year"
         :month="shift.month"
         :date="shift.date"
-        :shiftIdx="shiftIdx"
-        @sendRequestedShift="updateStorageShiftData"
+        :index="index"
+        @sendShiftsData="updateStorageShiftData"
       >
       </modal>
       <button @click="postshifts">シフトを提出</button>
@@ -63,16 +66,17 @@
       return{
         showModal: false,
         shift: [],
-        shiftIdx: 0,
+        shiftId: 0,
         guideMessage: true
       }
     },
 
     props: [
-      'beforeApplyData'
+      'shifts'
     ],
 
-    mounted() {
+    created() {
+      this.$store.dispatch('resetRequestedShifts')
       this.guideMessage = true
     },
 
@@ -81,7 +85,7 @@
       openModal(data, index) {
         this.guideMessage = false
         this.shift = data
-        this.shiftIdx = index
+        this.index = index
         this.showModal = true
       },
       
@@ -96,7 +100,7 @@
         this.$store.dispatch('updateShift', {
           clockIn: data.clockIn,
           clockOut: data.clockOut,
-          shiftIdx: data.shiftIdx,
+          shiftId: data.shiftId,
           year: data.year,
           month: data.month,
           date: data.date,
@@ -108,12 +112,12 @@
       // ②localStorageのデータを削除
       postshifts() {
         if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
-        axios.post('/api/v1/staff/requested_shifts', {shifts: this.beforeApplyData })
-        this.$store.dispatch('deleteReqLists')
+        axios.post('/api/v1/staff/requested_shifts', {shifts: this.shifts })
+        this.$store.dispatch('resetRequestedShifts')
         }
       },
-      removeStorageShiftData(shiftIdx) {
-        this.$store.dispatch("removeStorageShiftData", {shiftIdx: shiftIdx})
+      removeStorageShiftData(shiftId) {
+        this.$store.dispatch("removeStorageShiftData", {shiftId: shiftId})
       }
     }
 }

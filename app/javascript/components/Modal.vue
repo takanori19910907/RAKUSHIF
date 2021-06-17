@@ -5,7 +5,7 @@
     <div id="modal">
       <slot name="title"></slot>
       <slot name="subtitle"></slot>
-      <form @submit.prevent="sendRequestedShift">
+      <form @submit.prevent="sendShiftsData">
       <select v-model="selected1">
         <option disabled value="">希望出勤時間</option>
         <option v-for="clockIn in clockIns" v-bind:val="clockIn.time" v-bind:key="clockIn.id">
@@ -35,23 +35,27 @@ export default {
     return {
       selected1: "",
       selected2: "",
+
       clockIns: [
         {id: 1, time: "9:00" },
         {id: 2, time: "13:00" },
         {id: 3, time: "17:00" }
       ],
+
       clockOuts: [
         {id: 1, time: "13:30" },
         {id: 2, time: "17:30" },
         {id: 3, time: "21:00" }
       ],
+
       setData: {
         year: 0,
         month: 0,
         date: 0,
         clockIn: "",
         clockOut: "",
-        shiftIdx: 0
+        shiftId: 0,
+        index: 0
       }
     }
   },
@@ -60,20 +64,21 @@ export default {
     'year',
     'month',
     'date',
-    'shiftIdx',
+    'shiftId',
+    'index',
     'title'
   ],
   
   methods: {
-    sendRequestedShift: function() {
+    sendShiftsData() {
     this.setData.year = this.year
     this.setData.month = this.month
     this.setData.date = this.date
     this.setData.clockIn = this.selected1
     this.setData.clockOut = this.selected2
-    this.setData.shiftIdx = this.shiftIdx
-    console.log(this.setData.year);
-      this.$emit('sendRequestedShift', 
+    this.setData.shiftId = this.shiftId
+    this.setData.index = this.index
+      this.$emit('sendShiftsData', 
                       this.setData
                       )
     }

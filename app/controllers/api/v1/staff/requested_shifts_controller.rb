@@ -5,10 +5,6 @@ class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
     render json: shifts
   end
 
-  def show
-    shift = current_user.requested_shifts.find(id: params[:id])
-  end
-
   def create
     # stateに蓄積されたデータ(shifts)を受け取りオブジェクトを作成してDBへ保存
     params.require(:shifts).each do |record|
@@ -23,7 +19,7 @@ class Api::V1::Staff::RequestedShiftsController < Api::V1::BaseController
   end
 
   def update
-    shift = current_user.requested_shifts.find_by(id: params[:shiftData][:id])
+    shift = current_user.requested_shifts.find_by(id: params[:id])
     shift.update(
       clock_in: "#{params[:shiftData][:year]}-#{params[:shiftData][:month]}-#{params[:shiftData][:date]} #{params[:shiftData][:clockIn]}:00",
       clock_out: "#{params[:shiftData][:year]}-#{params[:shiftData][:month]}-#{params[:shiftData][:date]} #{params[:shiftData][:clockOut]}:00",
