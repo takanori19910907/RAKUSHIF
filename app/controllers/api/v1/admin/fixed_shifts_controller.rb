@@ -3,8 +3,6 @@ class Api::V1::Admin::FixedShiftsController < ApplicationController
   def index
     shifts = FixedShift.all
     render json: shifts
-    # users = User.all
-    # render json: { shifts: shifts, users: users }
   end
 
   def create
