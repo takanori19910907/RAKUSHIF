@@ -66,23 +66,26 @@
 
     created() {
       axios
-        .get('/api/v1/admin/fixed_shifts')
-        .then(response => {
-        this.shiftData = response.data.shifts
-        this.userData = response.data.users
-        })
+      this.$store.dispatch('getAllShiftsByUser')
+      this.$store.dispatch('getAllUsers')
     },
 
     computed: {
       filteredShiftData() {
-        return this.$store.getters.filteredShiftData({
-          date: {
-            year: this.year,
-            month: this.month,
-            date: this.date
-            },
-            user: this.userData     
+        const calendarDate = dayjs(this.year + '-' + this.month + '-' + this.date).format('DD/MM/YYYY')
+      const shifts = this.$store.state.fixedShiftsInTableData.filter(function (item) {
+        const shiftDate = dayjs(item.clock_in).format('DD/MM/YYYY')
+        return calendarDate === shiftDate
+      })
+      return shifts.map(shift => {
+        const user = this.$store.state.allUsersData.find(function (user) {
+        return user.id === shift.user_id
         })
+        return {
+          ...shift,
+          user: user
+        }
+      })
       },
     },
 
@@ -91,18 +94,6 @@
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        const shiftDates = this.$store.state.fixedShifts.map((shift) => {
-          return dayjs(shift.clock_in).date();
-        });
-        if (!shiftDates.includes(value.date)) {
-          const selectedShifts = this.shiftData.filter((constShift) => {
-            const checkedDate = dayjs(constShift.clock_in).date();
-            return checkedDate === value.date;
-          })
-          for( var i = 0; i < selectedShifts.length; i++ ){
-          this.$store.dispatch('fixedShifts', selectedShifts[i])
-          }
-        }
       },
   }
 }

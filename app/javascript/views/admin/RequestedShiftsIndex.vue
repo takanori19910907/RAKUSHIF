@@ -80,25 +80,18 @@
 
     data() {
       return{
-        shiftData: [],
-        userData: {},
         selectedShift: {},
         year: null,
         month: null,
         date: null,
         showModal: false,
-        index: 0
+        index: null
       }
     },
 
     created() {
-      this.$store.dispatch('resetRequestedShifts')
-      axios
-        .get('/api/v1/admin/requested_shifts')
-        .then(response => {
-        this.shiftData = response.data.shifts
-        this.userData = response.data.users
-        })
+      this.$store.dispatch('getAllShiftsByAdmin', { type: "requested" } )
+      this.$store.dispatch('getAllUsers')
     },
 
     computed: {
@@ -109,7 +102,8 @@
             month: this.month,
             date: this.date
             },
-            user: this.userData     
+            user: this.$store.state.allUsersData,
+            shifts: this.$store.state.requestedShiftsInTableData
         })
       },
     },
@@ -119,15 +113,15 @@
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        const shiftDates = this.$store.state.fixedShifts.map((shift) => {
+        const shiftDates = this.$store.state.requestedShiftsInTableData.map((shift) => {
           return dayjs(shift.clock_in).date();
         });
         if (!shiftDates.includes(value.date)) {
-          const selectedShifts = this.shiftData.filter((constShift) => {
-            const checkedDate = dayjs(constShift.clock_in).date();
+            const selectedShifts = this.$store.state.requestedShiftsInTableData.filter((shift) => {
+            const checkedDate = dayjs(shift.clock_in).date();
             return checkedDate === value.date;
             })
-            for( var i = 0; i < selectedShifts.length; i++ ){
+            for( let i = 0; i < selectedShifts.length; i++ ){
               this.$store.dispatch('fixedShifts', selectedShifts[i])
             }
         }
@@ -143,9 +137,9 @@
         this.showModal = false
       },
       
-      createFixedShift() {
+      async createFixedShift() {
         if ( window.confirm("確定シフトを作成します、よろしいですか?")) {
-        axios.post('/api/v1/admin/fixed_shifts', {shifts: this.$store.state.fixedShifts })
+          await this.$store.dispatch('createFixedShift')
         this.$router.push('/admin/fixed_shifts')
         }
       },
@@ -156,7 +150,7 @@
       },
 
       deleteItemInShiftData(itemID) {
-        this.$store.dispatch("destroyShift", itemID)
+        this.$store.dispatch("deleteItemInShiftData", itemID)
       }
   }
 }
