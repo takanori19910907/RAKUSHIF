@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header :userID="user.id" :hasAdmin="user.admin"></Header>
-      <router-view :userID="user.id" :hasAdmin="user.admin" :beforeApplyData="shifts.beforeApplyData" :beforeCreateData="shifts.beforeCreateData"></router-view>
+      <router-view :userID="user.id" :hasAdmin="user.admin" :shifts="requestedShifts" :shiftData="fixedShifts"></router-view>
   </div>
 </template>
 <script>
@@ -25,7 +25,8 @@
 
     computed: {
       ...mapState([
-      'shifts',
+      'requestedShifts',
+      'fixedShifts'
       ]),
     },
   };

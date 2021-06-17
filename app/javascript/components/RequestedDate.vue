@@ -1,5 +1,5 @@
 <template>
-    <div>
+  <div>
     <p>{{ formattedYear }}年{{ formattedMonth }}月{{ formattedDate }}日</p>
   </div>
 </template>

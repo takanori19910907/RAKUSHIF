@@ -12,7 +12,7 @@ export default {
 
   computed: {
     formattedClockIn(){
-    return this.$store.getters.formattedTime(this.clockIn);
+      return this.$store.getters.formattedTime(this.clockIn);
     },
   }
 }

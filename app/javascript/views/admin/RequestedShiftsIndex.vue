@@ -29,16 +29,16 @@
           </tr>
         </tbody>
       </table>
-      <fixedShiftsModal v-if="showModal" @close="closeModal" 
+      <Modal v-if="showModal" @close="closeModal" 
         :year="year"
         :month="month"
         :date="date"
         :shift="selectedShift"
-        :shiftIdx="selectedShift.id"
-        :arrayIdx="arrayIdx"
-        @sendUpdateData="updateItemInShiftData"
+        :shiftId="selectedShift.id"
+        :index="index"
+        @sendShiftsData="updateItemInShiftData"
         >
-      </fixedShiftsModal>
+      </Modal>
       <p>出勤者を決定したら『シフト確定』を押してください</p>
       <button @click="createFixedShift">シフト確定</button>
     </div>
@@ -57,7 +57,7 @@
   import axios from 'axios';
   import dayjs from 'dayjs';
   import Calendar from '../../components/FixedShiftsCalendar.vue'
-  import FixedShiftsModal from '../../components/FixedShiftsModal.vue'
+  import Modal from '../../components/Modal.vue'
   import UserName from '../../components/UserName.vue'
   import UserAge from '../../components/UserAge.vue'
   import UserWorkStatus from '../../components/UserWorkStatus.vue'
@@ -66,7 +66,7 @@
   export default {
     components: {
       Calendar,
-      FixedShiftsModal,
+      Modal,
       UserName,
       UserAge,
       UserWorkStatus,
@@ -83,11 +83,12 @@
         month: null,
         date: null,
         showModal: false,
-        arrayIdx: 0
+        index: 0
       }
     },
 
     created() {
+      this.$store.dispatch('resetRequestedShifts')
       axios
         .get('/api/v1/admin/requested_shifts')
         .then(response => {
@@ -114,7 +115,7 @@
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        const shiftDates = this.$store.state.shifts.beforeCreateData.map((shift) => {
+        const shiftDates = this.$store.state.fixedShifts.map((shift) => {
           return dayjs(shift.clock_in).date();
         });
         if (!shiftDates.includes(value.date)) {
@@ -128,9 +129,9 @@
         }
       },
 
-      openModal(value, index) {
-        this.arrayIdx = index
-        this.selectedShift = value
+      openModal(data, index) {
+        this.index = index
+        this.selectedShift = data
         this.showModal = true
       },
       
@@ -139,16 +140,15 @@
       },
       
       createFixedShift() {
-        this.$store.state.shifts.beforeCreateData.splice(0, 1) 
-        if (window.confirm("確定シフトを作成します、よろしいですか?")) {
-        axios.post('/api/v1/admin/fixed_shifts', {shifts: this.$store.state.shifts.beforeCreateData })
+        if ( window.confirm("確定シフトを作成します、よろしいですか?")) {
+        axios.post('/api/v1/admin/fixed_shifts', {shifts: this.$store.state.fixedShifts })
         this.$router.push('/admin/fixed_shifts')
         }
       },
 
-      updateItemInShiftData(value) {
+      updateItemInShiftData(data) {
         this.showModal = false
-        this.$store.dispatch('updateItemInShiftData', value )
+        this.$store.dispatch('updateItemInShiftData', data )
       },
 
       deleteItemInShiftData(itemID) {

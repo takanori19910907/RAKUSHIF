@@ -23,12 +23,12 @@
     </table>
     <modal v-if="showModal" 
                 @close="closeModal" 
-                @sendRequestedShift="updateTableShiftData"
+                @sendShiftsData="updateTableShiftData"
                 :shift="shift"
                 :year="year"
                 :month="month"
                 :date="date"
-                :shiftIdx="shiftIdx"
+                :shiftId="shiftId"
                 >
     </modal>
     </div>
@@ -61,7 +61,7 @@
         year: 0,
         month: 0,
         date: 0,
-        shiftIdx: 0,
+        shiftId: 0,
         showModal: false
       };
     },
@@ -78,8 +78,11 @@
     methods: {
       // シフト提出用のモーダルを開く
       openModal(data) {
+        this.year = this.$store.getters.formattedYear(data.clock_in)
+        this.month = this.$store.getters.formattedMonth(data.clock_in)
+        this.date = this.$store.getters.formattedDate(data.clock_in)
         this.shift = data
-        this.shiftIdx = data.id
+        this.shiftId = data.id
         this.showModal = true
       },
       
@@ -89,16 +92,19 @@
       },
 
       //modal-componentから帰ってきたシフト希望データを用いて希望シフトテーブルの値を更新する
-      updateTableShiftData(data) {
+      async updateTableShiftData(data) {
         this.showModal = false
-        axios.patch('/api/v1/staff/requested_shifts/id', {
+        await axios.patch(`/api/v1/staff/requested_shifts/${data.shiftId}`, {
           shiftData: {
+            year: this.year,
+            month: this.month,
+            date: this.date,
             clockIn: data.clockIn,
             clockOut: data.clockOut,
-            id: data.shiftIdx, 
+            id: data.shiftId,
           }
         })
-        this.getShift(data.shiftIdx);
+        this.getShift();
       },
       
       //クリックで指定した希望データを希望シフトテーブルから削除する 
@@ -109,11 +115,11 @@
         }
       },
 
-      getShift(shiftIdx) {
+      getShift() {
       axios
-        .get('/api/v1/staff/requested_shifts/id', { params: { id: shiftIdx }})
+        .get('/api/v1/staff/requested_shifts')
         .then(response => {
-        this.shiftData = response.data.shift
+        this.shifts = response.data
         })
       }
     }

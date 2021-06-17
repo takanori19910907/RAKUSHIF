@@ -1,9 +1,9 @@
 class Api::V1::Admin::FixedShiftsController < ApplicationController
 
   def index
-    date = Date.new(params[:year].to_i, params[:month].to_i, params[:date].to_i)
-    shifts = RequestedShift.where(clock_in: date.beginning_of_day .. date.end_of_day)
-    render json: shifts
+    shifts = FixedShift.all
+    users = User.all
+    render json: { shifts: shifts, users: users }
   end
 
   def create      

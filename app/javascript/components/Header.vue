@@ -14,10 +14,12 @@
 </template>
 <script>
   export default {
+    
     data() {
       return {
       };
     },
+
     props: [
       'userID',
       'hasAdmin'
