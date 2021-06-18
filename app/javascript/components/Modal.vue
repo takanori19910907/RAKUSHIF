@@ -1,4 +1,4 @@
-<!-- addshift(dispatch)でselectした要素、propsで受け取った日付情報をstoreに送るmodal -->
+<!-- selectした要素、propsで受け取った日付情報をstoreに送るmodal -->
 
 <template>
   <div id="overlay">

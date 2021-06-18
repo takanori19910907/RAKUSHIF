@@ -70,11 +70,14 @@ const store = new Vuex.Store({
   },
 
   actions: {
-    // ユーザーが使う機能
-
     async getMyUserData(context) {
       const response = await axios.get('/api/v1/staff/users')
       context.commit('getMyUserData', response.data)
+    },
+
+    async getAllUsers(context) {
+      const response = await axios.get('/api/v1/admin/users')
+      context.commit('getAllUsers', response.data)
     },
 
     async getMyShiftData(context) {
@@ -82,22 +85,25 @@ const store = new Vuex.Store({
       context.commit('getMyShiftData', response.data)
     },
 
-    async getAllShiftsByUser(context) {
+    async getAllShiftByStaff(context) {
       const response = await axios.get('/api/v1/staff/fixed_shifts')
       context.commit('getFixedShiftsInTableData', response.data)
     },
 
-    addShift(context, payload) {
-      context.commit('addShift', payload)
+    addStorageShiftData(context, payload) {
+      context.commit('addStorageShiftData', payload)
     },
-    updateShift(context, payload) {
-      context.commit('updateShift', payload)
+
+    updateRequestedShiftInStorageData(context, payload) {
+      context.commit('updateRequestedShiftInStorageData', payload)
     },
+
     resetRequestedShifts(context) {
       context.commit("resetRequestedShifts")
     },
-    removeStorageShiftData(context, payload) {
-      context.commit('removeStorageShiftData', payload)
+
+    deleteRequestedShiftInStorageData(context, payload) {
+      context.commit('deleteRequestedShiftInStorageData', payload)
     },
 
     postRequestedShiftsInTheTable(context) {
@@ -146,7 +152,6 @@ const store = new Vuex.Store({
       }
     },
     
-    // 管理者が使うシフト関連機能
     async getAllShiftsByAdmin(context, payload) {
       if ( payload.type === "requested" ) {
         const response = await axios.get('/api/v1/admin/requested_shifts')
@@ -157,24 +162,15 @@ const store = new Vuex.Store({
       }
     },
 
-    async getAllUsers(context) {
-        const response = await axios.get('/api/v1/admin/users')
-        context.commit('getAllUsers', response.data)
-    },
-
-    addFixedShifts(context, payload) {
-      context.commit('addFixedShifts', payload)
-    },
-
-    updateShiftInStorageData(context, payload) {
-      context.commit('updateShiftInStorageData', payload)
+    updateFixedShiftInStorageData(context, payload) {
+      context.commit('updateFixedShiftInStorageData', payload)
     },
     
-    deleteItemInShiftData(context, payload) {
-      context.commit('deleteItemInShiftData', payload)
+    deleteFixedShiftInStorageData(context, payload) {
+      context.commit('deleteFixedShiftInStorageData', payload)
     },
 
-    async createFixedShift(context, payload) {
+    async createFixedShifts(context, payload) {
       await axios.post('/api/v1/admin/fixed_shifts', { shifts: payload })
       const response = await axios.get('/api/v1/admin/fixed_shifts')
       context.commit('getFixedShiftsInTableData', response.data)
@@ -182,16 +178,19 @@ const store = new Vuex.Store({
   },
 
   mutations: {
-    // ユーザーが使う機能
     getMyUserData(state, payload) {
       state.myUserData = payload
+    },
+
+    getAllUsers(state, payload) {
+      state.allUsersData = payload
     },
 
     getMyShiftData(state, payload) {
       state.myRequestedShifts = payload
     },
 
-    addShift(state, payload) {
+    addStorageShiftData(state, payload) {
       state.temporarilyRequestedShifts.push({
         clockIn: payload.clockIn,
         clockOut: payload.clockOut,
@@ -201,7 +200,7 @@ const store = new Vuex.Store({
       })
     },
     
-    updateShift(state, payload) {
+    updateRequestedShiftInStorageData(state, payload) {
       state.temporarilyRequestedShifts.splice([payload.shiftId], 1, {
         clockIn: payload.clockIn,
         clockOut: payload.clockOut,
@@ -215,7 +214,7 @@ const store = new Vuex.Store({
       state.temporarilyRequestedShifts = []
     },
 
-    removeStorageShiftData(state, payload) {
+    deleteRequestedShiftInStorageData(state, payload) {
       state.temporarilyRequestedShifts.splice(payload.shiftId, 1)
     },
 
@@ -223,11 +222,6 @@ const store = new Vuex.Store({
       if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
         await axios.post('/api/v1/staff/requested_shifts', { shifts: state.temporarilyRequestedShifts })
       }
-    },
-    
-    // 管理者が使う機能
-    getAllUsers(state, payload) {
-      state.allUsersData = payload
     },
 
     getRequestedShiftsByAdmin(state, payload) {
@@ -238,17 +232,13 @@ const store = new Vuex.Store({
       state.fixedShiftsInTableData = payload
     },
 
-    addFixedShifts(state, payload) {
-      state.temporarilyFixedShifts.push(payload)
-    },
-
-    updateShiftInStorageData(state, payload) {
+    updateFixedShiftInStorageData(state, payload) {
       let targetShift = state.requestedShiftsInTableData.find(el => el.id == payload.shiftId)
       targetShift.clock_in = `${payload.year}-${payload.month}-${payload.date} ${payload.clockIn}:00`;
       targetShift.clock_out = `${payload.year}-${payload.month}-${payload.date} ${payload.clockOut}:00`;
     },
 
-    deleteItemInShiftData(state, payload) {
+    deleteFixedShiftInStorageData(state, payload) {
       const fixedShifts = state.requestedShiftsInTableData
       for (var i = 0; i < fixedShifts.length; i++) {
         if (payload === fixedShifts[i].id) {

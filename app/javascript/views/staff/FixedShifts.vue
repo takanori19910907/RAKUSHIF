@@ -66,7 +66,7 @@
 
     created() {
       axios
-      this.$store.dispatch('getAllShiftsByUser')
+      this.$store.dispatch('getAllShiftByStaff')
       this.$store.dispatch('getAllUsers')
     },
 

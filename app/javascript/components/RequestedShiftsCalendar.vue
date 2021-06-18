@@ -121,7 +121,7 @@
       // modal-componentから返ってきたデータを用いて希望シフトを作成しLocalStorageに保存する
       addRequestedShift(data) {
         this.showModal = false
-        this.$store.dispatch('addShift', {
+        this.$store.dispatch('addStorageShiftData', {
           year: data.year,
           month: data.month,
           date: data.date,
