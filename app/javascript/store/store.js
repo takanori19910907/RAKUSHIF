@@ -74,17 +74,17 @@ const store = new Vuex.Store({
 
     async getMyUserData(context) {
       const response = await axios.get('/api/v1/staff/users')
-      context.commit('getFixedShifts', response.data)
+      context.commit('getMyUserData', response.data)
     },
 
-    async getMyShiftsData(context) {
+    async getMyShiftData(context) {
       const response = await axios.get('/api/v1/staff/requested_shifts')
-      context.commit('getMyShiftsData', response.data)
+      context.commit('getMyShiftData', response.data)
     },
 
     async getAllShiftsByUser(context) {
       const response = await axios.get('/api/v1/staff/fixed_shifts')
-      context.commit('getFixedShifts', response.data)
+      context.commit('getFixedShiftsInTableData', response.data)
     },
 
     addShift(context, payload) {
@@ -105,33 +105,55 @@ const store = new Vuex.Store({
     },
 
     async updateShiftInTableData(context, payload) {
-      await axios.patch(`/api/v1/staff/requested_shifts/${payload.shiftId}`, {
-        shiftData: {
-            year: payload.year,
-            month: payload.month,
-            date: payload.date,
-            clockIn: payload.clockIn,
-            clockOut: payload.clockOut,
+      if (payload.type === "requested") {
+        await axios.patch(`/api/v1/staff/requested_shifts/${payload.returnedModalData.shiftId}`, {
+          shiftData: {
+            year: payload.returnedModalData.year,
+            month: payload.returnedModalData.month,
+            date: payload.returnedModalData.date,
+            clockIn: payload.returnedModalData.clockIn,
+            clockOut: payload.returnedModalData.clockOut,
           }
-      })
-      const response = await axios.get('/api/v1/staff/requested_shifts')
-      context.commit( 'getMyShiftsData', response.data )
+        })
+        const response = await axios.get('/api/v1/staff/requested_shifts')
+        context.commit('getMyShiftData', response.data)
+
+      } else if (payload.type === "fixed") {
+        await axios.patch(`/api/v1/admin/fixed_shifts/${payload.returnedModalData.shiftId}`, {
+          shiftData: {
+            year: payload.returnedModalData.year,
+            month: payload.returnedModalData.month,
+            date: payload.returnedModalData.date,
+            clockIn: payload.returnedModalData.clockIn,
+            clockOut: payload.returnedModalData.clockOut,
+            user_id: payload.returnedModalData.userId
+          }
+        })
+        const response = await axios.get('/api/v1/admin/fixed_shifts')
+        context.commit('getFixedShiftsInTableData', response.data)
+      }
     },
 
-    async  removeShiftInTableData(context, payload) {
-      await axios.delete(`/api/v1/staff/requested_shifts/${payload}`)
-      const response = await axios.get('/api/v1/staff/requested_shifts')
-      context.commit( 'getMyShiftsData', response.data )
+    async deleteFixedShiftInTableData(context, payload) {
+      if (payload.type === "requested") {
+        await axios.delete(`/api/v1/staff/requested_shifts/${payload.shiftID}`)
+        const response = await axios.get('/api/v1/staff/requested_shifts')
+        context.commit( 'getMyShiftData', response.data )
+      } else if (payload.type === "fixed") {
+        await axios.delete(`/api/v1/admin/fixed_shifts/${payload.shiftID}`)
+        const response = await axios.get('/api/v1/staff/fixed_shifts')
+        context.commit( 'getFixedShiftsInTableData', response.data )
+      }
     },
     
     // 管理者が使うシフト関連機能
     async getAllShiftsByAdmin(context, payload) {
-      if (payload.type === "fixed") {
-        const response = await axios.get('/api/v1/admin/fixed_shifts')
-        context.commit('getFixedShifts', response.data)
-      } else if (payload.type === "requested") {
+      if ( payload.type === "requested" ) {
         const response = await axios.get('/api/v1/admin/requested_shifts')
         context.commit('getRequestedShiftsByAdmin', response.data)
+      } else if ( payload.type === "fixed" ) {
+        const response = await axios.get('/api/v1/admin/fixed_shifts')
+        context.commit('getFixedShiftsInTableData', response.data)
       }
     },
 
@@ -140,20 +162,22 @@ const store = new Vuex.Store({
         context.commit('getAllUsers', response.data)
     },
 
-    fixedShifts(context, payload) {
-      context.commit('fixedShifts', payload)
+    addFixedShifts(context, payload) {
+      context.commit('addFixedShifts', payload)
     },
 
-    updateItemInShiftData(context, payload) {
-      context.commit('updateItemInShiftData', payload)
+    updateShiftInStorageData(context, payload) {
+      context.commit('updateShiftInStorageData', payload)
     },
     
     deleteItemInShiftData(context, payload) {
       context.commit('deleteItemInShiftData', payload)
     },
 
-    createFixedShift(context) {
-      context.commit('createFixedShift')
+    async createFixedShift(context, payload) {
+      await axios.post('/api/v1/admin/fixed_shifts', { shifts: payload })
+      const response = await axios.get('/api/v1/admin/fixed_shifts')
+      context.commit('getFixedShiftsInTableData', response.data)
     }
   },
 
@@ -163,7 +187,7 @@ const store = new Vuex.Store({
       state.myUserData = payload
     },
 
-    getMyShiftsData(state, payload) {
+    getMyShiftData(state, payload) {
       state.myRequestedShifts = payload
     },
 
@@ -210,15 +234,15 @@ const store = new Vuex.Store({
       state.requestedShiftsInTableData = payload
     },
 
-    getFixedShifts(state, payload) {
+    getFixedShiftsInTableData(state, payload) {
       state.fixedShiftsInTableData = payload
     },
 
-    fixedShifts(state, payload) {
+    addFixedShifts(state, payload) {
       state.temporarilyFixedShifts.push(payload)
     },
 
-    updateItemInShiftData(state, payload) {
+    updateShiftInStorageData(state, payload) {
       let targetShift = state.requestedShiftsInTableData.find(el => el.id == payload.shiftId)
       targetShift.clock_in = `${payload.year}-${payload.month}-${payload.date} ${payload.clockIn}:00`;
       targetShift.clock_out = `${payload.year}-${payload.month}-${payload.date} ${payload.clockOut}:00`;
@@ -231,12 +255,6 @@ const store = new Vuex.Store({
           fixedShifts.splice(i, 1);
         }
       }
-    },
-
-    async createFixedShift(state) {
-      await axios.post('/api/v1/admin/fixed_shifts', {
-        shifts: state.requestedShiftsInTableData
-      })
     }
   }
 })

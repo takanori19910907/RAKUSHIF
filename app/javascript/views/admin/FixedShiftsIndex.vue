@@ -24,7 +24,7 @@
             <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
             <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
             <button @click="openModal(item, index)">修正</button>
-            <button @click="deleteFixedShift(item.id)">×</button>
+            <button @click="deleteFixedShiftInTableData(item.id, index)">×</button>
           </tr>
         </tbody>
       </table>
@@ -34,15 +34,16 @@
         :date="date"
         :shift="selectedShift"
         :shiftId="selectedShift.id"
+        :userId="selectedShift.user_id"
         :index="index"
         :title=" '確定シフトの編集' "
         :subtitle=" 'シフトを編集' "
         :footerMessage=" '上記の時刻に変更します' "
         :submit=" '変更' "
-        @sendShiftsData="changeFixedShift"
+        @sendShiftsData="editFixedShiftInTableData"
         >
       </Modal>
-      <button @click="updateFixedShifts">シフト変更完了</button>
+      <button @click="updateFixedShiftsInTableData()">シフト変更完了</button>
     </div>
     <div v-else-if="this.date === null ">
       <p>カレンダーをクリックするとその日付の出勤予定者を確認出来ます</p>
@@ -119,7 +120,7 @@
             return checkedDate === value.date;
           })
           for( let i = 0; i < selectedShifts.length; i++ ){
-          this.$store.dispatch('fixedShifts', selectedShifts[i])
+          this.$store.dispatch('addFixedShifts', selectedShifts[i])
           }
         }
       },
@@ -134,17 +135,18 @@
         this.showModal = false
       },
 
-      changeFixedShift(value) {
-        console.log('change')
+      editFixedShiftInTableData(returnedModalData) {
         this.showModal = false
+        this.$store.dispatch('updateShiftInTableData', { returnedModalData: returnedModalData, type: "fixed" } )
       },
 
-      updateFixedShifts() {
+      deleteFixedShiftInTableData(selectedShiftID, index) {
+        this.$store.state.fixedShiftsInTableData.splice(index, 1)
+        this.$store.dispatch( 'deleteFixedShiftInTableData', {shiftID: selectedShiftID, type: "fixed"} )
+      },
+
+      updateFixedShiftsInTableData() {
         console.log('update')
-      },
-
-      deleteFixedShift(itemID) {
-        console.log('delete')
       }
   }
 }

@@ -74,7 +74,7 @@
     ],
       
     created() {
-    this.$store.dispatch('getMyShiftsData')
+    this.$store.dispatch('getMyShiftData')
     },
 
     methods: {
@@ -94,9 +94,9 @@
       },
 
       //modal-componentから帰ってきたシフト希望データを用いて希望シフトテーブルの値を更新する
-      updateShiftInTableData(data) {
+      updateShiftInTableData(returnedModalData) {
         this.showModal = false
-        this.$store.dispatch('updateShiftInTableData', data)
+        this.$store.dispatch('updateShiftInTableData', {returnedModalData: returnedModalData, type: "requested" })
       },
       
       //クリックで指定した希望データを希望シフトテーブルから削除する 
