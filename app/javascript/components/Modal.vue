@@ -54,22 +54,24 @@ export default {
       ],
 
       setData: {
-        year: 0,
-        month: 0,
-        date: 0,
+        year: null,
+        month: null,
+        date: null,
         clockIn: "",
         clockOut: "",
-        shiftId: 0,
-        index: 0
+        shiftId: null,
+        userId: null,
+        index: null
       }
     }
   },
   props: [
-    'shift',
     'year',
     'month',
     'date',
+    'shift',
     'shiftId',
+    'userId',
     'index',
     'title',
     'subtitle',
@@ -92,6 +94,7 @@ export default {
     this.setData.clockIn = this.selected1
     this.setData.clockOut = this.selected2
     this.setData.shiftId = this.shiftId
+    this.setData.userId = this.userId
     this.setData.index = this.index
       this.$emit('sendShiftsData', 
                       this.setData

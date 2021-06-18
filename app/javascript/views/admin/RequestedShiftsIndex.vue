@@ -40,7 +40,7 @@
         :subtitle=" 'シフトを変更' "
         :footerMessage=" '上記の時刻に変更します' "
         :submit=" '変更' "
-        @sendShiftsData="updateItemInShiftData"
+        @sendShiftsData="updateShiftInStorageData"
         >
       </Modal>
       <p>出勤者を決定したら『シフト確定』を押してください</p>
@@ -122,7 +122,7 @@
             return checkedDate === value.date;
             })
             for( let i = 0; i < selectedShifts.length; i++ ){
-              this.$store.dispatch('fixedShifts', selectedShifts[i])
+              this.$store.dispatch('addFixedShifts', selectedShifts[i])
             }
         }
       },
@@ -139,14 +139,13 @@
       
       async createFixedShift() {
         if ( window.confirm("確定シフトを作成します、よろしいですか?")) {
-          await this.$store.dispatch('createFixedShift')
+          await this.$store.dispatch('createFixedShift', this.$store.state.requestedShiftsInTableData )}
         this.$router.push('/admin/fixed_shifts')
-        }
       },
 
-      updateItemInShiftData(data) {
+      updateShiftInStorageData(data) {
         this.showModal = false
-        this.$store.dispatch('updateItemInShiftData', data )
+        this.$store.dispatch('updateShiftInStorageData', data )
       },
 
       deleteItemInShiftData(itemID) {

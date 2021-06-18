@@ -16,6 +16,20 @@ class Api::V1::Admin::FixedShiftsController < ApplicationController
       )
       shift.save!
     end
-      redirect_to root_path
+  end
+
+  def update
+    targetShift = FixedShift.find_by(id: params[:id], user_id: params[:shiftData][:user_id])
+    targetShift.update(
+      clock_in: "#{params[:shiftData][:year]}-#{params[:shiftData][:month]}-#{params[:shiftData][:date]} #{params[:shiftData][:clockIn]}:00",
+      clock_out: "#{params[:shiftData][:year]}-#{params[:shiftData][:month]}-#{params[:shiftData][:date]} #{params[:shiftData][:clockOut]}:00",
+    )
+    head :no_content
+  end
+
+  def destroy
+    targetShift = FixedShift.find(params[:id])
+    targetShift.destroy
+    head :no_content
   end
 end
