@@ -21,7 +21,7 @@
             <td> {{ item.clockIn }}</td>
             <td> {{ item.clockOut }}</td>
             <button @click="openModal(item,index)">修正</button>
-            <button @click="removeStorageShiftData(index)">×</button>
+            <button @click="deleteRequestedShiftInStorageData(index)">×</button>
           </tr>
         </tbody>
       </table>
@@ -34,7 +34,7 @@
         :subtitle=" '希望内容を変更' "
         :footerMessage=" '上記の時刻に変更します' "
         :submit=" '変更' "
-        @sendShiftsData="updateStorageShiftData"
+        @sendShiftsData="updateRequestedShiftInStorageData"
       >
       </modal>
       <button @click="postshifts">シフトを提出</button>
@@ -91,9 +91,9 @@
       },
 
       //modal-componentから返ってきたデータを用いてLocalStorageの希望シフトデータを更新する 
-      updateStorageShiftData(data) {
+      updateRequestedShiftInStorageData(data) {
         this.showModal = false
-        this.$store.dispatch('updateShift', {
+        this.$store.dispatch('updateRequestedShiftInStorageData', {
           clockIn: data.clockIn,
           clockOut: data.clockOut,
           shiftId: data.shiftId,
@@ -111,8 +111,8 @@
         this.$store.dispatch('resetRequestedShifts')
       },
 
-      removeStorageShiftData(shiftId) {
-        this.$store.dispatch("removeStorageShiftData", {shiftId: shiftId})
+      deleteRequestedShiftInStorageData(shiftId) {
+        this.$store.dispatch("deleteRequestedShiftInStorageData", {shiftId: shiftId})
       }
     }
 }

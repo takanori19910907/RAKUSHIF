@@ -25,7 +25,7 @@
             <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
             <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
             <button @click="openModal(item, index)">修正</button>
-            <button @click="deleteItemInShiftData(item.id)">×</button>
+            <button @click="deleteFixedShiftInStorageData(item.id)">×</button>
           </tr>
         </tbody>
       </table>
@@ -40,11 +40,11 @@
         :subtitle=" 'シフトを変更' "
         :footerMessage=" '上記の時刻に変更します' "
         :submit=" '変更' "
-        @sendShiftsData="updateShiftInStorageData"
+        @sendShiftsData="updateFixedShiftInStorageData"
         >
       </Modal>
       <p>出勤者を決定したら『シフト確定』を押してください</p>
-      <button @click="createFixedShift">シフト確定</button>
+      <button @click="createFixedShifts">シフト確定</button>
     </div>
     <div v-else-if="this.date === null ">
       <p>カレンダーをクリックすると、日付ごとにスタッフの希望シフトが表示されます</p>
@@ -113,18 +113,18 @@
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        const shiftDates = this.$store.state.requestedShiftsInTableData.map((shift) => {
-          return dayjs(shift.clock_in).date();
-        });
-        if (!shiftDates.includes(value.date)) {
-            const selectedShifts = this.$store.state.requestedShiftsInTableData.filter((shift) => {
-            const checkedDate = dayjs(shift.clock_in).date();
-            return checkedDate === value.date;
-            })
-            for( let i = 0; i < selectedShifts.length; i++ ){
-              this.$store.dispatch('addFixedShifts', selectedShifts[i])
-            }
-        }
+        // const shiftDates = this.$store.state.requestedShiftsInTableData.map((shift) => {
+        //   return dayjs(shift.clock_in).date();
+        // });
+        // if (!shiftDates.includes(value.date)) {
+        //     const selectedShifts = this.$store.state.requestedShiftsInTableData.filter((shift) => {
+        //     const checkedDate = dayjs(shift.clock_in).date();
+        //     return checkedDate === value.date;
+        //     })
+            // for( let i = 0; i < selectedShifts.length; i++ ){
+            //   this.$store.dispatch('addFixedShifts', selectedShifts[i])
+            // }
+        // }
       },
 
       openModal(data, index) {
@@ -137,19 +137,19 @@
         this.showModal = false
       },
       
-      async createFixedShift() {
+      async createFixedShifts() {
         if ( window.confirm("確定シフトを作成します、よろしいですか?")) {
-          await this.$store.dispatch('createFixedShift', this.$store.state.requestedShiftsInTableData )}
+          await this.$store.dispatch('createFixedShifts', this.$store.state.requestedShiftsInTableData )}
         this.$router.push('/admin/fixed_shifts')
       },
 
-      updateShiftInStorageData(data) {
+      updateFixedShiftInStorageData(data) {
         this.showModal = false
-        this.$store.dispatch('updateShiftInStorageData', data )
+        this.$store.dispatch('updateFixedShiftInStorageData', data )
       },
 
-      deleteItemInShiftData(itemID) {
-        this.$store.dispatch("deleteItemInShiftData", itemID)
+      deleteFixedShiftInStorageData(itemID) {
+        this.$store.dispatch("deleteFixedShiftInStorageData", itemID)
       }
   }
 }

@@ -141,8 +141,10 @@
       },
 
       deleteFixedShiftInTableData(selectedShiftID, index) {
+        if (window.confirm(`このシフトを削除します、よろしいでしょうか?`)) {
         this.$store.state.fixedShiftsInTableData.splice(index, 1)
         this.$store.dispatch( 'deleteFixedShiftInTableData', {shiftID: selectedShiftID, type: "fixed"} )
+        }
       },
 
       updateFixedShiftsInTableData() {
