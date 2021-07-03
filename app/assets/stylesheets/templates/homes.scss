@@ -1,0 +1,131 @@
+@import "mixin";
+
+$basicBodyColor: #e2e2e2;
+
+body {
+  margin: 0;
+}
+
+.container {
+  position: relative;
+  background-color: $basicBodyColor;
+  height: 100vh;
+
+  &__main-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    background-color: transparent;
+    color: rgb(255, 255, 255);
+    font-size: 4rem;
+    z-index: 3;
+  }
+}
+
+.cover-slide {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #eaebe6;
+    opacity: 0;
+  }
+  &.inview {
+    &::after {
+      opacity: 1;
+
+      @include animation(
+        $name: kf-cover-slide,
+        $duration: 1.6s,
+        $timing-function: ease-in-out
+      );
+    }
+  }
+}
+
+@keyframes kf-cover-slide {
+  0% {
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  50% {
+    transform-origin: left;
+    transform: scaleX(1);
+  }
+  50.1% {
+    transform-origin: right;
+    transform: scaleX(1);
+  }
+  100% {
+    transform-origin: right;
+    transform: scaleX(0);
+  }
+}
+
+img {
+  width: 100%;
+  vertical-align: bottom;
+}
+
+.img-zoom {
+  opacity: 0;
+
+  .inview & {
+    opacity: 1;
+
+    transition: transform 0.3s ease;
+    @include animation(
+      $name: kf-img-show,
+      $duration: 1.6s,
+      $timing-function: ease-in-out,
+      $fill-mode: none
+    );
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+@keyframes kf-img-show {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  50.1% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.bg-img-zoom {
+  background-image: url(images/image-1.jpg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  @extend .img-zoom;
+}
+
+.img-bg50 {
+  position: relative;
+
+  &::before {
+    display: block;
+    content: "";
+    padding-top: 50%;
+  }
+}
