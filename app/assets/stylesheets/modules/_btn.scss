@@ -1,0 +1,17 @@
+@import "base/mixin";
+
+.btn-links {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-evenly;
+  border-radius: 10px;
+  margin: 20px 0;
+  &__sign-up {
+    @include basic-btn;
+    background-color: #5ccbe4;
+  }
+  &__sign-in {
+    @include basic-btn;
+    background-color: rgb(250, 219, 45);
+  }
+}

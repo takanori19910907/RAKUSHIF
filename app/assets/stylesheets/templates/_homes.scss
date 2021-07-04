@@ -1,26 +1,15 @@
-@import "mixin";
+@import "base/mixin";
+@import "modules/color-template";
 
-$basicBodyColor: #e2e2e2;
-
-body {
-  margin: 0;
-}
-
-.container {
-  position: relative;
-  background-color: $basicBodyColor;
-  height: 100vh;
-
-  &__main-title {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
-    background-color: transparent;
-    color: rgb(255, 255, 255);
-    font-size: 4rem;
-    z-index: 3;
-  }
+.main-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  background-color: transparent;
+  color: rgb(255, 255, 255);
+  font-size: 2rem;
+  z-index: 3;
 }
 
 .cover-slide {
@@ -35,13 +24,13 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #eaebe6;
+    background-color: rgb(46, 30, 4);
     opacity: 0;
   }
+
   &.inview {
     &::after {
       opacity: 1;
-
       @include animation(
         $name: kf-cover-slide,
         $duration: 1.6s,
@@ -68,11 +57,6 @@ body {
     transform-origin: right;
     transform: scaleX(0);
   }
-}
-
-img {
-  width: 100%;
-  vertical-align: bottom;
 }
 
 .img-zoom {
@@ -127,5 +111,24 @@ img {
     display: block;
     content: "";
     padding-top: 50%;
+  }
+}
+
+.service {
+  &__list {
+    display: flex;
+    flex-flow: column;
+  }
+}
+
+.flow {
+  &__list {
+    display: flex;
+    flex-flow: row;
+    padding-inline-start: 0;
+  }
+  &__item {
+    flex: 1;
+    text-align: center;
   }
 }

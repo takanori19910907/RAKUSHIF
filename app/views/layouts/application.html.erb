@@ -7,16 +7,45 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application' %>
-    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     
   </head>
 
   <body>
-    <div class="global-container">
-      <div class="container">    
-        <%= render 'shared/header'  %>
+    <div id="global-container">
+      <div id="container">    
+        <%= render 'layouts/header'  %>
         <%= yield %>
       </div>
+      <%= render 'layouts/mobile-menu' %>
     </div>
   </body>
+  <script>
+    class MobileMenu {
+      constructor() {
+        this.DOM = {};
+        this.DOM.btn = document.querySelector('.mobile-menu__btn');
+        this.DOM.cover = document.querySelector('.mobile-menu__cover');
+        this.DOM.container = document.querySelector('#global-container');
+        this.eventType = this._getEventType();
+        this._addEvent();
+      }
+
+      _getEventType() {
+        return window.ontouchstart ? 'touchstart' : 'click';
+      }
+
+      _toggle() {
+        this.DOM.container.classList.toggle('menu-open');
+      }
+
+      _addEvent() {
+        this.DOM.btn.addEventListener(this.eventType, this._toggle.bind(this));
+        this.DOM.cover.addEventListener(this.eventType, this._toggle.bind(this));
+      }
+    }
+
+new MobileMenu();
+
+  </script>
 </html>

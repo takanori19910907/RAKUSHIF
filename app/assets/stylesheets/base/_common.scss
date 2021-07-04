@@ -1,0 +1,34 @@
+@import "modules/color-template";
+
+html {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 62.5%; /*rem算出をしやすくするために*/
+}
+
+body {
+  margin: 0;
+}
+
+#container {
+  position: relative;
+  height: auto;
+  transition: transform 0.5s;
+  z-index: 2;
+  background-color: $basicBody;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+img {
+  width: 100%;
+  vertical-align: bottom;
+}
