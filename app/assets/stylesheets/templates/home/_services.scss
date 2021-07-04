@@ -1,0 +1,56 @@
+@import "base/mixin";
+@import "modules/color-template";
+
+.service {
+  @include section-container;
+
+  &__title {
+    @include basicTitleStyle;
+    font-size: 2rem;
+  }
+
+  &__subtitle {
+    @include basicTitleStyle;
+    font-size: 1.5rem;
+  }
+
+  &__title-text {
+    @include basicTitleStyle;
+  }
+
+  &__list {
+    display: flex;
+    flex-flow: column;
+    padding-inline-start: 0;
+  }
+
+  &__box-title {
+    position: absolute;
+    display: inline-block;
+    top: -14px;
+    left: 10px;
+    padding: 0 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: $basicMainTitle;
+    background-color: $basicBody;
+  }
+
+  &__item {
+    position: relative;
+    margin: 3rem 0;
+    padding: 0.5rem 1rem;
+    border: solid 3px $basicMainTitle;
+    border-radius: 8px;
+  }
+
+  &__item-title {
+    display: inline-block;
+    border-bottom: solid 1px;
+    font-size: 1.5rem;
+  }
+
+  &__item-text {
+    font-size: 1.2rem;
+  }
+}

@@ -1,0 +1,49 @@
+@import "base/mixin";
+
+.flow {
+  &__title {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  &__list {
+    display: flex;
+    flex-flow: row;
+    padding-inline-start: 0;
+    margin: 0 10px;
+  }
+
+  &__item {
+    flex: 1;
+    height: 160px;
+    margin: 0 5px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #c6e4ff;
+  }
+
+  &__item-title {
+    font-size: 1.5rem;
+    color: #5989cf;
+  }
+
+  &__item-text {
+    display: inline-block;
+  }
+
+  &__signin-btn {
+    @include basic-btn;
+    background-color: rgb(255, 217, 66);
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: 1rem;
+  }
+
+  &__signup-btn {
+    @include basic-btn;
+    background-color: #5ccbe4;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: 1rem;
+  }
+}
