@@ -113,22 +113,3 @@
     padding-top: 50%;
   }
 }
-
-.service {
-  &__list {
-    display: flex;
-    flex-flow: column;
-  }
-}
-
-.flow {
-  &__list {
-    display: flex;
-    flex-flow: row;
-    padding-inline-start: 0;
-  }
-  &__item {
-    flex: 1;
-    text-align: center;
-  }
-}
