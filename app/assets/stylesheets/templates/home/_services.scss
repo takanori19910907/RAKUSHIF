@@ -45,12 +45,35 @@
   }
 
   &__item-title {
+    position: relative;
     display: inline-block;
-    border-bottom: solid 1px;
     font-size: 1.5rem;
   }
 
   &__item-text {
     font-size: 1.2rem;
+  }
+}
+
+.add-border {
+  & > .service__item-title {
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      border-bottom: solid 2px yellow;
+      animation: border-animation 1s linear forwards;
+    }
+  }
+}
+
+@keyframes border-animation {
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
   }
 }
