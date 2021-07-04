@@ -7,16 +7,17 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application' %>
-    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     
   </head>
 
   <body>
-    <div class="global-container">
-      <div class="container">    
-        <%= render 'shared/header'  %>
+    <div id="global-container">
+      <div id="container">    
+        <%= render 'layouts/header'  %>
         <%= yield %>
       </div>
+      <%= render 'layouts/mobile-menu' %>
     </div>
   </body>
   <script>
