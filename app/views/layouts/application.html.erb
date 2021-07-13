@@ -47,29 +47,6 @@
 
 new MobileMenu();
 
-// class ScrollObserver {
-//   constructor(els, cb, options) {
-//     this.els = document.querySelectorAll('.service__item');
-//     this.cd = 
-//     console.log(this.els);
-//     const defaultOptions = {
-//       root: null,
-//       rootMargin: "0px",
-//       threshold: 0,
-//       once: true
-//     }
-//     this. = cb;
-//     this.options = Object.assign(defaultOptions, options);
-//     this.once = this.options.once;
-//     this._init();
-//   }
-
-//   _init() {
-//     const callBack = function(entries, observer) {
-//       alert('ok');
-//     };
-//   }
-
   document.addEventListener('DOMContentLoaded', function () {
 
   const els = document.querySelectorAll('.service__item');
@@ -86,7 +63,6 @@ new MobileMenu();
   const io = new IntersectionObserver(callBack);
   els.forEach(el => io.observe(el));
 
-// new ScrollObserver();
   });
   </script>
 </html>

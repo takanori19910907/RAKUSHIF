@@ -4,8 +4,8 @@
       <img class="img-zoom" src="/work.jpeg">
     </div>
     <div class="btn-links">
-      <button class="btn-links__sign-up">ユーザー登録</button>
-      <button class="btn-links__sign-in">ログイン</button>
+      <%= link_to "ユーザー登録", new_user_path, class:"btn-links__sign-up" %>
+      <%= link_to "ログイン", login_path, class:"btn-links__sign-in" %>
     </div>
   </section>
 
@@ -48,13 +48,17 @@
         <p class="flow__item-title">ユーザー登録</p>
         <span class="flow__item-text">登録項目が少なく</span>
         <span class="flow__item-text">簡単に始められます</span>
-        <button class="flow__signup-btn">早速ユーザー<br>登録開始</button>
+        <%= link_to  new_user_path, class:"flow__signup-btn" do %>
+          早速ユーザー<br>登録開始
+        <% end %>
       </li>
       <li class="flow__item">
         <p class="flow__item-title">利用開始</p>
         <span class="flow__item-text">シンプルでわかりやすい</span>
         <span class="flow__item-text">まずは体験しましょう</span>
-        <button class="flow__signin-btn">アカウントをお持ちの方は<br>コチラから</button>
+        <%= link_to login_path, class:"flow__signin-btn" do %>
+          アカウントをお持ちの方は<br>コチラから
+        <% end %>
       </li>
     </ul>
   </section>
