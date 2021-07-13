@@ -2,14 +2,14 @@
 
 <%= form_with scope: :session, url: login_path, local: true do |f| %>
 
-    <%= f.label :ユーザーID %>
+  <%= f.label :ユーザーID %>
 
-    <%= f.text_field :user_id %>
+  <%= f.text_field :user_id %>
 
-    <%= f.label :パスワード %>
+  <%= f.label :パスワード %>
 
-    <%= f.password_field :password %>
+  <%= f.password_field :password %>
 
-    <%= f.submit "ログイン", class: "btn btn-primary" %>
+  <%= f.submit "ログイン", class: "btn btn-primary" %>
 
 <% end %>
