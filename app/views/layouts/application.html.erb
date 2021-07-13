@@ -5,8 +5,8 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%= javascript_pack_tag 'application' %>
+    <%= stylesheet_link_tag "application", media: "all" %>
+    <%= javascript_pack_tag "application" %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     
   </head>
@@ -14,29 +14,29 @@
   <body>
     <div id="global-container">
       <div id="container">    
-        <%= render 'layouts/header'  %>
+        <%= render "layouts/header"  %>
         <%= yield %>
       </div>
-      <%= render 'layouts/mobile-menu' %>
+      <%= render "layouts/mobile-menu" %>
     </div>
   </body>
   <script>
     class MobileMenu {
       constructor() {
         this.DOM = {};
-        this.DOM.btn = document.querySelector('.mobile-menu__btn');
-        this.DOM.cover = document.querySelector('.mobile-menu__cover');
-        this.DOM.container = document.querySelector('#global-container');
+        this.DOM.btn = document.querySelector(".mobile-menu__btn");
+        this.DOM.cover = document.querySelector(".mobile-menu__cover");
+        this.DOM.container = document.querySelector("#global-container");
         this.eventType = this._getEventType();
         this._addEvent();
       }
 
       _getEventType() {
-        return window.ontouchstart ? 'touchstart' : 'click';
+        return window.ontouchstart ? "touchstart" : "click";
       }
 
       _toggle() {
-        this.DOM.container.classList.toggle('menu-open');
+        this.DOM.container.classList.toggle("menu-open");
       }
 
       _addEvent() {
@@ -45,24 +45,24 @@
       }
     }
 
-new MobileMenu();
+    new MobileMenu();
 
-  document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-  const els = document.querySelectorAll('.service__item');
-  const callBack = function(entries, observer) {
-    entries.forEach(entry => {
-      if(entry.isIntersecting) {
-      entry.target.classList.add('add-border');
-      observer.unobserve(entry.target);
-      } else {
-      }
-    })
-  };
+      const els = document.querySelectorAll(".service__item");
+      const callBack = function(entries, observer) {
+        entries.forEach(entry => {
+          if(entry.isIntersecting) {
+          entry.target.classList.add("add-border");
+          observer.unobserve(entry.target);
+          } else {
+          }
+        })
+      };
 
-  const io = new IntersectionObserver(callBack);
-  els.forEach(el => io.observe(el));
+      const io = new IntersectionObserver(callBack);
+      els.forEach(el => io.observe(el));
 
-  });
+    });
   </script>
 </html>
