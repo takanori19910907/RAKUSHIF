@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-
-  root "homes#top"
   
+  root "homes#top"
+
   resources :users do
     collection do
       get :top
@@ -26,4 +26,7 @@ Rails.application.routes.draw do
   get       "/login",   to: "sessions#new"
   post     "/login",   to: "sessions#create"
   delete   "/logout",  to: "sessions#destroy"
+
+  post     "/guest_login",   to: "guest_sessions#create"
+  delete   "/guest_logout",  to: "guest_sessions#destroy"
 end
