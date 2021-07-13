@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   before_action :current_user
-  include SessionsHelper
   def login_check
     if current_user.nil?
       redirect_to root_url, danger: "ログインしてください"
