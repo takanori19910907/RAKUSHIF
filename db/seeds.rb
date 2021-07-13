@@ -1,6 +1,6 @@
 shop = Shop.create(
-  id: 300,
-  name: "松戸3丁目"
+  id: 1111,
+  name: "オンラインテスト店舗"
 )
 
 user1 = User.create(

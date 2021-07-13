@@ -15,7 +15,7 @@ body {
   height: auto;
   margin-bottom: 50px;
   transition: transform 0.5s;
-  z-index: 2;
+  z-index: 99;
   background-color: $basicBody;
 }
 

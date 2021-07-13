@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  before_action :login_check
-  before_action :admin_user, except: [:top]
+  before_action :login_check, only: [:edit,:update,:destroy]
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def top

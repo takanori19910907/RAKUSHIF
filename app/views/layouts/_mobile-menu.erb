@@ -22,5 +22,15 @@
         <span class="menu-maintitle signin-link">ログイン</span>
       </a>
     </li>
+
+    <% if @current_user %>
+      <li class="mobile-menu__item user-status">
+        <%= link_to "★", guest_logout_path, class: "menu-maintitle signin-link", method: :delete %>
+    </li>
+    <% else %>
+    <li class="mobile-menu__item user-status">
+      <%= link_to "★", guest_login_path, class: "menu-maintitle signin-link", method: :post %>
+    </li>
+    <% end %>
   </ul>
 </nav>
