@@ -1,39 +1,50 @@
+
 <p>下記項目に入力後、『登録完了』をクリックしてください</p>
 
 <%= form_with model: @user, local: true do |f| %>
+  <div class="signup-form">
 
-  <%= f.hidden_field :shop_id, :value => @current_user.shop_id %>
+    <div class="signup-form__item">
+      <%= f.label :ユーザー名 %>
+      <%= f.text_field :name, class: "signup-form__name" %>
+    </div>
 
-  <%= f.label :ユーザー名 %>
+    <div class="signup-form__item">
+      <%= f.label :年齢 %>
+      <%= f.number_field :age %>
+    </div>
 
-  <%= f.text_field :name %>
+    <div class="signup-form__item">
+      <%= f.label :"ID(8桁の従業員番号を入力)" %>
+      <%= f.number_field :user_id %>
+    </div>
 
-  <%= f.label :年齢 %>
+    <div class="signup-form__item">
+      <%= f.label :店番 %>
+      <%= f.number_field :shop_id %>
+    </div>
 
-  <%= f.number_field :age %>
+    <div class="signup-form__item">
+      <%= f.label :勤務区分 %>
+      <%= f.radio_button :work_status, 1 %>社員
+      <%= f.radio_button :work_status, 2 %>パートナー
+      <%= f.radio_button :work_status, 3 %>アルバイト
+      <%= f.radio_button :work_status, 4 %>早朝アルバイト
+    </div>
 
-  <%= f.label :"従業員ID(8桁の従業員番号を入力)" %>
+    <div class="signup-form__item">
+      <%= f.label :店舗営業資格有り %>
+      <%= f.check_box :license ,{}, "true", "false" %>
+    </div>
 
-  <%= f.number_field :user_id %>
+    <div class="signup-form__item">
+      <%= f.label :実習生 %>
+      <%= f.check_box :rookie ,{}, "true", "false" %>
+    </div>
 
-  <%= f.label :勤務区分 %>
-
-  <%= f.radio_button :work_status, 1 %>社員
-
-  <%= f.radio_button :work_status, 2 %>パートナー
-
-  <%= f.radio_button :work_status, 3 %>アルバイト
-
-  <%= f.radio_button :work_status, 4 %>早朝アルバイト
-
-  <%= f.label :店舗営業資格有り %>
-
-  <%= f.check_box :license ,{}, "true", "false" %>
-
-  <%= f.label :実習生 %>
-
-  <%= f.check_box :rookie ,{}, "true", "false" %>
-
-  <%= f.submit "登録完了" %>
+    <div class="signup-form__item">   
+      <%= f.submit "登録完了" %>
+    </div>
+  </div>
 
 <% end %>
