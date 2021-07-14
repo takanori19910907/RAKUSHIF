@@ -140,7 +140,7 @@ const store = new Vuex.Store({
       }
     },
 
-    async deleteFixedShiftInTableData(context, payload) {
+    async deleteShiftInTableData(context, payload) {
       if (payload.type === "requested") {
         await axios.delete(`/api/v1/staff/requested_shifts/${payload.shiftID}`)
         const response = await axios.get("/api/v1/staff/requested_shifts")
