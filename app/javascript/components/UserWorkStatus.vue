@@ -1,3 +1,5 @@
+<!-- シフト表のmodule -->
+
 <template>
   <div>
     <ul>

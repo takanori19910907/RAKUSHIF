@@ -1,4 +1,4 @@
-<!-- selectした要素、propsで受け取った日付情報をstoreに送るmodal -->
+<!-- シフト入力用のmodal -->
 
 <template>
   <div id="overlay">

@@ -1,5 +1,3 @@
-<!-- 希望シフト提出ページ、一覧ページの切り替え用 -->
-
 <template>
   <div>
     <div v-if="hasAdmin">
