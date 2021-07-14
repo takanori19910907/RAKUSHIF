@@ -1,4 +1,4 @@
-<!-- ログインユーザーのシフト希望(提出済み)一覧ページ -->
+<!-- 提出済みのシフト希望一覧ページ -->
 
 <template>
   <section id="about">
@@ -17,7 +17,7 @@
           <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
           <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
           <button @click="openModal(item)">修正</button>
-          <button @click="removeShiftInTableData(item.id, index)">×</button>
+          <button @click="deleteShiftInTableData(item.id, index)">×</button>
         </tr>
       </tbody>
     </table>
@@ -44,7 +44,6 @@
 </template>
 
 <script>
-  import axios from "axios";
   import Modal from "components/Modal.vue"
   import RequestedDate from "../../components/RequestedDate.vue"
   import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
@@ -100,9 +99,14 @@
       },
       
       //クリックで指定した希望データを希望シフトテーブルから削除する 
-      removeShiftInTableData(id, index) {
-        this.$store.state.myRequestedShifts.splice(index, 1)
-        this.$store.dispatch( "removeShiftInTableData", id )
+      deleteShiftInTableData(selectedShiftID, index) {
+        if (window.confirm(`このシフトを削除します、よろしいでしょうか?`)) {
+          this.$store.state.myRequestedShifts.splice(index, 1)
+          this.$store.dispatch( "deleteShiftInTableData", {
+            shiftID: selectedShiftID,
+            type: "requested"}
+            )
+        }
       }
     }
 };
