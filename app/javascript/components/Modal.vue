@@ -57,8 +57,8 @@ export default {
         year: null,
         month: null,
         date: null,
-        clockIn: "",
-        clockOut: "",
+        clockIn: null,
+        clockOut: null,
         shiftId: null,
         userId: null,
         index: null
