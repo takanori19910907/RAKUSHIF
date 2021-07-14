@@ -1,3 +1,5 @@
+<!-- シフト表のmodule -->
+
 <template>
   <div>
     <p>{{ userName }}さん</p>
@@ -7,7 +9,7 @@
 <script>
 export default {
   props: [
-    'userName' 
+    "userName" 
   ]
 }
 </script>

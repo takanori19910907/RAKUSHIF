@@ -1,3 +1,5 @@
+<!-- シフト表のmodule -->
+
 <template>
   <div>
     <p>{{ formattedClockIn }}</p>
@@ -7,7 +9,7 @@
 <script>
 export default {
   props: [
-    'clockIn'
+    "clockIn"
   ],
 
   computed: {

@@ -36,10 +36,10 @@
         :shift="selectedShift"
         :shiftId="selectedShift.id"
         :index="index"
-        :title=" '確定シフトの作成' "
-        :subtitle=" 'シフトを変更' "
-        :footerMessage=" '上記の時刻に変更します' "
-        :submit=" '変更' "
+        :title="'確定シフトの作成'"
+        :subtitle="'シフトを変更'"
+        :footerMessage="'上記の時刻に変更します'"
+        :submit="'変更'"
         @sendShiftsData="updateFixedShiftInStorageData"
         >
       </Modal>
@@ -58,15 +58,13 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import dayjs from 'dayjs';
-  import Calendar from '../../components/FixedShiftsCalendar.vue'
-  import Modal from '../../components/Modal.vue'
-  import UserName from '../../components/UserName.vue'
-  import UserAge from '../../components/UserAge.vue'
-  import UserWorkStatus from '../../components/UserWorkStatus.vue'
-  import RequestedClockInTime from '../../components/RequestedClockInTime.vue'
-  import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
+  import Calendar from "../../components/FixedShiftsCalendar.vue"
+  import Modal from "../../components/Modal.vue"
+  import UserName from "../../components/UserName.vue"
+  import UserAge from "../../components/UserAge.vue"
+  import UserWorkStatus from "../../components/UserWorkStatus.vue"
+  import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
   export default {
     components: {
       Calendar,
@@ -90,11 +88,12 @@
     },
 
     created() {
-      this.$store.dispatch('getAllShiftsByAdmin', { type: "requested" } )
-      this.$store.dispatch('getAllUsers')
+      this.$store.dispatch("getAllShiftsByAdmin", { type: "requested" } )
+      this.$store.dispatch("getAllUsers")
     },
 
     computed: {
+      // カレンダーで指定した日付のシフト情報とそのシフトのユーザー情報を取得し表示する
       filteredShiftData() {
         return this.$store.getters.filteredShiftData({
           date: {
@@ -109,22 +108,11 @@
     },
 
     methods: {
+      // クリックしたカレンダーの日付情報をdataに格納しcomputed: filteredShiftでの処理に使用する
       checkShifts(value) {
         this.year = value.year
         this.month = value.month
         this.date = value.date
-        // const shiftDates = this.$store.state.requestedShiftsInTableData.map((shift) => {
-        //   return dayjs(shift.clock_in).date();
-        // });
-        // if (!shiftDates.includes(value.date)) {
-        //     const selectedShifts = this.$store.state.requestedShiftsInTableData.filter((shift) => {
-        //     const checkedDate = dayjs(shift.clock_in).date();
-        //     return checkedDate === value.date;
-        //     })
-            // for( let i = 0; i < selectedShifts.length; i++ ){
-            //   this.$store.dispatch('addFixedShifts', selectedShifts[i])
-            // }
-        // }
       },
 
       openModal(data, index) {
@@ -139,13 +127,13 @@
       
       async createFixedShifts() {
         if ( window.confirm("確定シフトを作成します、よろしいですか?")) {
-          await this.$store.dispatch('createFixedShifts', this.$store.state.requestedShiftsInTableData )}
-        this.$router.push('/admin/fixed_shifts')
+          await this.$store.dispatch("createFixedShifts", this.$store.state.requestedShiftsInTableData )}
+        this.$router.push("/admin/fixed_shifts")
       },
 
       updateFixedShiftInStorageData(data) {
         this.showModal = false
-        this.$store.dispatch('updateFixedShiftInStorageData', data )
+        this.$store.dispatch("updateFixedShiftInStorageData", data )
       },
 
       deleteFixedShiftInStorageData(itemID) {

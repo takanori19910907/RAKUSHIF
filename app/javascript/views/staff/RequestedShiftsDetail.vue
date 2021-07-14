@@ -1,4 +1,4 @@
-<!-- ログインユーザーのシフト希望(提出済み)一覧ページ -->
+<!-- 提出済みのシフト希望一覧ページ -->
 
 <template>
   <section id="about">
@@ -17,7 +17,7 @@
           <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
           <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
           <button @click="openModal(item)">修正</button>
-          <button @click="removeShiftInTableData(item.id, index)">×</button>
+          <button @click="deleteShiftInTableData(item.id, index)">×</button>
         </tr>
       </tbody>
     </table>
@@ -29,10 +29,10 @@
                 :month="month"
                 :date="date"
                 :shiftId="shiftId"
-                :title=" '申請済みの希望シフトを編集' "
-                :subtitle=" 'シフトを編集' "
-                :footerMessage=" '上記の時刻に変更します' "
-                :submit=" '変更' "
+                :title="'申請済みの希望シフトを編集'"
+                :subtitle="'シフトを編集'"
+                :footerMessage="'上記の時刻に変更します'"
+                :submit="'変更'"
                 >
     </modal>
     </div>
@@ -44,11 +44,10 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import Modal from 'components/Modal.vue'
-  import RequestedDate from '../../components/RequestedDate.vue'
-  import RequestedClockInTime from '../../components/RequestedClockInTime.vue'
-  import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
+  import Modal from "components/Modal.vue"
+  import RequestedDate from "../../components/RequestedDate.vue"
+  import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
   export default {
     components: {
       Modal,
@@ -70,11 +69,11 @@
     },
 
     props: [
-      'userID'
+      "userID"
     ],
       
     created() {
-    this.$store.dispatch('getMyShiftData')
+    this.$store.dispatch("getMyShiftData")
     },
 
     methods: {
@@ -96,13 +95,18 @@
       //modal-componentから帰ってきたシフト希望データを用いて希望シフトテーブルの値を更新する
       updateShiftInTableData(returnedModalData) {
         this.showModal = false
-        this.$store.dispatch('updateShiftInTableData', {returnedModalData: returnedModalData, type: "requested" })
+        this.$store.dispatch("updateShiftInTableData", {returnedModalData: returnedModalData, type: "requested" })
       },
       
       //クリックで指定した希望データを希望シフトテーブルから削除する 
-      removeShiftInTableData(id, index) {
-        this.$store.state.myRequestedShifts.splice(index, 1)
-        this.$store.dispatch( 'removeShiftInTableData', id )
+      deleteShiftInTableData(selectedShiftID, index) {
+        if (window.confirm(`このシフトを削除します、よろしいでしょうか?`)) {
+          this.$store.state.myRequestedShifts.splice(index, 1)
+          this.$store.dispatch( "deleteShiftInTableData", {
+            shiftID: selectedShiftID,
+            type: "requested"}
+            )
+        }
       }
     }
 };

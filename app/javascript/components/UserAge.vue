@@ -1,3 +1,5 @@
+<!-- シフト表のmodule -->
+
 <template>
   <div>
     <p>{{ userAge }}歳</p>
@@ -7,7 +9,7 @@
 <script>
 export default {
   props: [
-    'userAge'
+    "userAge"
   ]
 }
 </script>

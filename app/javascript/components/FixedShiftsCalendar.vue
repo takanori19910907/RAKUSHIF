@@ -1,3 +1,5 @@
+<!-- 確定シフトの閲覧/編集に用いるカレンダー -->
+
 <template>
   <div>
   <!-- カレンダータイトル -->
@@ -39,11 +41,11 @@ export default {
   },
   data() {
     return {
-      weekdays: ['日', '月', '火', '水', '木', '金', '土'],
+      weekdays: ["日", "月", "火", "水", "木", "金", "土"],
       year: 2020,
       month: 3,
       day:-1,
-      today: '',
+      today: "",
       setDatetime: {
         year: 0,
         month: 0,
@@ -57,21 +59,21 @@ export default {
   mounted(){
     const date = new Date()
     const y = date.getFullYear()
-    const m = ('0' + (date.getMonth() + 1)).slice(-2)
-    const d = ('0' + date.getDate()).slice(-2)
+    const m = ("0" + (date.getMonth() + 1)).slice(-2)
+    const d = ("0" + date.getDate()).slice(-2)
 
     // yearとmonthを設定
     this.year = y
     this.month = Number(m)
 
     // 今日の日付を設定
-    this.today = y + '-' + m + '-' + d
+    this.today = y + "-" + m + "-" + d
   },
 
   methods: {
     // 当日かどうかの判定
     isToday(day) {
-      const date = this.year + '-' + ('0' + this.month).slice(-2) + "-" + day
+      const date = this.year + "-" + ("0" + this.month).slice(-2) + "-" + day
       if(this.today === date){
         return true
       }
@@ -104,7 +106,7 @@ export default {
       this.setDatetime.year = this.year
       this.setDatetime.month = this.month
       this.setDatetime.date = date
-      this.$emit('sendDate', this.setDatetime)
+      this.$emit("sendDate", this.setDatetime)
     }
   },
 
@@ -124,10 +126,10 @@ export default {
         for (let i = 0; i <= 6; i++) {
           if (calData.length === 0 && i < firstWeekDay) {
             // 初週の1日以前の曜日は空文字
-            weekData[i] = ''
+            weekData[i] = ""
           } else if (lastDay < dayNum) {
             // 最終日以降の曜日は空文字
-            weekData[i] = ''
+            weekData[i] = ""
           } else {
             // 通常の日付入力
             weekData[i] = dayNum

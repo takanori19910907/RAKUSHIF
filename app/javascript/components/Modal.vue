@@ -1,4 +1,4 @@
-<!-- selectした要素、propsで受け取った日付情報をstoreに送るmodal -->
+<!-- シフト入力用のmodal -->
 
 <template>
   <div id="overlay">
@@ -57,8 +57,8 @@ export default {
         year: null,
         month: null,
         date: null,
-        clockIn: "",
-        clockOut: "",
+        clockIn: null,
+        clockOut: null,
         shiftId: null,
         userId: null,
         index: null
@@ -66,17 +66,17 @@ export default {
     }
   },
   props: [
-    'year',
-    'month',
-    'date',
-    'shift',
-    'shiftId',
-    'userId',
-    'index',
-    'title',
-    'subtitle',
-    'footerMessage',
-    'submit'
+    "year",
+    "month",
+    "date",
+    "shift",
+    "shiftId",
+    "userId",
+    "index",
+    "title",
+    "subtitle",
+    "footerMessage",
+    "submit"
   ],
   computed: {
     formattedClockIn() {
@@ -96,7 +96,7 @@ export default {
     this.setData.shiftId = this.shiftId
     this.setData.userId = this.userId
     this.setData.index = this.index
-      this.$emit('sendShiftsData', 
+      this.$emit("sendShiftsData", 
                       this.setData
                       )
     }

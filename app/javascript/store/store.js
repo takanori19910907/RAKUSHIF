@@ -1,10 +1,10 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 Vue.use(Vuex);
-const savedLists = localStorage.getItem('shiftsStorageData')
+const savedLists = localStorage.getItem("shiftsStorageData")
 const store = new Vuex.Store({
   state: {
     // ユーザー自身のユーザー情報
@@ -36,9 +36,9 @@ const store = new Vuex.Store({
   // 希望シフト & ユーザー情報をセットにしたオブジェクトを作成しcomponentに返す
   
     filteredShiftData: (state) => (data) => {
-      var calendarDate = dayjs(data.date.year + '-' + data.date.month + '-' + data.date.date).format('DD/MM/YYYY')
+      var calendarDate = dayjs(data.date.year + "-" + data.date.month + "-" + data.date.date).format("DD/MM/YYYY")
       var shifts = data.shifts.filter(function (item) {
-        var shiftDate = dayjs(item.clock_in).format('DD/MM/YYYY')
+        var shiftDate = dayjs(item.clock_in).format("DD/MM/YYYY")
         return calendarDate === shiftDate
       })
       return shifts.map(shift => {
@@ -65,37 +65,37 @@ const store = new Vuex.Store({
     },
 
     formattedTime: (state) => (data) => {
-      return dayjs(data).format('HH:mm');
+      return dayjs(data).format("HH:mm");
     }
   },
 
   actions: {
     async getMyUserData(context) {
-      const response = await axios.get('/api/v1/staff/users')
-      context.commit('getMyUserData', response.data)
+      const response = await axios.get("/api/v1/staff/users")
+      context.commit("getMyUserData", response.data)
     },
 
     async getAllUsers(context) {
-      const response = await axios.get('/api/v1/admin/users')
-      context.commit('getAllUsers', response.data)
+      const response = await axios.get("/api/v1/admin/users")
+      context.commit("getAllUsers", response.data)
     },
 
     async getMyShiftData(context) {
-      const response = await axios.get('/api/v1/staff/requested_shifts')
-      context.commit('getMyShiftData', response.data)
+      const response = await axios.get("/api/v1/staff/requested_shifts")
+      context.commit("getMyShiftData", response.data)
     },
 
     async getAllShiftByStaff(context) {
-      const response = await axios.get('/api/v1/staff/fixed_shifts')
-      context.commit('getFixedShiftsInTableData', response.data)
+      const response = await axios.get("/api/v1/staff/fixed_shifts")
+      context.commit("getFixedShiftsInTableData", response.data)
     },
 
     addStorageShiftData(context, payload) {
-      context.commit('addStorageShiftData', payload)
+      context.commit("addStorageShiftData", payload)
     },
 
     updateRequestedShiftInStorageData(context, payload) {
-      context.commit('updateRequestedShiftInStorageData', payload)
+      context.commit("updateRequestedShiftInStorageData", payload)
     },
 
     resetRequestedShifts(context) {
@@ -103,11 +103,11 @@ const store = new Vuex.Store({
     },
 
     deleteRequestedShiftInStorageData(context, payload) {
-      context.commit('deleteRequestedShiftInStorageData', payload)
+      context.commit("deleteRequestedShiftInStorageData", payload)
     },
 
     postRequestedShiftsInTheTable(context) {
-      context.commit('postRequestedShiftsInTheTable')
+      context.commit("postRequestedShiftsInTheTable")
     },
 
     async updateShiftInTableData(context, payload) {
@@ -121,8 +121,8 @@ const store = new Vuex.Store({
             clockOut: payload.returnedModalData.clockOut,
           }
         })
-        const response = await axios.get('/api/v1/staff/requested_shifts')
-        context.commit('getMyShiftData', response.data)
+        const response = await axios.get("/api/v1/staff/requested_shifts")
+        context.commit("getMyShiftData", response.data)
 
       } else if (payload.type === "fixed") {
         await axios.patch(`/api/v1/admin/fixed_shifts/${payload.returnedModalData.shiftId}`, {
@@ -135,45 +135,45 @@ const store = new Vuex.Store({
             user_id: payload.returnedModalData.userId
           }
         })
-        const response = await axios.get('/api/v1/admin/fixed_shifts')
-        context.commit('getFixedShiftsInTableData', response.data)
+        const response = await axios.get("/api/v1/admin/fixed_shifts")
+        context.commit("getFixedShiftsInTableData", response.data)
       }
     },
 
-    async deleteFixedShiftInTableData(context, payload) {
+    async deleteShiftInTableData(context, payload) {
       if (payload.type === "requested") {
         await axios.delete(`/api/v1/staff/requested_shifts/${payload.shiftID}`)
-        const response = await axios.get('/api/v1/staff/requested_shifts')
-        context.commit( 'getMyShiftData', response.data )
+        const response = await axios.get("/api/v1/staff/requested_shifts")
+        context.commit( "getMyShiftData", response.data )
       } else if (payload.type === "fixed") {
         await axios.delete(`/api/v1/admin/fixed_shifts/${payload.shiftID}`)
-        const response = await axios.get('/api/v1/staff/fixed_shifts')
-        context.commit( 'getFixedShiftsInTableData', response.data )
+        const response = await axios.get("/api/v1/staff/fixed_shifts")
+        context.commit( "getFixedShiftsInTableData", response.data )
       }
     },
     
     async getAllShiftsByAdmin(context, payload) {
       if ( payload.type === "requested" ) {
-        const response = await axios.get('/api/v1/admin/requested_shifts')
-        context.commit('getRequestedShiftsByAdmin', response.data)
+        const response = await axios.get("/api/v1/admin/requested_shifts")
+        context.commit("getRequestedShiftsByAdmin", response.data)
       } else if ( payload.type === "fixed" ) {
-        const response = await axios.get('/api/v1/admin/fixed_shifts')
-        context.commit('getFixedShiftsInTableData', response.data)
+        const response = await axios.get("/api/v1/admin/fixed_shifts")
+        context.commit("getFixedShiftsInTableData", response.data)
       }
     },
 
     updateFixedShiftInStorageData(context, payload) {
-      context.commit('updateFixedShiftInStorageData', payload)
+      context.commit("updateFixedShiftInStorageData", payload)
     },
     
     deleteFixedShiftInStorageData(context, payload) {
-      context.commit('deleteFixedShiftInStorageData', payload)
+      context.commit("deleteFixedShiftInStorageData", payload)
     },
 
     async createFixedShifts(context, payload) {
-      await axios.post('/api/v1/admin/fixed_shifts', { shifts: payload })
-      const response = await axios.get('/api/v1/admin/fixed_shifts')
-      context.commit('getFixedShiftsInTableData', response.data)
+      await axios.post("/api/v1/admin/fixed_shifts", { shifts: payload })
+      const response = await axios.get("/api/v1/admin/fixed_shifts")
+      context.commit("getFixedShiftsInTableData", response.data)
     }
   },
 
@@ -220,7 +220,7 @@ const store = new Vuex.Store({
 
     async postRequestedShiftsInTheTable(state) {
       if (window.confirm("入力した希望シフトをまとめて提出します、よろしいですか?")) {
-        await axios.post('/api/v1/staff/requested_shifts', { shifts: state.temporarilyRequestedShifts })
+        await axios.post("/api/v1/staff/requested_shifts", { shifts: state.temporarilyRequestedShifts })
       }
     },
 
@@ -250,7 +250,7 @@ const store = new Vuex.Store({
 })
 
 store.subscribe((mutation, state) => {
-  localStorage.setItem('shiftsStorageData', JSON.stringify(state.temporarilyRequestedShifts))
+  localStorage.setItem("shiftsStorageData", JSON.stringify(state.temporarilyRequestedShifts))
 });
 
 export default store;

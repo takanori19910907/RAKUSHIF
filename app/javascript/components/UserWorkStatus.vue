@@ -1,3 +1,5 @@
+<!-- シフト表のmodule -->
+
 <template>
   <div>
     <ul>
@@ -14,7 +16,7 @@
 <script>
 export default {
   props: [
-    'userData'
+    "userData"
   ]
 }
 </script>
