@@ -30,10 +30,10 @@
         :month="shift.month"
         :date="shift.date"
         :index="index"
-        :title=" '希望シフトの修正' "
-        :subtitle=" '希望内容を変更' "
-        :footerMessage=" '上記の時刻に変更します' "
-        :submit=" '変更' "
+        :title="'希望シフトの修正'"
+        :subtitle="'希望内容を変更'"
+        :footerMessage="'上記の時刻に変更します'"
+        :submit="'変更'"
         @sendShiftsData="updateRequestedShiftInStorageData"
       >
       </modal>
@@ -53,9 +53,9 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import Modal from 'components/Modal.vue'
-  import Calendar from 'components/RequestedShiftsCalendar.vue';
+  import axios from "axios";
+  import Modal from "components/Modal.vue"
+  import Calendar from "components/RequestedShiftsCalendar.vue";
   export default {
     components: {
       Modal,
@@ -72,7 +72,7 @@
     },
 
     created() {
-      this.$store.dispatch('resetRequestedShifts')
+      this.$store.dispatch("resetRequestedShifts")
       this.guideMessage = true
     },
 
@@ -93,7 +93,7 @@
       //modal-componentから返ってきたデータを用いてLocalStorageの希望シフトデータを更新する 
       updateRequestedShiftInStorageData(data) {
         this.showModal = false
-        this.$store.dispatch('updateRequestedShiftInStorageData', {
+        this.$store.dispatch("updateRequestedShiftInStorageData", {
           clockIn: data.clockIn,
           clockOut: data.clockOut,
           shiftId: data.shiftId,
@@ -107,8 +107,8 @@
       // ①requestedShift_controllerにpostしテーブルに保存
       // ②localStorageのデータを削除
       async postshifts() {
-        await this.$store.dispatch('postRequestedShiftsInTheTable' )
-        this.$store.dispatch('resetRequestedShifts')
+        await this.$store.dispatch("postRequestedShiftsInTheTable" )
+        this.$store.dispatch("resetRequestedShifts")
       },
 
       deleteRequestedShiftInStorageData(shiftId) {

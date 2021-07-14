@@ -14,26 +14,26 @@ const router = new Router({
     },
 
     {
-    path: '/staff/requested_shifts/id', 
-      name: 'RequestedShiftsDetail',
+    path: "/staff/requested_shifts/id", 
+      name: "RequestedShiftsDetail",
       component: RequestedShiftsDetail
     },
 
     {
       path: "/staff/fixed_shifts/",
-      name: 'FixedShifts',
+      name: "FixedShifts",
       component: FixedShifts,
     },
 
     {
       path: "/admin/requested_shifts/",
-      name: 'RequestedShiftsIndex',
+      name: "RequestedShiftsIndex",
       component: RequestedShiftsIndex,
     },
 
     {
       path: "/admin/fixed_shifts/",
-      name: 'FixedShiftsIndex',
+      name: "FixedShiftsIndex",
       component: FixedShiftsIndex,
     },
   ],

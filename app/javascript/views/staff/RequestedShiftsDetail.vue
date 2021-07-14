@@ -29,10 +29,10 @@
                 :month="month"
                 :date="date"
                 :shiftId="shiftId"
-                :title=" '申請済みの希望シフトを編集' "
-                :subtitle=" 'シフトを編集' "
-                :footerMessage=" '上記の時刻に変更します' "
-                :submit=" '変更' "
+                :title="'申請済みの希望シフトを編集'"
+                :subtitle="'シフトを編集'"
+                :footerMessage="'上記の時刻に変更します'"
+                :submit="'変更'"
                 >
     </modal>
     </div>
@@ -44,11 +44,11 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import Modal from 'components/Modal.vue'
-  import RequestedDate from '../../components/RequestedDate.vue'
-  import RequestedClockInTime from '../../components/RequestedClockInTime.vue'
-  import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
+  import axios from "axios";
+  import Modal from "components/Modal.vue"
+  import RequestedDate from "../../components/RequestedDate.vue"
+  import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
   export default {
     components: {
       Modal,
@@ -70,11 +70,11 @@
     },
 
     props: [
-      'userID'
+      "userID"
     ],
       
     created() {
-    this.$store.dispatch('getMyShiftData')
+    this.$store.dispatch("getMyShiftData")
     },
 
     methods: {
@@ -96,13 +96,13 @@
       //modal-componentから帰ってきたシフト希望データを用いて希望シフトテーブルの値を更新する
       updateShiftInTableData(returnedModalData) {
         this.showModal = false
-        this.$store.dispatch('updateShiftInTableData', {returnedModalData: returnedModalData, type: "requested" })
+        this.$store.dispatch("updateShiftInTableData", {returnedModalData: returnedModalData, type: "requested" })
       },
       
       //クリックで指定した希望データを希望シフトテーブルから削除する 
       removeShiftInTableData(id, index) {
         this.$store.state.myRequestedShifts.splice(index, 1)
-        this.$store.dispatch( 'removeShiftInTableData', id )
+        this.$store.dispatch( "removeShiftInTableData", id )
       }
     }
 };

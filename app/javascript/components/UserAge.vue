@@ -7,7 +7,7 @@
 <script>
 export default {
   props: [
-    'userAge'
+    "userAge"
   ]
 }
 </script>

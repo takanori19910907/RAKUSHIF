@@ -34,10 +34,10 @@
       :year="year"
       :month="month"
       :date="dayNum"
-      :title=" '希望シフトの作成' "
-      :subtitle=" 'シフトを作成' "
-      :footerMessage=" '上記の日時で作成します' "
-      :submit=" '作成' "
+      :title="'希望シフトの作成'"
+      :subtitle="'シフトを作成'"
+      :footerMessage="'上記の日時で作成します'"
+      :submit="'作成'"
       @sendShiftsData="addRequestedShift"
       >
       </modal>
@@ -52,11 +52,11 @@
     },
     data() {
       return {
-        weekdays: ['日', '月', '火', '水', '木', '金', '土'],
+        weekdays: ["日", "月", "火", "水", "木", "金", "土"],
         year: 2020,
         month: 3,
         day:-1,
-        today: '',
+        today: "",
         showModal: false,
         dayNum: 0
       }
@@ -65,20 +65,20 @@
     mounted(){
       const date = new Date()
       const y = date.getFullYear()
-      const m = ('0' + (date.getMonth() + 1)).slice(-2)
-      const d = ('0' + date.getDate()).slice(-2)
+      const m = ("0" + (date.getMonth() + 1)).slice(-2)
+      const d = ("0" + date.getDate()).slice(-2)
 
       // yearとmonthを設定
       this.year = y
       this.month = Number(m)
       // 今日の日付を設定
-      this.today = y + '-' + m + '-' + d
+      this.today = y + "-" + m + "-" + d
     },
 
     methods: {
       // 当日かどうかの判定
       isToday(day) {
-        const date = this.year + '-' + ('0' + this.month).slice(-2) + "-" + day
+        const date = this.year + "-" + ("0" + this.month).slice(-2) + "-" + day
         if(this.today === date){
           return true
         }
@@ -121,7 +121,7 @@
       // modal-componentから返ってきたデータを用いて希望シフトを作成しLocalStorageに保存する
       addRequestedShift(data) {
         this.showModal = false
-        this.$store.dispatch('addStorageShiftData', {
+        this.$store.dispatch("addStorageShiftData", {
           year: data.year,
           month: data.month,
           date: data.date,
@@ -147,10 +147,10 @@
           for (let i = 0; i <= 6; i++) {
             if (calData.length === 0 && i < firstWeekDay) {
               // 初週の1日以前の曜日は空文字
-              weekData[i] = ''
+              weekData[i] = ""
             } else if (lastDay < dayNum) {
               // 最終日以降の曜日は空文字
-              weekData[i] = ''
+              weekData[i] = ""
             } else {
               // 通常の日付入力
               weekData[i] = dayNum

@@ -7,7 +7,7 @@
 <script>
 export default {
   props: [
-    'clockOut'
+    "clockOut"
   ],
 
   computed: {

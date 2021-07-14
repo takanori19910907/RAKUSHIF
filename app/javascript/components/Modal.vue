@@ -66,17 +66,17 @@ export default {
     }
   },
   props: [
-    'year',
-    'month',
-    'date',
-    'shift',
-    'shiftId',
-    'userId',
-    'index',
-    'title',
-    'subtitle',
-    'footerMessage',
-    'submit'
+    "year",
+    "month",
+    "date",
+    "shift",
+    "shiftId",
+    "userId",
+    "index",
+    "title",
+    "subtitle",
+    "footerMessage",
+    "submit"
   ],
   computed: {
     formattedClockIn() {
@@ -96,7 +96,7 @@ export default {
     this.setData.shiftId = this.shiftId
     this.setData.userId = this.userId
     this.setData.index = this.index
-      this.$emit('sendShiftsData', 
+      this.$emit("sendShiftsData", 
                       this.setData
                       )
     }

@@ -32,15 +32,15 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import dayjs from 'dayjs';
-  import Calendar from '../../components/FixedShiftsCalendar.vue'
-  import Modal from '../../components/Modal.vue'
-  import UserName from '../../components/UserName.vue'
-  import UserAge from '../../components/UserAge.vue'
-  import UserWorkStatus from '../../components/UserWorkStatus.vue'
-  import RequestedClockInTime from '../../components/RequestedClockInTime.vue'
-  import RequestedClockOutTime from '../../components/RequestedClockOutTime.vue'
+  import axios from "axios";
+  import dayjs from "dayjs";
+  import Calendar from "../../components/FixedShiftsCalendar.vue"
+  import Modal from "../../components/Modal.vue"
+  import UserName from "../../components/UserName.vue"
+  import UserAge from "../../components/UserAge.vue"
+  import UserWorkStatus from "../../components/UserWorkStatus.vue"
+  import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
   export default {
     components: {
       Calendar,
@@ -66,15 +66,15 @@
 
     created() {
       axios
-      this.$store.dispatch('getAllShiftByStaff')
-      this.$store.dispatch('getAllUsers')
+      this.$store.dispatch("getAllShiftByStaff")
+      this.$store.dispatch("getAllUsers")
     },
 
     computed: {
       filteredShiftData() {
-        const calendarDate = dayjs(this.year + '-' + this.month + '-' + this.date).format('DD/MM/YYYY')
+        const calendarDate = dayjs(this.year + "-" + this.month + "-" + this.date).format("DD/MM/YYYY")
       const shifts = this.$store.state.fixedShiftsInTableData.filter(function (item) {
-        const shiftDate = dayjs(item.clock_in).format('DD/MM/YYYY')
+        const shiftDate = dayjs(item.clock_in).format("DD/MM/YYYY")
         return calendarDate === shiftDate
       })
       return shifts.map(shift => {

@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    
     <Header :userID="myUserData.id" :hasAdmin="myUserData.admin"></Header>
       <router-view 
         :userID="myUserData.id"
@@ -13,8 +14,8 @@
   </div>
 </template>
 <script>
-  import { mapState } from 'vuex'
-  import axios from 'axios';
+  import { mapState } from "vuex";
+  import axios from "axios";
   import Header from "./components/Header.vue";
   export default {
     components: {
@@ -26,19 +27,22 @@
       };
     },
     mounted () {
-      // axios
-      //   .get('/api/v1/staff/users')
-      //   .then(response => (this.user = response.data))
+      axios
+        .get("/api/v1/staff/users")
+        .then(response => { 
+          const user = response.data
+          this.$store.dispatch("setUserData")      
+        })
     },
 
     computed: {
       ...mapState([
-      'myUserData',
-      'allUsersData',
-      'requestedShifts',
-      'requestedShiftsInTableData',
-      'fixedShifts',
-      'fixedShiftsInTableData'
+      "myUserData",
+      "allUsersData",
+      "requestedShifts",
+      "requestedShiftsInTableData",
+      "fixedShifts",
+      "fixedShiftsInTableData"
       ]),
     },
   };
