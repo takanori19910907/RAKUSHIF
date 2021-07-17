@@ -41,6 +41,8 @@
   import UserWorkStatus from "../../components/UserWorkStatus.vue"
   import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
   import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
+  import axios from "axios";
+
   export default {
     components: {
       Calendar,
@@ -61,35 +63,26 @@
         month: null,
         date: null,
         showModal: false
+        fixedShifts: []
       }
     },
-
     created() {
-      this.$store.dispatch("getAllShiftByStaff")
+      this.fetchFixedShifts();
       this.$store.dispatch("getAllUsers")
     },
-
     computed: {
       // カレンダーで指定した日付のシフト情報とそのシフトのユーザー情報を取得し表示する
       filteredShiftData() {
         const calendarDate = dayjs(this.year + "-" + this.month + "-" + this.date).format("DD/MM/YYYY")
-      const shifts = this.$store.state.fixedShiftsInTableData.filter(function (item) {
-        const shiftDate = dayjs(item.clock_in).format("DD/MM/YYYY")
-        return calendarDate === shiftDate
-      })
-      return shifts.map(shift => {
-        const user = this.$store.state.allUsersData.find(function (user) {
-        return user.id === shift.user_id
-        })
-        return {
-          ...shift,
-          user: user
-        }
-      })
+        return this.fixedShifts.filter(shift => calendarDate === dayjs(shift.clock_in).format("DD/MM/YYYY"))
       },
     },
 
     methods: {
+      async fetchFixedShifts() {
+        const response = await axios.get("/api/v1/staff/fixed_shifts")
+        this.fixedShifts = response.data
+      },
       // クリックカレンダーの日付情報をdataに格納しcomputed: filteredShiftでの処理に使用する
       checkShifts(value) {
         this.year = value.year
