@@ -6,50 +6,26 @@
     <div v-if="this.month && this.date">
       <h2>{{ this.month }}月{{ this.date }}日の出勤予定者</h2>
     </div>
-    <div v-if="filteredShiftData.length">
-      <table>
-        <tbody>
-          <tr>
-            <th>氏名</th>
-            <th>年齢</th>
-            <th>勤務ステータス</th>
-            <th>希望出勤時間</th>
-            <th>希望退勤時間</th>
-          </tr>
-          <tr v-for="(item) in filteredShiftData" :key="item.id" >
-            <td><userName :key="item.id" :userName="item.user.name" ></userName></td>
-            <td><userWorkStatus :key="item.id" :userData="item.user" ></userWorkStatus></td>
-            <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
-            <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <div v-else>
-      <p>出勤予定の方がいません</p>
-    </div>
+
+    <shift-table
+      :fixedShifts="fixedShifts"
+      :year="year"
+      :month="month"
+      :date="date"
+    ></shift-table>
   </div>
 </template>
 
 <script>
   import dayjs from "dayjs";
   import Calendar from "../../components/FixedShiftsCalendar.vue"
-  import UserName from "../../components/UserName.vue"
-  import UserAge from "../../components/UserAge.vue"
-  import UserWorkStatus from "../../components/UserWorkStatus.vue"
-  import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
-  import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
   import axios from "axios";
+  import ShiftTable from '../../components/ShiftTable.vue';
 
   export default {
     components: {
       Calendar,
-      UserName,
-      UserAge,
-      UserWorkStatus,
-      RequestedClockInTime,
-      RequestedClockOutTime
+      ShiftTable
     },
 
     data() {
@@ -67,18 +43,12 @@
       this.fetchFixedShifts();
       this.$store.dispatch("getAllUsers")
     },
-    computed: {
-      // カレンダーで指定した日付のシフト情報とそのシフトのユーザー情報を取得し表示する
-      filteredShiftData() {
-        const calendarDate = dayjs(this.year + "-" + this.month + "-" + this.date).format("DD/MM/YYYY")
-        return this.fixedShifts.filter(shift => calendarDate === dayjs(shift.clock_in).format("DD/MM/YYYY"))
-      },
-    },
 
     methods: {
       async fetchFixedShifts() {
         const response = await axios.get("/api/v1/staff/fixed_shifts")
         this.fixedShifts = response.data
+        console.log(this.fixedShifts)
       },
       // クリックカレンダーの日付情報をdataに格納しcomputed: filteredShiftでの処理に使用する
       checkShifts(value) {
