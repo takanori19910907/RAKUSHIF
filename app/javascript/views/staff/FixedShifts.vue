@@ -12,6 +12,7 @@
       :year="year"
       :month="month"
       :date="date"
+      :admin="false"
     ></shift-table>
   </div>
 </template>
