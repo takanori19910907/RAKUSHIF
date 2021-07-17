@@ -35,7 +35,6 @@
 <script>
   import dayjs from "dayjs";
   import Calendar from "../../components/FixedShiftsCalendar.vue"
-  import Modal from "../../components/Modal.vue"
   import UserName from "../../components/UserName.vue"
   import UserAge from "../../components/UserAge.vue"
   import UserWorkStatus from "../../components/UserWorkStatus.vue"
@@ -46,7 +45,6 @@
   export default {
     components: {
       Calendar,
-      Modal,
       UserName,
       UserAge,
       UserWorkStatus,
@@ -62,7 +60,6 @@
         year: null,
         month: null,
         date: null,
-        showModal: false
         fixedShifts: []
       }
     },
