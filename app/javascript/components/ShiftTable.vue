@@ -48,7 +48,6 @@
 </template>
 
 <script>
-  import dayjs from "dayjs"
   import UserName from "./UserName.vue"
   import UserAge from "./UserAge.vue"
   import UserWorkStatus from "./UserWorkStatus.vue"
