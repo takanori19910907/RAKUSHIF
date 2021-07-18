@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <div v-if="filteredShiftData.length">
+    <div v-if="filteredShifts.length">
       
       <table v-if="this.admin===true">
         <tbody>
@@ -13,7 +13,7 @@
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(shift) in filteredShiftData" :key="shift.id" >
+          <tr v-for="(shift) in filteredShifts" :key="shift.id" >
             <td><userName :key="shift.id" :userName="shift.user.name" ></userName></td>
             <td><userAge :key="item.id" :userAge="item.user.age" ></userAge></td>
             <td><userWorkStatus :key="shift.id" :userData="shift.user" ></userWorkStatus></td>
@@ -31,7 +31,7 @@
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(shift) in filteredShiftData" :key="shift.id" >
+          <tr v-for="(shift) in filteredShifts" :key="shift.id" >
             <td><userName :key="shift.id" :userName="shift.user.name" ></userName></td>
             <td><userWorkStatus :key="shift.id" :userData="shift.user" ></userWorkStatus></td>
             <td><requestedClockInTime :key="shift.id" :clockIn="shift.clock_in" ></requestedClockInTime></td>
@@ -65,19 +65,8 @@ export default({
   },
 
   props: [
-    'fixedShifts',
-    'year',
-    'month',
-    'date',
+    'filteredShifts',
     'admin'
-  ],
-
-  computed: {
-      // カレンダーで指定した日付のシフト情報とそのシフトのユーザー情報を取得し表示する
-      filteredShiftData() {
-        const calendarDate = dayjs(this.year + "-" + this.month + "-" + this.date).format("DD/MM/YYYY")
-        return this.fixedShifts.filter(shift => calendarDate === dayjs(shift.clock_in).format("DD/MM/YYYY"))
-      },
-    },
+  ]
 })
 </script>

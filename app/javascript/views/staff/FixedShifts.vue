@@ -8,10 +8,7 @@
     </div>
 
     <shift-table
-      :fixedShifts="fixedShifts"
-      :year="year"
-      :month="month"
-      :date="date"
+      :filteredShifts="filteredShifts"
       :admin="false"
     ></shift-table>
   </div>
@@ -37,12 +34,12 @@
         year: null,
         month: null,
         date: null,
-        fixedShifts: []
+        fixedShifts: [],
+        filteredShifts: []
       }
     },
     created() {
       this.fetchFixedShifts();
-      this.$store.dispatch("getAllUsers")
     },
 
     methods: {
@@ -52,12 +49,10 @@
         console.log(this.fixedShifts)
       },
       // クリックカレンダーの日付情報をdataに格納しcomputed: filteredShiftでの処理に使用する
-      checkShifts(value) {
-        this.year = value.year
-        this.month = value.month
-        this.date = value.date
-      },
-  }
       checkShifts(checkDate) {
+        const calendarDate = dayjs(checkDate.year + "-" + checkDate.month + "-" + checkDate.date).format("DD/MM/YYYY")
+        this.filteredShifts =  this.fixedShifts.filter(shift => calendarDate === dayjs(shift.clock_in).format("DD/MM/YYYY"))
+      }
+    },
 }
 </script>
