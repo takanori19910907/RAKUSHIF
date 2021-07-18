@@ -58,5 +58,6 @@
         this.date = value.date
       },
   }
+      checkShifts(checkDate) {
 }
 </script>
