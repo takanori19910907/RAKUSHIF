@@ -4,7 +4,7 @@
   <div>
     <div v-if="filteredShifts.length">
       
-      <table v-if="this.admin===true">
+      <table v-if="admin">
         <tbody>
           <tr>
             <th>氏名</th>
