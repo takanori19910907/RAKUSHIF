@@ -60,10 +60,10 @@
     data() {
       return {
         shift: {},
-        year: null,
-        month: null,
-        date: null,
-        shiftId: null,
+        year: 0,
+        month: 0,
+        date: 0,
+        shiftId: 0,
         showModal: false
       };
     },

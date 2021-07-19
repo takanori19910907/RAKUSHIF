@@ -28,12 +28,9 @@
 
     data() {
       return{
-        shiftData: [],
-        userData: {},
-        selectedShift: {},
-        year: null,
-        month: null,
-        date: null,
+        year: 0,
+        month: 0,
+        date: 0,
         fixedShifts: [],
         filteredShifts: []
       }

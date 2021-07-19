@@ -54,14 +54,14 @@ export default {
       ],
 
       setData: {
-        year: null,
-        month: null,
-        date: null,
-        clockIn: null,
-        clockOut: null,
-        shiftId: null,
-        userId: null,
-        index: null
+        year: 0,
+        month: 0,
+        date: 0,
+        clockIn: "",
+        clockOut: "",
+        shiftId: 0,
+        userId: 0,
+        index: 0
       }
     }
   },
