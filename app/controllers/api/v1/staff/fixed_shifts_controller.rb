@@ -4,7 +4,6 @@ class Api::V1::Staff::FixedShiftsController < ApplicationController
   def index
     # 所属店舗のシフトデータを検索し、現在から１ヶ月先の期間で絞り込んで取得
     @shifts = FixedShift.where(shop_id: current_user.shop_id, clock_in: @from...@to)
-    binding.pry
   end
 
   def current_user_fixed_shifts
