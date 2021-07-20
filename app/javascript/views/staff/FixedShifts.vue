@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <calendar @sendDate="checkShifts"/>
+    <calendar @sendDate="filterShifts" @changeMonth="fetchFixedShifts"/>
     <div v-if="this.month && this.date">
       <h2>{{ this.month }}月{{ this.date }}日の出勤予定者</h2>
     </div>
@@ -40,10 +40,13 @@
     },
 
     methods: {
-      async fetchFixedShifts() {
-        const response = await axios.get("/api/v1/staff/fixed_shifts")
+      async fetchFixedShifts(month) {
+        // カレンダーcomponentで月の変更があったときはparamとして月データを送る
+        const response = await axios.get(
+          "/api/v1/staff/fixed_shifts",{
+            params: { month: month }
+          })
         this.fixedShifts = response.data
-        console.log(this.fixedShifts)
       },
       // クリックカレンダーの日付情報をdataに格納しcomputed: filteredShiftでの処理に使用する
       checkShifts(checkDate) {
