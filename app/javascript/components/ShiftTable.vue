@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <div v-if="filteredShifts.length">
+    <div v-if="shifts.length">
       
       <table>
         <tbody>
@@ -13,7 +13,7 @@
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(shift) in filteredShifts" :key="shift.id" >
+          <tr v-for="(shift) in shifts" :key="shift.id" >
             <td><userName :key="shift.id" :userName="shift.user.name" ></userName></td>
             <td v-if="admin"><userAge :key="item.id" :userAge="item.user.age" ></userAge></td>
             <td><userWorkStatus :key="shift.id" :userData="shift.user" ></userWorkStatus></td>
@@ -46,7 +46,7 @@ export default({
   },
 
   props: [
-    'filteredShifts',
+    'shifts',
     'admin'
   ]
 })
