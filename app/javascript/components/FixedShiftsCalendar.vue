@@ -89,6 +89,7 @@ export default {
         this.month--
       }
         this.day = -1
+        this.$emit('changeMonth', `${this.year}/${this.month}`);
     },
 
     // 翌月のカレンダーを取得
@@ -100,6 +101,7 @@ export default {
         this.month++
       }
         this.day = -1
+        this.$emit('changeMonth', `${this.year}/${this.month}`);
     },
     
     setShifts(date) {

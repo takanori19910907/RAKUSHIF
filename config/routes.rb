@@ -19,6 +19,7 @@ Rails.application.routes.draw do
         resources :users, only: [:index, :show]
         resources :requested_shifts, only: [:index, :create, :update, :destroy]
         resources :fixed_shifts, only: [:index]
+        get "/current_user_fixed_shifts", to: "fixed_shifts#current_user_fixed_shifts"
       end
     end
   end

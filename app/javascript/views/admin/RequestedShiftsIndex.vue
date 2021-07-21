@@ -79,11 +79,11 @@
     data() {
       return{
         selectedShift: {},
-        year: null,
-        month: null,
-        date: null,
-        showModal: false,
-        index: null
+        year: 0,
+        month: 0,
+        date: 0,
+        index: 0,
+        showModal: false
       }
     },
 
