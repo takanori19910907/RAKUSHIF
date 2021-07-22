@@ -9,7 +9,7 @@
 
     <shift-table
       :shifts="filteredShifts"
-      :admin="false"
+      :editPermission="false"
     ></shift-table>
   </div>
 </template>
