@@ -72,10 +72,6 @@
     },
 
     created() {
-      this.$store.dispatch("getAllShiftsByAdmin", { type: "fixed" } )
-      this.$store.dispatch("getAllUsers")
-    },
-
       this.fetchFixedShifts();
     },
 
@@ -99,7 +95,6 @@
         this.showModal = false
       },
 
-      // type属性をつけてstoreのactionsで条件分岐に用いる
       filterShifts(date) {
         this.year = date.year
         this.month = date.month
