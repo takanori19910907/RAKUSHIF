@@ -45,9 +45,9 @@
 
 <script>
   import Modal from "components/Modal.vue"
-  import RequestedDate from "../../components/RequestedDate.vue"
-  import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
-  import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
+  import RequestedDate from "../../components/shiftTables/modules/RequestedDate.vue"
+  import RequestedClockInTime from "../../components/shiftTables/modules/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "../../components/shiftTables/modules/RequestedClockOutTime.vue"
   export default {
     components: {
       Modal,

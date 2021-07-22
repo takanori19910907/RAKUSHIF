@@ -16,9 +16,9 @@
 
 <script>
   import dayjs from "dayjs";
-  import Calendar from "../../components/FixedShiftsCalendar.vue"
+  import Calendar from "../../components/FixedShiftsCalendar"
   import axios from "axios";
-  import ShiftTable from '../../components/ShiftTable.vue';
+  import ShiftTable from '../../components/shiftTables/UserShiftTable';
 
   export default {
     components: {

@@ -47,13 +47,10 @@
 
 <script>
   import dayjs from "dayjs";
+  import axios from "axios"
   import Calendar from "../../components/FixedShiftsCalendar.vue"
   import Modal from "../../components/Modal.vue"
-  import UserName from "../../components/UserName.vue"
-  import UserAge from "../../components/UserAge.vue"
-  import UserWorkStatus from "../../components/UserWorkStatus.vue"
-  import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
-  import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
+  import ShiftTable from  "../../components/shiftTables/AdminShiftTable.vue"
   export default {
     components: {
       Calendar,

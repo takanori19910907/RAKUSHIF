@@ -60,11 +60,11 @@
 <script>
   import Calendar from "../../components/FixedShiftsCalendar.vue"
   import Modal from "../../components/Modal.vue"
-  import UserName from "../../components/UserName.vue"
-  import UserAge from "../../components/UserAge.vue"
-  import UserWorkStatus from "../../components/UserWorkStatus.vue"
-  import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
-  import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
+  import UserName from "../../components/shiftTables/modules/UserName.vue"
+  import UserAge from "../../components/shiftTables/modules/UserAge.vue"
+  import UserWorkStatus from "../../components/shiftTables/modules/UserWorkStatus.vue"
+  import RequestedClockInTime from "../../components/shiftTables/modules/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "../../components/shiftTables/modules/RequestedClockOutTime.vue"
   export default {
     components: {
       Calendar,
