@@ -3,32 +3,22 @@
 <template>
   <div>
     <h2>確定シフト閲覧/編集</h2>
-    <calendar @sendDate="checkShifts"/>
-    <div v-if="this.month && this.date">
-      <h2>{{ this.month }}月{{ this.date }}日の出勤予定者</h2>
+
+    <calendar @sendDate="filterShifts"></calendar>
+    
+    <div v-if=" month && date">
+      <h2>{{ month }}月{{ date }}日の出勤予定者</h2>
     </div>
-    <div v-if="filteredShiftData.length">
-      <table>
-        <tbody>
-          <tr>
-            <th>氏名</th>
-            <th>年齢</th>
-            <th>勤務ステータス</th>
-            <th>希望出勤時間</th>
-            <th>希望退勤時間</th>
-          </tr>
-          <tr v-for="(item, index) in filteredShiftData" :key="item.id" >
-            <td><userName :key="item.id" :userName="item.user.name" ></userName></td>
-            <td><userAge :key="item.id" :userAge="item.user.age" ></userAge></td>
-            <td><userWorkStatus :key="item.id" :userData="item.user" ></userWorkStatus></td>
-            <td><requestedClockInTime :key="item.id" :clockIn="item.clock_in" ></requestedClockInTime></td>
-            <td><requestedClockOutTime :key="item.id" :clockOut="item.clock_out" ></requestedClockOutTime></td>
-            <button @click="openModal(item, index)">修正</button>
-            <button @click="deleteShiftInTableData(item.id, index)">×</button>
-          </tr>
-        </tbody>
-      </table>
-      <Modal v-if="showModal" @close="closeModal" 
+
+    <div v-if="filteredShifts.length">
+      <shift-table
+        :shifts="filteredShifts"
+        @sendDeleteShiftId="deleteShiftInTableData"
+        @openModal="openModal"
+        >
+      </shift-table>
+
+      <modal v-if="showModal" @close="closeModal" 
         :year="year"
         :month="month"
         :date="date"
@@ -68,15 +58,13 @@
     components: {
       Calendar,
       Modal,
-      UserName,
-      UserAge,
-      UserWorkStatus,
-      RequestedClockInTime,
-      RequestedClockOutTime
+      ShiftTable
     },
 
     data() {
       return{
+        fixedShifts: [],
+        filteredShifts: [],
         selectedShift: {},
         year: 0,
         month: 0,
@@ -91,28 +79,17 @@
       this.$store.dispatch("getAllUsers")
     },
 
-    computed: {
-      // カレンダーで指定した日付のシフト情報とそのシフトのユーザー情報を取得し表示する
-      filteredShiftData() {
-        return this.$store.getters.filteredShiftData({
-          date: {
-            year: this.year,
-            month: this.month,
-            date: this.date
-            },
-            user: this.$store.state.allUsersData,
-            shifts: this.$store.state.fixedShiftsInTableData
-        })
-      },
+      this.fetchFixedShifts();
     },
 
     methods: {
-
-      checkShifts(value) {
-      // クリックしたカレンダーの日付情報をdataに格納しcomputed: filteredShiftでの処理に使用する
-        this.year = value.year
-        this.month = value.month
-        this.date = value.date
+      async fetchFixedShifts(month) {
+        // カレンダーcomponentで月の変更があったときはparamとして月データを送る
+        const response = await axios.get(
+          "/api/v1/admin/fixed_shifts",{
+            params: { month: month }
+          })
+        this.fixedShifts = response.data
       },
 
       openModal(data, index) {
@@ -126,21 +103,37 @@
       },
 
       // type属性をつけてstoreのactionsで条件分岐に用いる
+      filterShifts(date) {
+        this.year = date.year
+        this.month = date.month
+        this.date = date.date
+        const calendarDate = dayjs(date.year + "-" + date.month + "-" + date.date).format("DD/MM/YYYY")
+        this.filteredShifts =  this.fixedShifts.filter(shift => calendarDate === dayjs(shift.clock_in).format("DD/MM/YYYY"))
+      },
 
-      editFixedShiftInTableData(returnedModalData) {
+      async editFixedShiftInTableData(returnedModalData) {
         this.showModal = false
-        this.$store.dispatch("updateShiftInTableData", { returnedModalData: returnedModalData, type: "fixed" } )
+        await axios.patch(`/api/v1/admin/fixed_shifts/${returnedModalData.shiftId}`, {
+          shiftData: {
+            year: returnedModalData.year,
+            month: returnedModalData.month,
+            date: returnedModalData.date,
+            clockIn: returnedModalData.clockIn,
+            clockOut: returnedModalData.clockOut,
+            user_id: returnedModalData.userId
+          }
+        })
+        await this.fetchFixedShifts();
+        this.filterShifts(returnedModalData);
       },
 
-      deleteShiftInTableData(selectedShiftID, index) {
+      async deleteShiftInTableData(selectedShiftID, index) {
         if (window.confirm(`このシフトを削除します、よろしいでしょうか?`)) {
-        this.$store.state.fixedShiftsInTableData.splice(index, 1)
-        this.$store.dispatch( "deleteShiftInTableData", {shiftID: selectedShiftID, type: "fixed"} )
+          this.fixedShifts.splice(index, 1)
+          this.filteredShifts.splice(index, 1)
+          await axios.delete(`/api/v1/admin/fixed_shifts/${selectedShiftID}`)
         }
-      },
-
-      updateFixedShiftsInTableData() {
-        console.log("update")
+        this.fetchFixedShifts();
       }
   }
 }
