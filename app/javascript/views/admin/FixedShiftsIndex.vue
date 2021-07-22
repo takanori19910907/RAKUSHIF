@@ -32,12 +32,13 @@
         :submit="'変更'"
         @sendShiftsData="editFixedShiftInTableData"
         >
-      </Modal>
-      <button @click="updateFixedShiftsInTableData()">シフト変更完了</button>
+      </modal>
     </div>
-    <div v-else-if="this.date === null ">
+
+    <div v-else-if="!date">
       <p>カレンダーをクリックするとその日付の出勤予定者を確認出来ます</p>
     </div>
+    
     <div v-else>
       <p>出勤予定の方がいません</p>
       <p>シフトの人員補充をお願いします</p>
@@ -85,9 +86,9 @@
         this.fixedShifts = response.data
       },
 
-      openModal(data, index) {
+      openModal(shift, index) {
         this.index = index
-        this.selectedShift = data
+        this.selectedShift = shift
         this.showModal = true
       },
       
