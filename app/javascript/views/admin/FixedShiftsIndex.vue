@@ -61,10 +61,9 @@
     },
 
     data() {
-      return{
+      return {
         fixedShifts: [],
-        filteredShifts: [],
-        selectedShift: {},
+        selectedShift: [],
         year: 0,
         month: 0,
         date: 0,
