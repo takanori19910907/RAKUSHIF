@@ -110,20 +110,13 @@
         this.date = date.date
       },
 
-      async editFixedShiftInTableData(returnedModalData) {
+      async editFixedShiftInTableData(params) {
         this.showModal = false
-        await axios.patch(`/api/v1/admin/fixed_shifts/${returnedModalData.shiftId}`, {
-          shiftData: {
-            year: returnedModalData.year,
-            month: returnedModalData.month,
-            date: returnedModalData.date,
-            clockIn: returnedModalData.clockIn,
-            clockOut: returnedModalData.clockOut,
-            user_id: returnedModalData.userId
-          }
+        const { year, month, date, clockIn, clockOut, userId } = params
+        await axios.patch(`/api/v1/admin/fixed_shifts/${params.shiftId}`, {
+          shiftData: { year, month, date, clockIn, clockOut, userId }
         })
         await this.fetchFixedShifts();
-        this.filterShifts(returnedModalData);
       },
 
       async deleteShiftInTableData(selectedShiftID, index) {
