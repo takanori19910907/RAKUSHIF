@@ -119,8 +119,6 @@
 
       async deleteShiftInTableData(selectedShiftID) {
         if (window.confirm(`このシフトを削除します、よろしいでしょうか?`)) {
-          this.fixedShifts.splice(index, 1)
-          this.filteredShifts.splice(index, 1)
           await axios.delete(`/api/v1/admin/fixed_shifts/${selectedShiftID}`)
         }
         this.fetchFixedShifts();
