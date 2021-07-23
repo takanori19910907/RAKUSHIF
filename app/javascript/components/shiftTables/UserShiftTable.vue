@@ -17,10 +17,8 @@
             <td><userWorkStatus :key="shift.id" :userData="shift.user" ></userWorkStatus></td>
             <td><requestedClockInTime :key="shift.id" :clockIn="shift.clock_in" ></requestedClockInTime></td>
             <td><requestedClockOutTime :key="shift.id" :clockOut="shift.clock_out" ></requestedClockOutTime></td>
-            <div v-if="editPermission">
-              <button @click="$emit('editButtonPushed', shift)">修正</button>
-              <button @click="$emit('deleteButtonPushed', shift.id)">削除</button>
-            <div>
+              <button v-if="editPermission" @click="$emit('editButtonPushed', shift)">修正</button>
+              <button v-if="editPermission" @click="$emit('deleteButtonPushed', shift.id)">削除</button>
           </tr>
         </tbody>
       </table>
