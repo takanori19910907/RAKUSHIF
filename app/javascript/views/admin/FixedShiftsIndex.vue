@@ -4,7 +4,7 @@
   <div>
     <h2>確定シフト閲覧/編集</h2>
 
-    <calendar @sendDate="filterShifts"></calendar>
+    <calendar @sendDate="checkDate"></calendar>
     
     <div v-if=" month && date">
       <h2>{{ month }}月{{ date }}日の出勤予定者</h2>
@@ -77,6 +77,13 @@
       this.fetchFixedShifts();
     },
 
+    computed: {
+      filteredShifts() {
+        const calendarDate = dayjs(this.year + "-" + this.month + "-" + this.date).format("DD/MM/YYYY")
+        return this.fixedShifts.filter(shift => calendarDate === dayjs(shift.clock_in).format("DD/MM/YYYY"))
+      }
+    },
+
     methods: {
       async fetchFixedShifts(month) {
         // カレンダーcomponentで月の変更があったときはparamとして月データを送る
@@ -97,12 +104,10 @@
         this.showModal = false
       },
 
-      filterShifts(date) {
+      checkDate(date) {
         this.year = date.year
         this.month = date.month
         this.date = date.date
-        const calendarDate = dayjs(date.year + "-" + date.month + "-" + date.date).format("DD/MM/YYYY")
-        this.filteredShifts =  this.fixedShifts.filter(shift => calendarDate === dayjs(shift.clock_in).format("DD/MM/YYYY"))
       },
 
       async editFixedShiftInTableData(returnedModalData) {
