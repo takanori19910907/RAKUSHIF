@@ -108,7 +108,7 @@ export default {
       this.setDatetime.year = this.year
       this.setDatetime.month = this.month
       this.setDatetime.date = date
-      this.$emit("sendDate", this.setDatetime)
+      this.$emit("calendarClicked", this.setDatetime)
     }
   },
 

@@ -4,7 +4,7 @@
   <div>
     <h2>確定シフト閲覧/編集</h2>
 
-    <calendar @sendDate="checkDate"></calendar>
+    <calendar @calendarClicked="checkDate"></calendar>
     
     <div v-if=" month && date">
       <h2>{{ month }}月{{ date }}日の出勤予定者</h2>
