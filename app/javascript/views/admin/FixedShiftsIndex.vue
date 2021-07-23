@@ -10,39 +10,40 @@
       <h2>{{ month }}月{{ date }}日の出勤予定者</h2>
     </div>
 
-    <div v-if="filteredShifts.length">
-      <shift-table
-        :shifts="filteredShifts"
-        @sendDeleteShiftId="deleteShiftInTableData"
-        @openModal="openModal"
-        >
-      </shift-table>
-
-      <modal v-if="showModal" @close="closeModal" 
-        :year="year"
-        :month="month"
-        :date="date"
-        :shift="selectedShift"
-        :shiftId="selectedShift.id"
-        :userId="selectedShift.user_id"
-        :index="index"
-        :title="'確定シフトの編集'"
-        :subtitle="'シフトを編集'"
-        :footerMessage="'上記の時刻に変更します'"
-        :submit="'変更'"
-        @sendShiftsData="editFixedShiftInTableData"
-        >
-      </modal>
-    </div>
-
-    <div v-else-if="!date">
+    <div v-if="!date">
       <p>カレンダーをクリックするとその日付の出勤予定者を確認出来ます</p>
     </div>
-    
+
     <div v-else>
-      <p>出勤予定の方がいません</p>
-      <p>シフトの人員補充をお願いします</p>
+      <div v-if="filteredShifts.length">
+        <shift-table
+          :shifts="filteredShifts"
+          @deleteButtonPushed="deleteShiftInTableData"
+          @editButtonPushed="openModal"
+          >
+        </shift-table>
+      </div>
+      
+      <div v-else>
+        <p>出勤予定の方がいません</p>
+        <p>シフトの人員補充をお願いします</p>
+      </div>
     </div>
+
+    <modal v-if="showModal" @close="closeModal" 
+      :year="year"
+      :month="month"
+      :date="date"
+      :shift="selectedShift"
+      :shiftId="selectedShift.id"
+      :userId="selectedShift.user_id"
+      :title="'確定シフトの編集'"
+      :subtitle="'シフトを編集'"
+      :footerMessage="'上記の時刻に変更します'"
+      :submit="'変更'"
+      @sendShiftsData="editFixedShiftInTableData"
+      >
+    </modal>
   </div>
 </template>
 
