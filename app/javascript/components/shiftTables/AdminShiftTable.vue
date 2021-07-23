@@ -18,8 +18,8 @@
             <td><userWorkStatus :key="shift.id" :userData="shift.user" ></userWorkStatus></td>
             <td><requestedClockInTime :key="shift.id" :clockIn="shift.clock_in" ></requestedClockInTime></td>
             <td><requestedClockOutTime :key="shift.id" :clockOut="shift.clock_out" ></requestedClockOutTime></td>
-            <button @click="$emit('openModal', shift, index)">修正</button>
-            <button @click="$emit('sendDeleteShiftId', shift.id, index)">削除</button>
+            <button @click="$emit('editButtonPushed', shift)">修正</button>
+            <button @click="$emit('deleteButtonPushed', shift.id)">削除</button>
           </tr>
         </tbody>
       </table>
