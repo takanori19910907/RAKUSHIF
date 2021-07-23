@@ -68,7 +68,6 @@
         year: 0,
         month: 0,
         date: 0,
-        index: 0,
         showModal: false
       }
     },
@@ -94,8 +93,7 @@
         this.fixedShifts = response.data
       },
 
-      openModal(shift, index) {
-        this.index = index
+      openModal(shift) {
         this.selectedShift = shift
         this.showModal = true
       },
@@ -119,7 +117,7 @@
         await this.fetchFixedShifts();
       },
 
-      async deleteShiftInTableData(selectedShiftID, index) {
+      async deleteShiftInTableData(selectedShiftID) {
         if (window.confirm(`このシフトを削除します、よろしいでしょうか?`)) {
           this.fixedShifts.splice(index, 1)
           this.filteredShifts.splice(index, 1)

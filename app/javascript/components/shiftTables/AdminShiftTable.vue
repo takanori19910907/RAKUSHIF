@@ -12,7 +12,7 @@
             <th>希望出勤時間</th>
             <th>希望退勤時間</th>
           </tr>
-          <tr v-for="(shift, index) in shifts" :key="shift.id" >
+          <tr v-for="(shift) in shifts" :key="shift.id" >
             <td><userName :key="shift.id" :userName="shift.user.name" ></userName></td>
             <td><userAge :key="shift.id" :userAge="shift.user.age" ></userAge></td>
             <td><userWorkStatus :key="shift.id" :userData="shift.user" ></userWorkStatus></td>
