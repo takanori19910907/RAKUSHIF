@@ -53,8 +53,8 @@
 </template>
 
 <script>
-  import Modal from "components/Modal.vue"
-  import Calendar from "components/RequestedShiftsCalendar.vue";
+  import Modal from "components/molecules/modals/Modal.vue"
+  import Calendar from "components/molecules/calendars/RequestedShiftsCalendar.vue";
   export default {
     components: {
       Modal,

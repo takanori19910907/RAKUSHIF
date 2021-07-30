@@ -2,23 +2,23 @@
 
 <template>
   <div>
-    <calendar @sendDate="filterShifts" @changeMonth="fetchFixedShifts"/>
+    <calendar @calendarClicked="checkDate" @changeMonth="fetchFixedShifts"/>
     <div v-if="this.month && this.date">
       <h2>{{ this.month }}月{{ this.date }}日の出勤予定者</h2>
     </div>
 
     <shift-table
       :shifts="filteredShifts"
-      :admin="false"
+      :editPermission="false"
     ></shift-table>
   </div>
 </template>
 
 <script>
   import dayjs from "dayjs";
-  import Calendar from "../../components/FixedShiftsCalendar.vue"
+  import Calendar from "components/molecules/calendars/FixedShiftsCalendar.vue"
   import axios from "axios";
-  import ShiftTable from '../../components/ShiftTable.vue';
+  import ShiftTable from 'components/molecules/tables/UserShiftTable';
 
   export default {
     components: {
@@ -31,12 +31,18 @@
         year: 0,
         month: 0,
         date: 0,
-        fixedShifts: [],
-        filteredShifts: []
+        fixedShifts: []
       }
     },
     created() {
       this.fetchFixedShifts();
+    },
+
+    computed: {
+      filteredShifts() {
+        const calendarDate = dayjs(this.year + "-" + this.month + "-" + this.date).format("DD/MM/YYYY")
+        return this.fixedShifts.filter(shift => calendarDate === dayjs(shift.clock_in).format("DD/MM/YYYY"))
+      }
     },
 
     methods: {
@@ -49,11 +55,12 @@
         this.fixedShifts = response.data
       },
 
-      // クリックカレンダーの日付情報をdataに格納しcomputed: filteredShiftでの処理に使用する
-      filterShifts(date) {
-        const calendarDate = dayjs(date.year + "-" + date.month + "-" + date.date).format("DD/MM/YYYY")
-        this.filteredShifts =  this.fixedShifts.filter(shift => calendarDate === dayjs(shift.clock_in).format("DD/MM/YYYY"))
-      }
-    },
+      checkDate(date) {
+        // クリックカレンダーの日付情報をdataに格納しcomputed: filteredShiftでの処理に使用する
+        this.year = date.year
+        this.month = date.month
+        this.date = date.date
+      },
+    }
 }
 </script>

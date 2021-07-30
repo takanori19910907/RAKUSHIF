@@ -60,8 +60,7 @@ export default {
         clockIn: "",
         clockOut: "",
         shiftId: 0,
-        userId: 0,
-        index: 0
+        userId: 0
       }
     }
   },
@@ -72,7 +71,6 @@ export default {
     "shift",
     "shiftId",
     "userId",
-    "index",
     "title",
     "subtitle",
     "footerMessage",
@@ -95,7 +93,6 @@ export default {
     this.setData.clockOut = this.selected2
     this.setData.shiftId = this.shiftId
     this.setData.userId = this.userId
-    this.setData.index = this.index
       this.$emit("sendShiftsData", 
                       this.setData
                       )

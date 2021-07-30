@@ -11,7 +11,7 @@
 </template>
 <script>
   import { mapState } from "vuex";
-  import Header from "./components/Header.vue";
+  import Header from "./components/molecules/Header.vue";
   export default {
     components: {
       Header,

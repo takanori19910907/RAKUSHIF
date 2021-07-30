@@ -30,4 +30,6 @@ Rails.application.routes.draw do
 
   post     "/guest_login",   to: "guest_sessions#create"
   delete   "/guest_logout",  to: "guest_sessions#destroy"
+
+  get '/users/top/*route', to: 'users#top' 
 end

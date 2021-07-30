@@ -44,10 +44,10 @@
 </template>
 
 <script>
-  import Modal from "components/Modal.vue"
-  import RequestedDate from "../../components/RequestedDate.vue"
-  import RequestedClockInTime from "../../components/RequestedClockInTime.vue"
-  import RequestedClockOutTime from "../../components/RequestedClockOutTime.vue"
+  import Modal from "components/molecules/modals/Modal.vue"
+  import RequestedDate from "components/atoms/RequestedDate.vue"
+  import RequestedClockInTime from "components/atoms/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "components/atoms/RequestedClockOutTime.vue"
   export default {
     components: {
       Modal,
