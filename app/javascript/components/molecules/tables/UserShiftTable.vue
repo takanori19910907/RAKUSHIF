@@ -30,10 +30,10 @@
 </template>
 
 <script>
-  import UserName from "./modules/UserName.vue"
-  import UserWorkStatus from "./modules/UserWorkStatus.vue"
-  import RequestedClockInTime from "./modules/RequestedClockInTime.vue"
-  import RequestedClockOutTime from "./modules/RequestedClockOutTime.vue"
+  import UserName from "components/atoms/UserName.vue"
+  import UserWorkStatus from "components/atoms/UserWorkStatus.vue"
+  import RequestedClockInTime from "components/atoms/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "components/atoms/RequestedClockOutTime.vue"
 
 export default({
   components: {

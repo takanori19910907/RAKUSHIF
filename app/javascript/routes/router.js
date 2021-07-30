@@ -1,11 +1,11 @@
 import Vue from "vue";
 import Router from "vue-router";
 Vue.use(Router);
-import RequestedShifts from "../views/staff/RequestedShifts.vue";
-import RequestedShiftsDetail from "../views/staff/RequestedShiftsDetail.vue";
-import FixedShifts from "../views/staff/FixedShifts.vue";
-import RequestedShiftsIndex from "../views/admin/RequestedShiftsIndex.vue";
-import FixedShiftsIndex from "../views/admin/FixedShiftsIndex.vue";
+import RequestedShifts from "../components/organisms/staff/RequestedShifts.vue";
+import RequestedShiftsDetail from "../components/organisms/staff/RequestedShiftsDetail.vue";
+import FixedShifts from "../components/organisms/staff/FixedShifts.vue";
+import RequestedShiftsIndex from "../components/organisms/admin/RequestedShiftsIndex.vue";
+import FixedShiftsIndex from "../components/organisms/admin/FixedShiftsIndex.vue";
 const router = new Router({
   routes: [
     {

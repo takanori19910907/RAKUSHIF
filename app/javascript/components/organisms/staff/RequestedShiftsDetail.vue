@@ -44,10 +44,10 @@
 </template>
 
 <script>
-  import Modal from "components/Modal.vue"
-  import RequestedDate from "../../components/shiftTables/modules/RequestedDate.vue"
-  import RequestedClockInTime from "../../components/shiftTables/modules/RequestedClockInTime.vue"
-  import RequestedClockOutTime from "../../components/shiftTables/modules/RequestedClockOutTime.vue"
+  import Modal from "components/molecules/modals/Modal.vue"
+  import RequestedDate from "components/atoms/RequestedDate.vue"
+  import RequestedClockInTime from "components/atoms/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "components/atoms/RequestedClockOutTime.vue"
   export default {
     components: {
       Modal,

@@ -50,9 +50,9 @@
 <script>
   import dayjs from "dayjs";
   import axios from "axios"
-  import Calendar from "../../components/FixedShiftsCalendar.vue"
-  import Modal from "../../components/Modal.vue"
-  import ShiftTable from  "../../components/shiftTables/AdminShiftTable.vue"
+  import Calendar from "components/molecules/calendars/FixedShiftsCalendar.vue"
+  import Modal from "components/molecules/modals/Modal.vue"
+  import ShiftTable from  "components/molecules/tables/AdminShiftTable.vue"
   export default {
     components: {
       Calendar,

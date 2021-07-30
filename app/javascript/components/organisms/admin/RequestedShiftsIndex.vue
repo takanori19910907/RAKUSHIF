@@ -58,13 +58,13 @@
 </template>
 
 <script>
-  import Calendar from "../../components/FixedShiftsCalendar.vue"
-  import Modal from "../../components/Modal.vue"
-  import UserName from "../../components/shiftTables/modules/UserName.vue"
-  import UserAge from "../../components/shiftTables/modules/UserAge.vue"
-  import UserWorkStatus from "../../components/shiftTables/modules/UserWorkStatus.vue"
-  import RequestedClockInTime from "../../components/shiftTables/modules/RequestedClockInTime.vue"
-  import RequestedClockOutTime from "../../components/shiftTables/modules/RequestedClockOutTime.vue"
+  import Calendar from "components/molecules/calendars/FixedShiftsCalendar.vue"
+  import Modal from "components/molecules/modals/Modal.vue"
+  import UserName from "components/atoms/UserName.vue"
+  import UserAge from "components/atoms/UserAge.vue"
+  import UserWorkStatus from "components/atoms/UserWorkStatus.vue"
+  import RequestedClockInTime from "components/atoms/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "components/atoms/RequestedClockOutTime.vue"
   export default {
     components: {
       Calendar,

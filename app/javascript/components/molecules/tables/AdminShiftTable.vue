@@ -2,6 +2,7 @@
 
 <template>
   <div>
+    <p>aaaaa</p>
     <div v-if="shifts.length">
       
       <table>
@@ -32,11 +33,11 @@
 </template>
 
 <script>
-  import UserName from "./modules/UserName.vue"
-  import UserAge from "./modules/UserAge.vue"
-  import UserWorkStatus from "./modules/UserWorkStatus.vue"
-  import RequestedClockInTime from "./modules/RequestedClockInTime.vue"
-  import RequestedClockOutTime from "./modules/RequestedClockOutTime.vue"
+  import UserName from "../../atoms/UserName.vue"
+  import UserAge from "../../atoms/UserAge.vue"
+  import UserWorkStatus from "../../atoms/UserWorkStatus.vue"
+  import RequestedClockInTime from "components/atoms/RequestedClockInTime.vue"
+  import RequestedClockOutTime from "components/atoms/RequestedClockOutTime.vue"
 
 export default({
   components: {
