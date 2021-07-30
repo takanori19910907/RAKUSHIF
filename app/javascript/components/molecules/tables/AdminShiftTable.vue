@@ -2,7 +2,6 @@
 
 <template>
   <div>
-    <p>aaaaa</p>
     <div v-if="shifts.length">
       
       <table>
